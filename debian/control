@@ -1,0 +1,17 @@
+Source: leaptime-manager
+Section: admin
+Priority: optional
+Maintainer: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+
+Package: leaptime-manager
+Architecture: all
+Depends: python3,
+         python3-gi,
+         python3-configobj,
+         python3-setproctitle,
+         ${misc:Depends},
+Description: Leaptime Manager
+ Aiming to be an all-in-one, friendly to new-users,
+ GUI based backup manager for Debian/Ubuntu based systems.
