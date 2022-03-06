@@ -1,3 +1,4 @@
 #!/bin/bash
-sudo cp -R usr /
-leaptime-manager
+
+sudo cp -R usr/* /usr/
+# leaptime-manager
