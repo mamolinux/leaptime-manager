@@ -1,14 +1,17 @@
 # [Leaptime Manager](https://hsbasu.github.io/leaptime-manager)
 
+# Work In Progress
+This App is currently under **development**. So, This is not what a regular user would expect. If you are a developer and would like to contribute, only then download or fork this repo.
+
 <p align="center">
   	<img src="https://raw.githubusercontent.com/hsbasu/leaptime-manager/master/usr/share/icons/hicolor/scalable/apps/leaptime-manager.svg?sanitize=true" height="128" alt="Logo">
 </p>
 
 <p align="center">
-	<a href="#">
+	<a href="https://github.com/hsbasu/leaptime-manager/actions/workflows/ci.yml">
 		<img src="https://img.shields.io/github/actions/workflow/status/hsbasu/leaptime-manager/ci.yml?branch=master&label=CI%20Build" alt="CI build">
 	</a>
-	<a href="#">
+	<a href="https://github.com/hsbasu/leaptime-manager/actions/workflows/codeql-analysis.yml">
 		<img src="https://img.shields.io/github/actions/workflow/status/hsbasu/leaptime-manager/codeql-analysis.yml?branch=master&label=CodeQL%20Build" alt="CodeQL build">
 	</a>
 	<a href="https://github.com/hsbasu/leaptime-manager/blob/master/LICENSE">

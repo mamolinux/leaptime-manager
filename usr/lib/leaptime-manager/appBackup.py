@@ -13,7 +13,7 @@ import subprocess
 import sys
 import time
 
-# from gi.repository import GLib
+from gi.repository import GLib
 
 # i18n
 APP = 'leaptime-manager'
@@ -23,8 +23,8 @@ gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
-# BACKUP_DIR = os.path.join(GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOCUMENTS), _("MovebackTime"))
-BACKUP_DIR = os.path.join("/media/backup/"+_("MovebackTime/apps"))
+BACKUP_DIR = os.path.join(GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOCUMENTS), _("leaptime/backup"))
+# BACKUP_DIR = os.path.join("/media/backup/"+_("MovebackTime/apps"))
 
 class AppBackup():
 	
