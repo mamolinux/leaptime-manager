@@ -6,10 +6,10 @@
 
 <p align="center">
 	<a href="#">
-		<img src="https://img.shields.io/github/workflow/status/hsbasu/leaptime-manager/CI/master?label=CI%20Build" alt="CI build">
+		<img src="https://img.shields.io/github/actions/workflow/status/hsbasu/leaptime-manager/ci.yml?branch=master&label=CI%20Build" alt="CI build">
 	</a>
 	<a href="#">
-		<img src="https://img.shields.io/github/workflow/status/hsbasu/leaptime-manager/CodeQL/master?label=CodeQL%20Build" alt="CodeQL build">
+		<img src="https://img.shields.io/github/actions/workflow/status/hsbasu/leaptime-manager/codeql-analysis.yml?branch=master&label=CodeQL%20Build" alt="CodeQL build">
 	</a>
 	<a href="https://github.com/hsbasu/leaptime-manager/blob/master/LICENSE">
 		<img src="https://img.shields.io/github/license/hsbasu/leaptime-manager?label=License" alt="License">
