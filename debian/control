@@ -2,8 +2,18 @@ Source: leaptime-manager
 Section: admin
 Priority: optional
 Maintainer: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
-Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.5
+Build-Depends: debhelper-compat (= 12),
+               dh-python,
+               libglib2.0-bin,
+               python3-setuptools,
+               python3-sphinx,
+               python3-all
+Standards-Version: 4.6.0
+Homepage: https://hsbasu.github.io/leaptime-manager
+#Vcs-Browser: https://salsa.debian.org/debian/leaptime-manager
+#Vcs-Git: https://salsa.debian.org/debian/leaptime-manager.git
+#Testsuite: autopkgtest-pkg-python
+Rules-Requires-Root: no
 
 Package: leaptime-manager
 Architecture: all
@@ -15,3 +25,9 @@ Depends: python3,
 Description: Leaptime Manager
  Aiming to be an all-in-one, friendly to new-users,
  GUI based backup manager for Debian/Ubuntu based systems.
+
+# Package: leaptime-manager-doc
+# Architecture: all
+# Description: documentation for leaptime-manager
+#  Documentations for CLI and GUI environment for
+#  Leaptime Manager.
