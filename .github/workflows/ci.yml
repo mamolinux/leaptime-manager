@@ -33,7 +33,9 @@ jobs:
         run: sudo apt-get update -qq
         
       - name: install-deps
-        run: sudo apt install python3 python3-gi python3-configobj python3-setproctitle
+        run: |
+          sudo apt install gir1.2-gtk-3.0 python3 python3-gi \
+          python3-configobj python3-setproctitle
         
       - name: make
-        run: sudo ./test -qq
+        run: sudo ./test/test -qq
