@@ -40,8 +40,13 @@ class AppBackup():
 		
 		# print(user_uid, user_gid)
 		if not os.path.exists(BACKUP_DIR):
+			try:
+				print("Creating backup directory in %s" % BACKUP_DIR)
+				os.makedirs(BACKUP_DIR)
+			except:
+				print("The backup directory is read-only. Provide a directory with write-access.")
+		else:
 			print("Creating backup directory in %s" % BACKUP_DIR)
-			os.makedirs(BACKUP_DIR)
 		# 	if os.geteuid() == 0:
 		# 		print("We're root!")
 		# 		os.makedirs(BACKUP_DIR)
@@ -65,7 +70,7 @@ class AppBackup():
 		
 		cache = apt_pkg.Cache()					# all cache packages
 		# package object list of all available packages in all repo
-		allpacks_list = [pack for pack in cache.packages]	
+		allpacks_list = [pack for pack in cache.packages]
 		
 		installer_log = "/var/log/installer/initial-status.gz"
 		if not os.path.isfile(installer_log):
@@ -80,7 +85,7 @@ class AppBackup():
 		initial_status = [x[9:] for x in installer_log if x.startswith("Package: ")]
 		if not initial_status:
 			return None
-			
+		
 		installed_pkgs = []
 		auto_installed_pkgs = []
 		for pack in allpacks_list:
@@ -112,18 +117,36 @@ class AppBackup():
 			if pack not in initial_status:
 				if pack in marked_manual_pakgs:
 					installed_packages += [pack]
-				
-		return installed_packages
 		
+		return installed_packages
+	
 	def backup_pkg_save_to_file(self):
-
+		
 		installed_packages=self.backup_pkg()
 		# Save the package selection
 		filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
-		file_path = os.path.join(BACKUP_DIR, filename)		
+		file_path = os.path.join(BACKUP_DIR, filename)
 		with open(file_path, "w") as f:
 			for pack in installed_packages:
 				f.write("%s\t%s\n" % (pack, "install"))
+	
+	def restore_pkg_validate_file(self, filechooser):
+		# Check the file validity
+		self.package_source = filechooser.get_filename()
+		try:
+			with open(self.package_source, "r") as source:
+				error = False
+				for line in source:
+					line = line.rstrip("\r\n")
+					if line != "":
+						if not line.endswith("\tinstall") and not line.endswith(" install"):
+							self.show_message(_("The selected file is not a valid software selection."))
+							self.builder.get_object("button_forward").set_sensitive(False)
+							return
+			self.builder.get_object("button_forward").set_sensitive(True)
+		except Exception as detail:
+			self.show_message(_("An error occurred while reading the file."))
+			print (detail)
 
 if __name__ == "__main__":
 	AppBackup()
