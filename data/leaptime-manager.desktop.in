@@ -1,12 +1,11 @@
 [Desktop Entry]
 Name=Leaptime Manager
 Comment=Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems.
-GenericName=Leaptime Manager
-Exec=leaptime-manager
+Exec=leaptime-manager -g
 Icon=leaptime-manager
 Terminal=false
 Type=Application
 Encoding=UTF-8
 Categories=System;Settings;
-X-KDE-StartupNotify=false
-OnlyShowIn=KDE;
+StartupNotify=false
+Name[en]=Leaptime Manager

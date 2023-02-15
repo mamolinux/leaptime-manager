@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # A shameless rip-off from MintBackup tool
 
 # import the necessary modules!

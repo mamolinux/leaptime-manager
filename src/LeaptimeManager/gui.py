@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 # Copyright (C) 2021 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 # 
 # This file is part of leaptime-manager.
@@ -37,13 +35,14 @@ warnings.filterwarnings("ignore")
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, Gdk
 
+from LeaptimeManager.common import APP, CONFIG_FILE, LOCALE_DIR, UI_PATH, __version__
+
 # imports from current package
-from appBackup import AppBackup
+from LeaptimeManager.appBackup import AppBackup
 
-setproctitle.setproctitle("leaptime-manager")
+setproctitle.setproctitle(APP)
 
-APP = 'leaptime-manager'
-LOCALE_DIR = "/usr/share/locale"
+# i18n
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
@@ -72,7 +71,7 @@ class LeaptimeManagerWindow():
 	def __init__(self, application):
 		
 		self.application = application
-		self.settings = Gio.Settings(schema_id="org.x.leaptime-manager")
+		self.settings = Gio.Settings(schema_id="org.mamolinux.leaptime-manager")
 		self.icon_theme = Gtk.IconTheme.get_default()
 		
 		# Set the Glade file
@@ -176,7 +175,7 @@ class LeaptimeManagerWindow():
 		print("Restoring apps")
 		AppBackup().backup_pkg_save_to_file()
 
-if __name__ == "__main__":
-	application = leaptime_manager("org.x.leaptime-manager", Gio.ApplicationFlags.FLAGS_NONE)
+def run_LTMwindow():
+	application = leaptime_manager("org.mamolinux.leaptime-manager", Gio.ApplicationFlags.FLAGS_NONE)
 	application.run()
 	
