@@ -1,3 +1,3 @@
 #!/bin/bash
-pip3 install .
+sudo pip3 install . -qq
 leaptime-manager -V

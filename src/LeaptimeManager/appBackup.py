@@ -22,14 +22,12 @@ gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
-BACKUP_DIR = os.path.join(GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_DOCUMENTS), _("leaptime/backup"))
-# BACKUP_DIR = os.path.join("/media/backup/"+_("MovebackTime/apps"))
+BACKUP_DIR = os.path.join(os.getcwd(), ("/leaptime/backup"))
 
 class AppBackup():
 	
 	def __init__(self) -> None:
-		self.create_dirs()
-		self.backup_pkg_save_to_file()
+		pass
 	
 	def create_dirs(self):
 		

@@ -38,4 +38,4 @@ jobs:
           python3-configobj python3-setproctitle
         
       - name: make
-        run: sudo ./test/test -qq
+        run: ./test/test -qq
