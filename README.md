@@ -4,36 +4,36 @@
 This App is currently under **development**. So, This is not what a regular user would expect. If you are a developer and would like to contribute, only then download or fork this repo.
 
 <p align="center">
-  	<img src="https://raw.githubusercontent.com/hsbasu/leaptime-manager/master/usr/share/icons/hicolor/scalable/apps/leaptime-manager.svg?sanitize=true" height="128" alt="Logo">
+  	<img src="https://raw.githubusercontent.com/mamolinux/leaptime-manager/master/data/icons/leaptime-manager.svg?sanitize=true" height="128" alt="Logo">
 </p>
 
 <p align="center">
-	<a href="https://github.com/hsbasu/leaptime-manager/actions/workflows/ci.yml">
-		<img src="https://img.shields.io/github/actions/workflow/status/hsbasu/leaptime-manager/ci.yml?branch=master&label=CI%20Build" alt="CI build">
+	<a href="https://github.com/mamolinux/leaptime-manager/actions/workflows/ci.yml">
+		<img src="https://img.shields.io/github/actions/workflow/status/mamolinux/leaptime-manager/ci.yml?branch=master&label=CI%20Build" alt="CI build">
 	</a>
-	<a href="https://github.com/hsbasu/leaptime-manager/actions/workflows/codeql-analysis.yml">
-		<img src="https://img.shields.io/github/actions/workflow/status/hsbasu/leaptime-manager/codeql-analysis.yml?branch=master&label=CodeQL%20Build" alt="CodeQL build">
+	<a href="https://github.com/mamolinux/leaptime-manager/actions/workflows/codeql-analysis.yml">
+		<img src="https://img.shields.io/github/actions/workflow/status/mamolinux/leaptime-manager/codeql-analysis.yml?branch=master&label=CodeQL%20Build" alt="CodeQL build">
 	</a>
-	<a href="https://github.com/hsbasu/leaptime-manager/blob/master/LICENSE">
-		<img src="https://img.shields.io/github/license/hsbasu/leaptime-manager?label=License" alt="License">
+	<a href="https://github.com/mamolinux/leaptime-manager/blob/master/LICENSE">
+		<img src="https://img.shields.io/github/license/mamolinux/leaptime-manager?label=License" alt="License">
 	</a>
   	<a href="#">
-		<img src="https://img.shields.io/github/repo-size/hsbasu/leaptime-manager?label=Repo%20size" alt="GitHub repo size">
+		<img src="https://img.shields.io/github/repo-size/mamolinux/leaptime-manager?label=Repo%20size" alt="GitHub repo size">
   	</a>
-	<a href="https://github.com/hsbasu/leaptime-manager/issues" target="_blank">
-		<img src="https://img.shields.io/github/issues/hsbasu/leaptime-manager?label=Issues" alt="Open Issues">
+	<a href="https://github.com/mamolinux/leaptime-manager/issues" target="_blank">
+		<img src="https://img.shields.io/github/issues/mamolinux/leaptime-manager?label=Issues" alt="Open Issues">
 	</a>
-	<a href="https://github.com/hsbasu/leaptime-manager/pulls" target="_blank">
-		<img src="https://img.shields.io/github/issues-pr/hsbasu/leaptime-manager?label=PR" alt="Open PRs">
+	<a href="https://github.com/mamolinux/leaptime-manager/pulls" target="_blank">
+		<img src="https://img.shields.io/github/issues-pr/mamolinux/leaptime-manager?label=PR" alt="Open PRs">
 	</a>
-  	<a href="https://github.com/hsbasu/leaptime-manager/releases/latest">
-    	<img src="https://img.shields.io/github/v/release/hsbasu/leaptime-manager?label=Latest%20Stable%20Release" alt="GitHub release (latest by date)">
+  	<a href="https://github.com/mamolinux/leaptime-manager/releases/latest">
+    	<img src="https://img.shields.io/github/v/release/mamolinux/leaptime-manager?label=Latest%20Stable%20Release" alt="GitHub release (latest by date)">
   	</a>
 	<a href="#download-latest-version">
-		<img src="https://img.shields.io/github/downloads/hsbasu/leaptime-manager/total?label=Downloads" alt="Downloads">
+		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/total?label=Downloads" alt="Downloads">
 	</a>
-	<a href="https://github.com/hsbasu/leaptime-manager/releases/download/1.0.0/leaptime-manager_1.0.0_all.deb">
-		<img src="https://img.shields.io/github/downloads/hsbasu/leaptime-manager/1.0.0/leaptime-manager_1.0.0_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.0/leaptime-manager_1.0.0_all.deb">
+		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.0/leaptime-manager_1.0.0_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
 	</a>
 </p>
 
@@ -51,9 +51,9 @@ Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for 
 
 ## Download Latest Version
 <p align="center">
-	<a href="https://github.com/hsbasu/leaptime-manager/zipball/master">Download Source (.zip)</a></br>
-	<a href="https://github.com/hsbasu/leaptime-manager/tarball/master">Download Source (.tar.gz)</a></br>
-	<a href="https://github.com/hsbasu/leaptime-manager/releases/download/1.0.0/leaptime-manager_1.0.0_all.deb">Download Binary (.deb)</a>
+	<a href="https://github.com/mamolinux/leaptime-manager/zipball/master">Download Source (.zip)</a></br>
+	<a href="https://github.com/mamolinux/leaptime-manager/tarball/master">Download Source (.tar.gz)</a></br>
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.0/leaptime-manager_1.0.0_all.deb">Download Binary (.deb)</a>
 </p>
 
 ## Features and Screenshots
@@ -109,7 +109,7 @@ Replace `apt install` in the command given in [Debian/Ubuntu based distros](#deb
 ### Debian/Ubuntu based systems
 There are two methods, this app can be installed/used on a Debian/Ubuntu based system. First, download and unzip the source package using:
 ```
-wget https://github.com/hsbasu/leaptime-manager/archive/refs/heads/master.zip
+wget https://github.com/mamolinux/leaptime-manager/archive/refs/heads/master.zip
 unzip master.zip
 cd leaptime-manager-master
 ```
@@ -150,18 +150,18 @@ After it is installed, run `leaptime-manager` from terminal or use the `leaptime
 
 
 ### For Developers
-Instructions for devs are coming soon or create a [PR](https://github.com/hsbasu/leaptime-manager/compare).
+Instructions for devs are coming soon or create a [PR](https://github.com/mamolinux/leaptime-manager/compare).
 
-**I have no knowledge on how to use `meson` or `npm` for testing. If you can offer any help regarding this, please start a discussion [here](https://github.com/hsbasu/leaptime-manager/discussions) or create a [PR](https://github.com/hsbasu/leaptime-manager/compare). It will be more than welcome.**
+**I have no knowledge on how to use `meson` or `npm` for testing. If you can offer any help regarding this, please start a discussion [here](https://github.com/mamolinux/leaptime-manager/discussions) or create a [PR](https://github.com/mamolinux/leaptime-manager/compare). It will be more than welcome.**
 
 ## User Manual
 Coming Soon or create a PR.
 
 ## Issue Tracking and Contributing
 If you are interested to contribute and enrich the code, you are most welcome. You can do it by:
-1. If you find a bug, to open a new issue with details: [Click Here](https://github.com/hsbasu/leaptime-manager/issues)
+1. If you find a bug, to open a new issue with details: [Click Here](https://github.com/mamolinux/leaptime-manager/issues)
 
-2. If you know how to fix a bug or want to add new feature/documentation to the existing package, please create a [Pull Request](https://github.com/hsbasu/leaptime-manager/compare).
+2. If you know how to fix a bug or want to add new feature/documentation to the existing package, please create a [Pull Request](https://github.com/mamolinux/leaptime-manager/compare).
 
 ## Contributors
 

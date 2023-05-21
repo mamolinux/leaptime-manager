@@ -1,2 +1,17 @@
 # python cache
 *.pyc
+*.egg-info
+
+# python build files
+src/LeaptimeManager/VERSION
+build/*
+dist/*
+
+# debian build files
+.pybuild/*
+usr/*
+debian/leaptime-manager/*
+debian/*debhelper*
+
+# snap files
+*.snap
