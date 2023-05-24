@@ -2,7 +2,7 @@ Source: leaptime-manager
 Section: admin
 Priority: optional
 Maintainer: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
-Build-Depends: debhelper-compat (= 12),
+Build-Depends: debhelper-compat (= 13),
                dh-python,
                libglib2.0-bin,
                python3-setuptools,
