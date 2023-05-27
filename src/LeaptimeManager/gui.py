@@ -38,6 +38,8 @@ from gi.repository import Gtk, Gio, Gdk
 from LeaptimeManager.common import APP, CONFIG_FILE, LOCALE_DIR, UI_PATH, __version__
 
 # imports from current package
+from LeaptimeManager.common import APP, LOCALE_DIR, UI_PATH, __version__
+from LeaptimeManager.about_window import AboutWindow
 from LeaptimeManager.appBackup import AppBackup
 
 setproctitle.setproctitle(APP)
@@ -107,7 +109,7 @@ class LeaptimeManagerWindow():
 		item = Gtk.ImageMenuItem()
 		item.set_image(Gtk.Image.new_from_icon_name("help-about-symbolic", Gtk.IconSize.MENU))
 		item.set_label(_("About"))
-		item.connect("activate", self.open_about)
+		item.connect("activate", self.open_about, self.window)
 		key, mod = Gtk.accelerator_parse("F1")
 		item.add_accelerator("activate", accel_group, key, mod, Gtk.AccelFlags.VISIBLE)
 		menu.append(item)
@@ -124,36 +126,9 @@ class LeaptimeManagerWindow():
 		# Show all drop-down menu options
 		menu.show_all()
 	
-	def open_about(self, widget):
-		dlg = Gtk.AboutDialog()
-		dlg.set_transient_for(self.window)
-		dlg.set_icon_name("leaptime-manager")
-		dlg.set_logo_icon_name("leaptime-manager")
-		dlg.set_title(_("About"))
-		
-		dlg.set_program_name(_("Leaptime Manager"))
-		dlg.set_version("__DEB_VERSION__")
-		dlg.set_comments(_("Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems."))
-		dlg.set_website("https://hsbasu.github.io/leaptime-manager")
-		dlg.set_copyright("Copyright \xa9 2021 Himadri Sekhar Basu")
-		dlg.set_authors(["Himadri Sekhar Basu <https://hsbasu.github.io>"])
-		dlg.set_documenters(["Himadri Sekhar Basu <https://hsbasu.github.io>"])
-		try:
-			h = open('/usr/share/common-licenses/GPL', encoding="utf-8")
-			s = h.readlines()
-			gpl = ""
-			for line in s:
-				gpl += line
-			h.close()
-			dlg.set_license(gpl)
-		except Exception as e:
-			print(e)
-		
-		def close(w, res):
-			if res == Gtk.ResponseType.CANCEL or res == Gtk.ResponseType.DELETE_EVENT:
-				w.destroy()
-		dlg.connect("response", close)
-		dlg.show()
+	def open_about(self, signal, widget):
+		about_window = AboutWindow(widget)
+		about_window.show()
 	
 	def on_quit(self, widget):
 		self.application.quit()
@@ -178,4 +153,3 @@ class LeaptimeManagerWindow():
 def run_LTMwindow():
 	application = leaptime_manager("org.mamolinux.leaptime-manager", Gio.ApplicationFlags.FLAGS_NONE)
 	application.run()
-	
