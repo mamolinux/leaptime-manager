@@ -29,6 +29,7 @@ import locale
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
+# imports from current package
 from LeaptimeManager.common import APP, description, LOCALE_DIR, __version__
 
 

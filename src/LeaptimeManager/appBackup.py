@@ -6,23 +6,25 @@ import apt
 import apt_pkg
 import gettext
 import locale
+import logging
 import os
 import shutil
 import subprocess
 import sys
 import time
 
-from gi.repository import GLib
+# imports from current package
+from LeaptimeManager.common import APP, LOCALE_DIR
 
 # i18n
-APP = 'leaptime-manager'
-LOCALE_DIR = "/usr/share/locale"
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
 BACKUP_DIR = os.path.join(os.getcwd(), ("/leaptime/backup"))
+# logger
+module_logger = logging.getLogger('LeaptimeManager.appBackup')
 
 class AppBackup():
 	
@@ -147,4 +149,3 @@ class AppBackup():
 
 if __name__ == "__main__":
 	AppBackup()
-	

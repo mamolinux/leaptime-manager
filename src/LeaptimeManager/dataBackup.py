@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright (C) 2021 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+# Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 # 
 # This file is part of leaptime-manager.
 # 
@@ -25,10 +25,16 @@
 # import the necessary modules!
 import gettext
 import locale
+import logging
 
-APP = 'leaptime-manager'
-LOCALE_DIR = "/usr/share/locale"
+# imports from current package
+from LeaptimeManager.common import APP, LOCALE_DIR
+
+# i18n
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+# logger
+module_logger = logging.getLogger('LeaptimeManager.dataBackup')
