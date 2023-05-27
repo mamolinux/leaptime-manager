@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+# Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 #
 # This file is part of leaptime-manager.
 #
@@ -33,6 +33,8 @@ locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+description = _('Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems.')
 
 # get version
 version_file = os.path.abspath(os.path.dirname(__file__))+'/VERSION'
