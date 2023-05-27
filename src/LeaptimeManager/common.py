@@ -22,9 +22,15 @@
 
 # import the necessary modules!
 import configparser
+import getpass
 import gettext
+import glob
 import locale
+import logging
 import os
+import string
+
+from random import choice
 
 # i18n
 APP = 'leaptime-manager'
@@ -33,6 +39,25 @@ locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+
+## Setup logfile
+def create_logfile():
+	logpath = '/tmp/'
+	dlimitter = '_'
+	username = getpass.getuser()
+	random_code =  ''.join(choice(string.digits) for _ in range(4))
+	if len(glob.glob(logpath+APP+dlimitter+username+'*')) ==0:
+		logfile = logpath + APP + dlimitter + username + dlimitter + random_code + '.log'
+	else:
+		logfile = glob.glob(logpath+APP+dlimitter+username+'*')[0]
+	
+	return logfile
+# Set the log filename
+LOGFILE = create_logfile()
+
+# logger
+module_logger = logging.getLogger('LeaptimeManager.common')
 
 description = _('Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems.')
 

@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+# Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 # 
 # This file is part of leaptime-manager.
 # 
@@ -24,9 +24,7 @@
 import gettext
 import gi
 import locale
-# from os import stat
-import setproctitle
-from threading import Thread
+import logging
 import warnings
 
 # Suppress GTK deprecation warnings
@@ -35,14 +33,14 @@ warnings.filterwarnings("ignore")
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, Gdk
 
-from LeaptimeManager.common import APP, CONFIG_FILE, LOCALE_DIR, UI_PATH, __version__
-
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR, UI_PATH, __version__
 from LeaptimeManager.about_window import AboutWindow
 from LeaptimeManager.appBackup import AppBackup
+from LeaptimeManager.logger import LoggerWindow
 
-setproctitle.setproctitle(APP)
+# logger
+module_logger = logging.getLogger('LeaptimeManager.appBackup')
 
 # i18n
 locale.bindtextdomain(APP, LOCALE_DIR)
@@ -105,6 +103,14 @@ class LeaptimeManagerWindow():
 		accel_group = Gtk.AccelGroup()
 		self.window.add_accel_group(accel_group)
 		menu = self.builder.get_object("main_menu")
+		# Add "Show Logs" option in drop-down menu
+		item = Gtk.ImageMenuItem()
+		item.set_image(Gtk.Image.new_from_icon_name("text-x-log", Gtk.IconSize.MENU))
+		item.set_label(_("Show Logs"))
+		item.connect("activate", self.show_logs, self.window)
+		key, mod = Gtk.accelerator_parse("<Control>L")
+		item.add_accelerator("activate", accel_group, key, mod, Gtk.AccelFlags.VISIBLE)
+		menu.append(item)
 		# Add "About" option in drop-down menu
 		item = Gtk.ImageMenuItem()
 		item.set_image(Gtk.Image.new_from_icon_name("help-about-symbolic", Gtk.IconSize.MENU))
@@ -129,6 +135,10 @@ class LeaptimeManagerWindow():
 	def open_about(self, signal, widget):
 		about_window = AboutWindow(widget)
 		about_window.show()
+	
+	def show_logs(self, signal, widget):
+		loggerwindow = LoggerWindow(widget)
+		loggerwindow.show()
 	
 	def on_quit(self, widget):
 		self.application.quit()
