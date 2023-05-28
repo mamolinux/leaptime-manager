@@ -1,17 +1,39 @@
-# A shameless rip-off from MintBackup tool
+# Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+# 
+# This file is part of leaptime-manager.
+# 
+# leaptime-manager is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# leaptime-manager is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with leaptime-manager.  If not, see <http://www.gnu.org/licenses/>
+# or write to the Free Software Foundation, Inc., 51 Franklin Street,
+# Fifth Floor, Boston, MA 02110-1301, USA..
+# 
+# Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+#
+# A shameless partial rip-off from MintBackup tool
 
 # import the necessary modules!
 import apt
 # from apt import package
 import apt_pkg
 import gettext
+import gi
 import locale
 import logging
 import os
-import shutil
-import subprocess
-import sys
 import time
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR
@@ -22,48 +44,35 @@ gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
 
-BACKUP_DIR = os.path.join(os.getcwd(), ("/leaptime/backup"))
 # logger
 module_logger = logging.getLogger('LeaptimeManager.appBackup')
 
 class AppBackup():
 	
 	def __init__(self) -> None:
-		pass
+		module_logger.info("Work in progress...")
 	
-	def create_dirs(self):
+	def choose_dirs(self, widget):
+		# Choose directory to save app backup files
+		dialog = Gtk.FileChooserDialog(
+			title="Please choose a folder",
+			action=Gtk.FileChooserAction.SELECT_FOLDER,
+		)
+		dialog.set_transient_for(widget)
+		dialog.add_buttons(
+			Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Select", Gtk.ResponseType.OK
+		)
+		dialog.set_default_size(800, 400)
+
+		response = dialog.run()
+		if response == Gtk.ResponseType.OK:
+			print("Select clicked")
+			print("Folder selected: " + dialog.get_filename())
+			module_logger.debug("Folder selected: %s", dialog.get_filename())
+			self.backup_dir = dialog.get_filename()
 		
-		# for dirpath, dirnames, filenames in os.walk(BACKUP_DIR):
-		# 	print(dirpath)
-		# 	shutil.chown(dirpath, user_uid, user_gid)
-		
-		# print(user_uid, user_gid)
-		if not os.path.exists(BACKUP_DIR):
-			try:
-				print("Creating backup directory in %s" % BACKUP_DIR)
-				os.makedirs(BACKUP_DIR)
-			except:
-				print("The backup directory is read-only. Provide a directory with write-access.")
-		else:
-			print("Creating backup directory in %s" % BACKUP_DIR)
-		# 	if os.geteuid() == 0:
-		# 		print("We're root!")
-		# 		os.makedirs(BACKUP_DIR)
-		# 		os.chown(BACKUP_DIR, user_uid, user_gid)
-		# 	else:
-		# 		print("We're not root.")
-		# 		subprocess.call(['sudo', 'python3', *sys.argv])
-		# 		sys.exit()
-		# else:
-		# 	print("Backup directory exists in %s" % BACKUP_DIR)
-		# 	if os.geteuid() == 0:
-		# 		print("Making backup directory accessible")
-		# 		os.chown(BACKUP_DIR, user_uid, user_gid)
-		# 	else:
-		# 		print("Backup directory not accessible")
-		# 		subprocess.call(['sudo', 'python3', *sys.argv])
-		# 		sys.exit()
-		
+		dialog.destroy()
+	
 	def backup_pkg(self):
 		apt_pkg.init()
 		
@@ -124,7 +133,7 @@ class AppBackup():
 		installed_packages=self.backup_pkg()
 		# Save the package selection
 		filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
-		file_path = os.path.join(BACKUP_DIR, filename)
+		file_path = os.path.join(self.backup_dir, filename)
 		with open(file_path, "w") as f:
 			for pack in installed_packages:
 				f.write("%s\t%s\n" % (pack, "install"))
