@@ -57,6 +57,7 @@ class UserData():
 	
 	def choose_dirs(self, title, widget):
 		# Choose source/destination directory for data backup
+		selected_dir = ""
 		dialog = Gtk.FileChooserDialog(
 			title=title,
 			action=Gtk.FileChooserAction.SELECT_FOLDER,
@@ -70,10 +71,12 @@ class UserData():
 		response = dialog.run()
 		if response == Gtk.ResponseType.OK:
 			module_logger.debug("Folder selected: %s", dialog.get_filename())
-			dialog.destroy()
-			return dialog.get_filename()
+			selected_dir = dialog.get_filename()
+		else:
+			selected_dir = ""
 		
 		dialog.destroy()
+		return selected_dir
 	
 	def on_select_src(self, widget):
 		title = "Please choose source folder"
@@ -85,8 +88,16 @@ class UserData():
 	
 	def on_backup_data(self):
 		module_logger.info("Starting backup using Rsync...")
-		cmd = "rsync -aAXUH --checksum --compress --partial"
-		os.system("%s %s %s" % (cmd, self.source_dir, self.backup_dir))
+		if self.source_dir and self.backup_dir:
+			cmd = "rsync -aAXUH --checksum --compress --partial %s %s" % (self.source_dir, self.backup_dir)
+			module_logger.debug("Running command: %s" % cmd)
+			os.system(cmd)
+			module_logger.info("%s is backed up into %s" % (self.source_dir, self.backup_dir))
+		else:
+			if not self.source_dir:
+				module_logger.error("No source directory selected.")
+			if not self.backup_dir:
+				module_logger.error("No destination directory selected.")
 	
 	def userData(self, widget):
 		module_logger.info("Starting Data backup...")
