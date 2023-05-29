@@ -61,17 +61,32 @@ class LoggerWindow():
 		self.logger_dlg = log_builder.get_object("logger_dlg")
 		self.logger_dlg.set_transient_for(widget)
 		self.logger_dlg.set_title(_("Leaptime Manager Logs"))
+		self.logger_dlg.add_buttons(Gtk.STOCK_REFRESH, Gtk.ResponseType.OK)
 		self.logger_dlg.add_buttons(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE)
-		logview = log_builder.get_object("log_view")
-		logview.set_editable(False)
-		logview.set_wrap_mode(Gtk.WrapMode.WORD)
-		logview.get_buffer().set_text(LTMlogs)
+		self.logview = log_builder.get_object("log_view")
+		self.logview.set_editable(False)
+		self.logview.set_wrap_mode(Gtk.WrapMode.WORD)
+		self.logview.get_buffer().set_text(LTMlogs)
 		
 		self.logger_dlg.connect("response", self.__close)
+		self.logger_dlg.connect("response", self.reload_log)
 	
 	def show(self):
 		# show the about dialog.
 		self.logger_dlg.show()
+	
+	def reload_log(self, widget, res):
+		if res == Gtk.ResponseType.OK:
+			try:
+				h = open(LOGFILE, encoding="utf-8")
+				s = h.readlines()
+				LTMlogs = ""
+				for line in s:
+					LTMlogs += line
+				h.close()
+			except Exception as e:
+				LTMlogs = str(e)
+			self.logview.get_buffer().set_text(LTMlogs)
 	
 	def __close(self, w, res):
 		"""Called when the user wants to close the about dialog.
