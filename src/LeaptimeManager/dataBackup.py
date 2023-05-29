@@ -1,5 +1,3 @@
-#!/usr/bin/python3
-
 # Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 # 
 # This file is part of leaptime-manager.
@@ -15,7 +13,7 @@
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with leaptime-manager.  If not, see <http://www.gnu.org/licenses/>
+# along with leaptime-manager. If not, see <http://www.gnu.org/licenses/>
 # or write to the Free Software Foundation, Inc., 51 Franklin Street,
 # Fifth Floor, Boston, MA 02110-1301, USA..
 # 
@@ -24,8 +22,13 @@
 
 # import the necessary modules!
 import gettext
+import gi
 import locale
 import logging
+import os
+
+gi.require_version("Gtk", "3.0")
+from gi.repository import Gtk
 
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR
@@ -38,3 +41,55 @@ _ = gettext.gettext
 
 # logger
 module_logger = logging.getLogger('LeaptimeManager.dataBackup')
+
+class UserData_backend():
+	
+	def __init__(self) -> None:
+		module_logger.info("Init UserData_backend class...")
+
+class UserData():
+	"""
+	GUI class for backing up and restoring user data
+	using rsync
+	"""
+	def __init__(self) -> None:
+		module_logger.info("Init UserData class...")
+	
+	def choose_dirs(self, title, widget):
+		# Choose source/destination directory for data backup
+		dialog = Gtk.FileChooserDialog(
+			title=title,
+			action=Gtk.FileChooserAction.SELECT_FOLDER,
+		)
+		dialog.set_transient_for(widget)
+		dialog.add_buttons(
+			Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Select", Gtk.ResponseType.OK
+		)
+		dialog.set_default_size(800, 400)
+		
+		response = dialog.run()
+		if response == Gtk.ResponseType.OK:
+			module_logger.debug("Folder selected: %s", dialog.get_filename())
+			dialog.destroy()
+			return dialog.get_filename()
+		
+		dialog.destroy()
+	
+	def on_select_src(self, widget):
+		title = "Please choose source folder"
+		self.source_dir = self.choose_dirs(title, widget)
+	
+	def on_select_dest(self, widget):
+		title = "Please choose destination folder"
+		self.backup_dir = self.choose_dirs(title, widget)
+	
+	def on_backup_data(self):
+		module_logger.info("Starting backup using Rsync...")
+		cmd = "rsync -aAXUH --checksum --compress --partial"
+		os.system("%s %s %s" % (cmd, self.source_dir, self.backup_dir))
+	
+	def userData(self, widget):
+		module_logger.info("Starting Data backup...")
+		self.on_select_src(widget)
+		self.on_select_dest(widget)
+		self.on_backup_data()

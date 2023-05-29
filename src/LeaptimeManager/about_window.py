@@ -20,8 +20,7 @@
 # Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 #
 
-
-# third-party library
+# import the necessary modules!
 import gettext
 import gi
 import locale
