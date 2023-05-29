@@ -1,5 +1,53 @@
+leaptime-manager (1.0.1) stable; urgency=medium
+
+  * Create README.md
+  * Create LICENSE
+  * Update README.md
+  * Rename and modify the package to leaptime-manager (#5)
+    1. setup debian build
+    2. debian package backup using apt
+    3. Update ui
+  * add .gitignore
+  * Add workflows, test scripts and update README
+  * update badges url (#8)
+  * New UI for leaptime-manager
+  * Add data backup in rsync mode
+  * Add apt package backup
+  * Update debian packaging (#10)
+    - Use python build system
+    - Update compapibility to 12
+    - Add post removal script
+  * Use pure python packaging (#9)
+    - Modify source to use python packaging
+    - Now the app can be installed using pip
+  * Update CI workflow (#11)
+  * Update publishing and funding workflows (#12)
+    - Update workflow for publishing deb packages
+    - Update funding
+  * Update readme with new organization (#13)
+    - Update readme with new icon
+    - Update descriptions and links to repo
+  * Fix failing workflows (#14)
+  * Update debian packaging and CI workflow (#15)
+  * separate about-dialog module (#16)
+  * Create logger (#17)
+    - Create logger for debugging and to record info
+      for users
+  * New ui and choose backup directory option (#18)
+    - New stacked UI with side bar
+    - User can choose where to save app backup
+  * Add basic moule to backup user data; closes #2 (#19)
+    - backup user-defined source to
+      user-defined destination
+  * Add button to reload log (#20)
+  * Fix Gtk file chooser error (#21)
+    - Fix gtk critical error when either source
+      or destination or both is not chosen
+
+ -- Himadri Sekhar Basu <hsb10@iitbbs.ac.in>  Mon, 29 May 2023 16:01:48 +0530
+
 leaptime-manager (1.0.0) unreleased; urgency=medium
 
-  * Initial release. (Closes: #XXXXXX)
+  * Initial release.
 
  -- Himadri Sekhar Basu <hsb10@iitbbs.ac.in>  Wed, 27 Oct 2021 19:39:45 +0530
