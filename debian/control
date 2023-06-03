@@ -22,9 +22,11 @@ Depends: python3,
          python3-configobj,
          python3-setproctitle,
          ${misc:Depends},
-Description: Leaptime Manager
+Description: All-in-one Backup Manager
  Aiming to be an all-in-one, friendly to new-users,
  GUI based backup manager for Debian/Ubuntu based systems.
+ .
+ This package installs the gui library for Python 3.
 
 # Package: leaptime-manager-doc
 # Architecture: all

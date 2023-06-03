@@ -26,6 +26,7 @@ export PYBUILD_INSTALL_ARGS_python3=--install-scripts=usr/bin
 override_dh_install:
 	dh_install
 	rm -f debian/leaptime-manager/usr/share/glib-2.0/schemas/gschemas.compiled
+	rm -rf debian/leaptime-manager/usr/lib/python*/dist-packages/LeaptimeManager/__pycache__
 
 override_dh_auto_install:
 	dh_auto_install --destdir=$(CURDIR)/$(DEB_SOURCE)
