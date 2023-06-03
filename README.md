@@ -1,4 +1,4 @@
-# [Leaptime Manager](https://hsbasu.github.io/leaptime-manager)
+# [LeapTime Manager](https://hsbasu.github.io/leaptime-manager)
 
 # Work In Progress
 This App is currently under **development**. So, This is not what a regular user would expect. If you are a developer and would like to contribute, only then download or fork this repo.
@@ -32,8 +32,8 @@ This App is currently under **development**. So, This is not what a regular user
 	<a href="#download-latest-version">
 		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/total?label=Downloads" alt="Downloads">
 	</a>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.0/leaptime-manager_1.0.0_all.deb">
-		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.0/leaptime-manager_1.0.0_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.1/leaptime-manager_1.0.1_all.deb">
+		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.1/leaptime-manager_1.0.1_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
 	</a>
 </p>
 
@@ -53,7 +53,7 @@ Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for 
 <p align="center">
 	<a href="https://github.com/mamolinux/leaptime-manager/zipball/master">Download Source (.zip)</a></br>
 	<a href="https://github.com/mamolinux/leaptime-manager/tarball/master">Download Source (.tar.gz)</a></br>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.0/leaptime-manager_1.0.0_all.deb">Download Binary (.deb)</a>
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.1/leaptime-manager_1.0.1_all.deb">Download Binary (.deb)</a>
 </p>
 
 ## Features and Screenshots
@@ -90,7 +90,7 @@ python3-gi
 python3-setproctitle
 python3-tldextract
 ```
-To use or test Leaptime Manager, you need these dependencies to be installed.
+To use or test LeapTime Manager, you need these dependencies to be installed.
 
 ### Debian/Ubuntu based distro
 To install dependencies on Debian/Ubuntu based systems, run:
@@ -98,7 +98,7 @@ To install dependencies on Debian/Ubuntu based systems, run:
 sudo apt install python3 python3-configobj python3-gi \
 python3-setproctitle python3-tldextract redshift
 ```
-**Note**: If you are using `gdebi` to install **Leaptime Manager** from a `.deb` file, it will automatically install the dependencies and you can skip this step.
+**Note**: If you are using `gdebi` to install **LeapTime Manager** from a `.deb` file, it will automatically install the dependencies and you can skip this step.
 
 ### Other Linux-based distro
 Replace `apt install` in the command given in [Debian/Ubuntu based distros](#debianubuntu-based-distro) and use the command for the package manager of the target system(eg. `yum install`, `dnf install`, `pacman -S` etc.)
