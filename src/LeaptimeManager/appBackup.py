@@ -31,12 +31,18 @@ import locale
 import logging
 import os
 import time
+import aptdaemon.client
+import aptdaemon.errors
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib
+from aptdaemon.enums import *
+from aptdaemon.gtk3widgets import (AptConfirmDialog, AptErrorDialog,
+                                   AptProgressDialog, AptStatusIcon)
 
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR
+from LeaptimeManager.dialogs import show_message
 
 # i18n
 locale.bindtextdomain(APP, LOCALE_DIR)
@@ -54,6 +60,8 @@ class AppBackup():
 		self.builder = builder
 		self.window = window
 		self.stack = stack
+		apt_pkg.init()
+		self.cache = apt_pkg.Cache()					# all cache packages
 		
 		# nav buttons
 		self.button_back = button_back
@@ -64,8 +72,8 @@ class AppBackup():
 		self.button_forward.connect("clicked", self.forward_callback)
 		self.button_apply.connect("clicked", self.forward_callback)
 		
-		# packages list
-		t = self.builder.get_object("treeview_packages")
+		# backup packages list treeview
+		t = self.builder.get_object("treeview_backup_list")
 		self.builder.get_object("button_select").connect("clicked", self.set_selection, t, True, False)
 		self.builder.get_object("button_deselect").connect("clicked", self.set_selection, t, False, False)
 		tog = Gtk.CellRendererToggle()
@@ -75,44 +83,114 @@ class AppBackup():
 		t.append_column(c1)
 		c2 = Gtk.TreeViewColumn("", Gtk.CellRendererText(), markup=2)
 		t.append_column(c2)
-
+		
+		# File chooser to select existing apps list
 		file_filter = Gtk.FileFilter()
 		file_filter.add_pattern ("*.list")
 		filechooser = self.builder.get_object("filechooserbutton_package_source")
 		filechooser.connect("file-set", self.restore_pkg_validate_file)
 		filechooser.set_filter(file_filter)
+
+		# choose a package list
+		self.treeview_restore_list = self.builder.get_object("treeview_restore_list")
+		self.builder.get_object("button_select_list").connect("clicked", self.set_selection, self.treeview_restore_list, True, True)
+		self.builder.get_object("button_deselect_list").connect("clicked", self.set_selection, self.treeview_restore_list, False, True)
+		self.builder.get_object("button_refresh").connect("clicked", self.restore_pkg_load_from_file)
+		tog = Gtk.CellRendererToggle()
+		tog.connect("toggled", self.toggled_cb, self.treeview_restore_list)
+		c1 = Gtk.TreeViewColumn("", tog, active=0, activatable=2)
+		c1.set_cell_data_func(tog, self.celldatamethod_checkbox)
+		self.treeview_restore_list.append_column(c1)
+		c2 = Gtk.TreeViewColumn("", Gtk.CellRendererText(), markup=1)
+		self.treeview_restore_list.append_column(c2)
 	
 	def back_callback(self, widget):
 		# Back button
 		page = self.stack.get_visible_child_name()
-		if page == "appbackup_page2":
-			self.stack.set_visible_child_name("appbackup_page1")
+		module_logger.debug("Previous page: %s", page)
+		if page == "appbackup_page1" or "apprestore_page1":
+			self.stack.set_visible_child_name("appbackup_main")
 			self.button_back.set_sensitive(False)
 			self.button_back.hide()
 			self.button_forward.hide()
-		elif page == "appbackup_page3":
-			self.stack.set_visible_child_name("appbackup_page2")
+		elif page == "appbackup_page2":
+			self.stack.set_visible_child_name("appbackup_page1")
 			self.show_apps_list()
 			self.button_back.set_sensitive(True)
 			self.button_back.show()
 			self.button_forward.show()
+		elif page == "apprestore_page2":
+			self.stack.set_visible_child_name("apprestore_page1")
+			self.button_back.set_sensitive(True)
+			self.button_back.show()
+			self.button_forward.show()
+			self.button_apply.hide()
+		elif page == "apprestore_page3":
+			self.stack.set_visible_child_name("apprestore_page2")
+			self.button_back.set_sensitive(True)
+			self.button_back.show()
+			self.button_forward.show()
+			self.button_apply.hide()
+		# else:
+		# 	if page == "appbackup_page1":
+		# 		self.builder.get_object("button_back").hide()
+		# 		self.builder.get_object("button_forward").hide()
+		# 	self.stack.set_child_by_name(page)
+		
+		page = self.stack.get_visible_child_name()
+		module_logger.debug("Showing page: %s", page)
 	
 	def forward_callback(self, widget):
 		# Go forward
 		page = self.stack.get_visible_child_name()
+		module_logger.debug("Previous page: %s", page)
 		self.builder.get_object("button_back").set_sensitive(True)
-		if page == "appbackup_page2":
+		if page == "appbackup_page1":
 			# show progress of packages page
-			self.stack.set_visible_child_name("appbackup_page3")
+			self.stack.set_visible_child_name("appbackup_page2")
 			self.button_forward.set_sensitive(True)
 			self.button_back.show()
 			self.button_forward.show()
-		elif page == "appbackup_page3":
+		elif page == "appbackup_page2":
 			self.backup_dest = self.builder.get_object("filechooserbutton_package_dest").get_filename()
 			self.backup_pkg_save_to_file()
-			self.stack.set_visible_child_name("appbackup_page1")
+			self.stack.set_visible_child_name("appbackup_main")
 			self.button_back.hide()
 			self.button_forward.hide()
+		elif page == "apprestore_page1":
+			self.stack.set_visible_child_name("apprestore_page2")
+			self.button_back.show()
+			self.button_forward.hide()
+			self.button_apply.show()
+			self.restore_pkg_load_from_file(widget)
+		elif page == "apprestore_page2":
+			inst = False
+			model = self.builder.get_object("treeview_restore_list").get_model()
+			if len(model) == 0:
+				show_message(self.window, _("No packages need to be installed."))
+				return
+			for row in model:
+				if row[0]:
+					inst = True
+					break
+			if not inst:
+				show_message(self.window, _("No packages selected to install."))
+				return
+			else:
+				self.restore_pkg_install_packages()
+			if inst:
+				self.stack.set_visible_child_name("apprestore_page3")
+				self.button_back.show()
+				self.button_apply.hide()
+				self.button_forward.show()
+		elif page == "apprestore_page3":
+			self.stack.set_visible_child_name("appbackup_main")
+			self.button_back.set_sensitive(False)
+			self.button_back.hide()
+			self.button_forward.hide()
+		
+		page = self.stack.get_visible_child_name()
+		module_logger.debug("Showing page: %s", page)
 	
 	def toggled_cb(self, ren, path, treeview):
 		model = treeview.get_model()
@@ -136,9 +214,6 @@ class AppBackup():
 				row[0] = selection
 	
 	def backup_pkg_list(self):
-		apt_pkg.init()
-		
-		self.cache = apt_pkg.Cache()					# all cache packages
 		# package object list of all available packages in all repo
 		allpacks_list = [pack for pack in self.cache.packages]
 		
@@ -187,31 +262,13 @@ class AppBackup():
 		return installed_packages
 	
 	def backup_pkg_save_to_file(self):
-		
 		# Save the package selection
 		filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
 		file_path = os.path.join(self.backup_dest, filename)
 		with open(file_path, "w") as f:
-			for pack in self.installed_packages:
-				f.write("%s\t%s\n" % (pack, "install"))
-	
-	def restore_pkg_validate_file(self, filechooser):
-		# Check the file validity
-		self.package_source = filechooser.get_filename()
-		try:
-			with open(self.package_source, "r") as source:
-				error = False
-				for line in source:
-					line = line.rstrip("\r\n")
-					if line != "":
-						if not line.endswith("\tinstall") and not line.endswith(" install"):
-							self.show_message(_("The selected file is not a valid software selection."))
-							self.builder.get_object("button_forward").set_sensitive(False)
-							return
-			self.builder.get_object("button_forward").set_sensitive(True)
-		except Exception as detail:
-			self.show_message(Gtk.window(), _("An error occurred while reading the file."))
-			module_logger.debug(detail)
+			for row in self.builder.get_object("treeview_backup_list").get_model():
+				if row[0]:
+					f.write("%s\t%s\n" % (row[1], "install"))
 	
 	def show_apps_list(self):
 		module_logger.debug(_("Showing backup apps list..."))
@@ -232,12 +289,131 @@ class AppBackup():
 			except Exception as e:
 				print(e)
 		
-		self.builder.get_object("treeview_packages").set_model(model)
+		self.builder.get_object("treeview_backup_list").set_model(model)
+	
+	def restore_pkg_validate_file(self, filechooser):
+		self.backup_src = filechooser.get_filename()
+		# Check the file validity
+		try:
+			with open(self.backup_src, "r") as source:
+				for line in source:
+					line = line.rstrip("\r\n")
+					if line != "":
+						if not line.endswith("\tinstall") and not line.endswith(" install"):
+							show_message(self.window, _("The selected file is not a valid software selection."))
+							self.builder.get_object("button_forward").set_sensitive(False)
+							return
+			self.builder.get_object("button_forward").set_sensitive(True)
+		except Exception as detail:
+			show_message(self.window, _("An error occurred while reading the file."))
+			module_logger.debug(detail)
+	
+	def restore_pkg_load_from_file(self, widget=None):
+		# Load package list into treeview
+		apt_pkg.init()
+		self.cache = apt_pkg.Cache()					# all cache packages
+		self.button_forward.hide()
+		self.button_apply.show()
+		self.button_apply.set_sensitive(True)
+		model = Gtk.ListStore(bool, str, bool, str)
+		self.treeview_restore_list.set_model(model)
+		try:
+			with open(self.backup_src, "r") as f:
+				source = f.readlines()
+			package_records = apt_pkg.PackageRecords(self.cache)
+			depcache = apt_pkg.DepCache(self.cache)
+			for line in source:
+				try:
+					if not line.strip() or line.startswith("#"):
+						continue
+					name = line.strip().replace(" install", "").replace("\tinstall", "")
+					if not name:
+						continue
+					error = "%s\n<small>%s</small>" % (name, _("Could not locate the package."))
+					if name in self.cache:
+						pkg = self.cache[name]
+						if not pkg.current_ver:
+							candidate = depcache.get_candidate_ver(pkg)
+							if candidate and candidate.downloadable:
+								package_records.lookup(candidate.translated_description.file_list[0])
+								summary = package_records.short_desc
+								status = "%s\n<small>%s</small>" % (name, GLib.markup_escape_text(summary))
+								model.append([True, status, True, pkg.name])
+							else:
+								model.append([False, error, False, pkg.name])
+					else:
+						model.append([False, error, False, error])
+				except Exception as inner_detail:
+					print("Error while reading '%s'." % line.strip())
+					print(inner_detail)
+		except Exception as detail:
+			show_message(self.window, _("An error occurred while reading the file."))
+			print (detail)
+		if len(model) == 0:
+			self.stack.set_visible_child_name("apprestore_page3")
+			self.button_forward.show()
+			self.button_back.hide()
+			self.button_apply.hide()
+		else:
+			self.button_back.show()
+			self.stack.set_visible_child_name("apprestore_page2")
+	
+	def apt_run_transaction(self, transaction):
+		transaction.connect("finished", self.on_transaction_finish)
+		dia = AptProgressDialog(transaction, parent=self.window)
+		dia.run(close_on_finished=True, show_error=True, reply_handler=lambda: True, error_handler=self.apt_on_error)
+	
+	def apt_simulate_trans(self, trans):
+		trans.simulate(reply_handler=lambda: self.apt_confirm_deps(trans), error_handler=self.apt_on_error)
+	
+	def apt_confirm_deps(self, trans):
+		try:
+			if [pkgs for pkgs in trans.dependencies if pkgs]:
+				dia = AptConfirmDialog(trans, parent=self.window)
+				res = dia.run()
+				dia.hide()
+				if res != Gtk.ResponseType.OK:
+					return
+			self.apt_run_transaction(trans)
+		except Exception as e:
+			print(e)
+	
+	def apt_on_error(self, error):
+		if isinstance(error, aptdaemon.errors.NotAuthorizedError):
+			# Silently ignore auth failures
+			return
+		elif not isinstance(error, aptdaemon.errors.TransactionFailed):
+			# Catch internal errors of the client
+			error = aptdaemon.errors.TransactionFailed(ERROR_UNKNOWN, str(error))
+		dia = AptErrorDialog(error)
+		dia.run()
+		dia.hide()
+	
+	def on_transaction_finish(self, transaction, exit_state):
+		# Refresh
+		self.restore_pkg_load_from_file()
+	
+	def restore_pkg_install_packages(self):
+		packages = []
+		model = self.builder.get_object("treeview_restore_list").get_model()
+		for row in model:
+			if row[0]:
+				packages.append(row[3])
+		ac = aptdaemon.client.AptClient()
+		ac.install_packages(packages, reply_handler=self.apt_simulate_trans, error_handler=self.apt_on_error)
 	
 	def backup_apps(self, widget):
 		module_logger.debug(_("Starting app backup list process"))
-		self.stack.set_visible_child_name("appbackup_page2")
+		self.stack.set_visible_child_name("appbackup_page1")
 		self.button_back.set_sensitive(True)
 		self.button_back.show()
 		self.button_forward.show()
 		self.show_apps_list()
+	
+	def restore_apps(self, widget):
+		module_logger.debug(_("Starting app restore list process"))
+		self.stack.set_visible_child_name("apprestore_page1")
+		self.button_back.set_sensitive(True)
+		self.button_back.show()
+		self.button_forward.show()
+		self.button_apply.hide()

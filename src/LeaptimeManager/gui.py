@@ -103,6 +103,7 @@ class LeaptimeManagerWindow():
 		self.user_data_button = self.builder.get_object("user_data")
 		
 		self.new_button = self.builder.get_object("add_button")
+		self.restore_button = self.builder.get_object("restore_button")
 		self.remove_button = self.builder.get_object("remove_button")
 		
 		# nav buttons
@@ -114,6 +115,7 @@ class LeaptimeManagerWindow():
 		self.user_data_button.connect("clicked", self.show_UserData_stack)
 		
 		self.new_button.connect("clicked", self.on_add_button)
+		self.restore_button.connect("clicked", self.on_restore_button)
 		
 		# Menubar
 		accel_group = Gtk.AccelGroup()
@@ -187,8 +189,16 @@ class LeaptimeManagerWindow():
 		if self.user_data:
 			self.UserData.userData(self.window)
 		if self.app_backup:
-			module_logger.debug(_("Starting app backup process"))
+			module_logger.debug(_("Starting app backup process..."))
 			self.AppBackup.backup_apps(widget)
+	
+	def on_restore_button(self, widget):
+		if self.user_data:
+			pass
+		elif self.app_backup:
+			module_logger.debug(_("Starting app restore process..."))
+			self.AppBackup.restore_apps(widget)
+	
 
 def run_LTMwindow():
 	application = leaptime_manager("org.mamolinux.leaptime-manager", Gio.ApplicationFlags.FLAGS_NONE)

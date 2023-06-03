@@ -18,7 +18,7 @@
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
     <child>
-      <object class="GtkBox" id="backup_page1">
+      <object class="GtkBox" id="backup_main">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
@@ -38,14 +38,14 @@
         </child>
       </object>
       <packing>
-        <property name="name">appbackup_page1</property>
+        <property name="name">appbackup_main</property>
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="backup_page2">
+      <object class="GtkBox" id="backup_page1">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="border-width">12</property>
+        <property name="border-width">5</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <child>
@@ -75,9 +75,10 @@
                 <property name="min-content-width">400</property>
                 <property name="min-content-height">200</property>
                 <child>
-                  <object class="GtkTreeView" id="treeview_packages">
+                  <object class="GtkTreeView" id="treeview_backup_list">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="reorderable">True</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
                     </child>
@@ -158,20 +159,17 @@
             <property name="position">2</property>
           </packing>
         </child>
-        <child>
-          <placeholder/>
-        </child>
       </object>
       <packing>
-        <property name="name">appbackup_page2</property>
+        <property name="name">appbackup_page1</property>
         <property name="position">1</property>
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="backup_page3">
+      <object class="GtkBox" id="backup_page2">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="border-width">12</property>
+        <property name="border-width">5</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
@@ -214,7 +212,7 @@
         </child>
       </object>
       <packing>
-        <property name="name">appbackup_page3</property>
+        <property name="name">appbackup_page2</property>
         <property name="position">2</property>
       </packing>
     </child>
@@ -222,7 +220,7 @@
       <object class="GtkBox" id="restore_page1">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="border-width">12</property>
+        <property name="border-width">5</property>
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
@@ -272,7 +270,7 @@
       <object class="GtkBox" id="restore_page2">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="border-width">12</property>
+        <property name="border-width">5</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <child>
@@ -298,10 +296,10 @@
                 <property name="can-focus">True</property>
                 <property name="shadow-type">out</property>
                 <child>
-                  <object class="GtkTreeView" id="treeview_restore_package_list">
+                  <object class="GtkTreeView" id="treeview_restore_list">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
-                    <property name="headers-visible">False</property>
+                    <property name="reorderable">True</property>
                     <property name="enable-search">False</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
@@ -385,7 +383,7 @@
       <object class="GtkBox" id="restore_page3">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="border-width">12</property>
+        <property name="border-width">5</property>
         <property name="orientation">vertical</property>
         <property name="spacing">12</property>
         <child>
