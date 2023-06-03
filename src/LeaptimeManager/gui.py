@@ -70,7 +70,6 @@ class LeaptimeManagerWindow():
 		self.application = application
 		self.settings = Gio.Settings(schema_id="org.mamolinux.leaptime-manager")
 		self.icon_theme = Gtk.IconTheme.get_default()
-		self.UserData = UserData()
 		
 		# Set the Glade files
 		MainWindow = UI_PATH+"MainWindow.ui"
@@ -81,9 +80,8 @@ class LeaptimeManagerWindow():
 		self.builder.add_from_file(app_backup_stack)
 		self.builder.add_from_file(user_data_stack)
 		
-		self.window = self.builder.get_object("main_window")
-		
 		# Create variables to quickly access dynamic widgets
+		self.window = self.builder.get_object("main_window")
 		self.main_box = self.builder.get_object("main_box")
 		
 		# App backup stack
@@ -107,8 +105,14 @@ class LeaptimeManagerWindow():
 		self.new_button = self.builder.get_object("add_button")
 		self.remove_button = self.builder.get_object("remove_button")
 		
+		# nav buttons
+		self.button_back = self.builder.get_object("button_back")
+		self.button_forward = self.builder.get_object("button_forward")
+		self.button_apply = self.builder.get_object("button_apply")
+		
 		self.apt_package_button.connect("clicked", self.show_appbackup_stack)
 		self.user_data_button.connect("clicked", self.show_UserData_stack)
+		
 		self.new_button.connect("clicked", self.on_add_button)
 		
 		# Menubar
@@ -143,6 +147,10 @@ class LeaptimeManagerWindow():
 		menu.append(item)
 		# Show all drop-down menu options
 		menu.show_all()
+		
+		self.UserData = UserData()
+		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack,
+			    self.button_back, self.button_forward, self.button_apply)
 	
 	def open_about(self, signal, widget):
 		about_window = AboutWindow(widget)
@@ -155,22 +163,14 @@ class LeaptimeManagerWindow():
 	def on_quit(self, widget):
 		self.application.quit()
 	
-	def backup_apps(self, widget):
-		print("backing up apps")
-		
-		self.AppBackup.choose_dirs(self.window)
-		self.AppBackup.backup_pkg_save_to_file()
-	
-	def restore_apps(self, widget):
-		print("Restoring apps")
-	
 	def show_appbackup_stack(self, widget):
+		module_logger.debug(_("Showing app backup stack."))
 		# hide all other modules except app backup
-		self.appbackup_stack.set_visible(True)
-		self.appbackup_stack.set_sensitive(True)
 		self.userdata_stack.set_visible(False)
 		self.userdata_stack.set_sensitive(False)
 		self.user_data = False
+		self.appbackup_stack.set_visible(True)
+		self.appbackup_stack.set_sensitive(True)
 		self.app_backup = True
 	
 	def show_UserData_stack(self, widget):
@@ -183,10 +183,12 @@ class LeaptimeManagerWindow():
 		self.app_backup = False
 	
 	def on_add_button(self, widget):
+		module_logger.debug(_("Add button clicked."))
 		if self.user_data:
 			self.UserData.userData(self.window)
-		elif self.app_backup:
-			self.backup_apps
+		if self.app_backup:
+			module_logger.debug(_("Starting app backup process"))
+			self.AppBackup.backup_apps(widget)
 
 def run_LTMwindow():
 	application = leaptime_manager("org.mamolinux.leaptime-manager", Gio.ApplicationFlags.FLAGS_NONE)

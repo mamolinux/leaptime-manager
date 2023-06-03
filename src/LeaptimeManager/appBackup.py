@@ -33,7 +33,7 @@ import os
 import time
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk, GLib
 
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR
@@ -49,36 +49,98 @@ module_logger = logging.getLogger('LeaptimeManager.appBackup')
 
 class AppBackup():
 	
-	def __init__(self) -> None:
-		module_logger.info("Work in progress...")
-	
-	def choose_dirs(self, widget):
-		# Choose directory to save app backup files
-		dialog = Gtk.FileChooserDialog(
-			title="Please choose a folder",
-			action=Gtk.FileChooserAction.SELECT_FOLDER,
-		)
-		dialog.set_transient_for(widget)
-		dialog.add_buttons(
-			Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, "Select", Gtk.ResponseType.OK
-		)
-		dialog.set_default_size(800, 400)
-
-		response = dialog.run()
-		if response == Gtk.ResponseType.OK:
-			print("Select clicked")
-			print("Folder selected: " + dialog.get_filename())
-			module_logger.debug("Folder selected: %s", dialog.get_filename())
-			self.backup_dir = dialog.get_filename()
+	def __init__(self, builder, window, stack, button_back, button_forward, button_apply) -> None:
+		module_logger.info("Initializing App backup module...")
+		self.builder = builder
+		self.window = window
+		self.stack = stack
 		
-		dialog.destroy()
+		# nav buttons
+		self.button_back = button_back
+		self.button_forward = button_forward
+		self.button_apply = button_apply
+		
+		self.button_back.connect("clicked", self.back_callback)
+		self.button_forward.connect("clicked", self.forward_callback)
+		self.button_apply.connect("clicked", self.forward_callback)
+		
+		# packages list
+		t = self.builder.get_object("treeview_packages")
+		self.builder.get_object("button_select").connect("clicked", self.set_selection, t, True, False)
+		self.builder.get_object("button_deselect").connect("clicked", self.set_selection, t, False, False)
+		tog = Gtk.CellRendererToggle()
+		tog.connect("toggled", self.toggled_cb, t)
+		c1 = Gtk.TreeViewColumn("", tog, active=0)
+		c1.set_cell_data_func(tog, self.celldatamethod_checkbox)
+		t.append_column(c1)
+		c2 = Gtk.TreeViewColumn("", Gtk.CellRendererText(), markup=2)
+		t.append_column(c2)
+
+		file_filter = Gtk.FileFilter()
+		file_filter.add_pattern ("*.list")
+		filechooser = self.builder.get_object("filechooserbutton_package_source")
+		filechooser.connect("file-set", self.restore_pkg_validate_file)
+		filechooser.set_filter(file_filter)
 	
-	def backup_pkg(self):
+	def back_callback(self, widget):
+		# Back button
+		page = self.stack.get_visible_child_name()
+		if page == "appbackup_page2":
+			self.stack.set_visible_child_name("appbackup_page1")
+			self.button_back.set_sensitive(False)
+			self.button_back.hide()
+			self.button_forward.hide()
+		elif page == "appbackup_page3":
+			self.stack.set_visible_child_name("appbackup_page2")
+			self.show_apps_list()
+			self.button_back.set_sensitive(True)
+			self.button_back.show()
+			self.button_forward.show()
+	
+	def forward_callback(self, widget):
+		# Go forward
+		page = self.stack.get_visible_child_name()
+		self.builder.get_object("button_back").set_sensitive(True)
+		if page == "appbackup_page2":
+			# show progress of packages page
+			self.stack.set_visible_child_name("appbackup_page3")
+			self.button_forward.set_sensitive(True)
+			self.button_back.show()
+			self.button_forward.show()
+		elif page == "appbackup_page3":
+			self.backup_dest = self.builder.get_object("filechooserbutton_package_dest").get_filename()
+			self.backup_pkg_save_to_file()
+			self.stack.set_visible_child_name("appbackup_page1")
+			self.button_back.hide()
+			self.button_forward.hide()
+	
+	def toggled_cb(self, ren, path, treeview):
+		model = treeview.get_model()
+		iter = model.get_iter(path)
+		if iter != None:
+			checked = model.get_value(iter, 0)
+			model.set_value(iter, 0, (not checked))
+	
+	def celldatamethod_checkbox(self, column, cell, model, iter, user_data):
+		checked = model.get_value(iter, 0)
+		cell.set_property("active", checked)
+	
+	def set_selection(self, w, treeview, selection, check):
+		# Select / deselect all
+		model = treeview.get_model()
+		for row in model:
+			if check:
+				if row[2]:
+					row[0] = selection
+			else:
+				row[0] = selection
+	
+	def backup_pkg_list(self):
 		apt_pkg.init()
 		
-		cache = apt_pkg.Cache()					# all cache packages
+		self.cache = apt_pkg.Cache()					# all cache packages
 		# package object list of all available packages in all repo
-		allpacks_list = [pack for pack in cache.packages]
+		allpacks_list = [pack for pack in self.cache.packages]
 		
 		installer_log = "/var/log/installer/initial-status.gz"
 		if not os.path.isfile(installer_log):
@@ -88,7 +150,7 @@ class AppBackup():
 			installer_log = gzip.open(installer_log, "r").read().decode('utf-8').splitlines()
 		except Exception as e:
 			# There are a number of different exceptions here, but there's only one response
-			print("Could not get initial installed packages list (check /var/log/installer/initial-status.gz): %s" % str(e))
+			module_logger.error("Could not get initial installed packages list (check /var/log/installer/initial-status.gz): %s" % str(e))
 			return None
 		initial_status = [x[9:] for x in installer_log if x.startswith("Package: ")]
 		if not initial_status:
@@ -100,15 +162,11 @@ class AppBackup():
 			# list all installed packages
 			if apt.Package(any, pack).is_installed:
 				installed_pkgs.append(pack.name)
-				# print(pack.name, "is installed.")
-			else:
-				pass
+				# module_logger.debug(pack.name, " is installed.")
 			# list all auto-installed packages
-			if apt_pkg.DepCache(cache).is_auto_installed(pack):
+			if apt_pkg.DepCache(self.cache).is_auto_installed(pack):
 				auto_installed_pkgs.append(pack.name)
-				# print(pack.name, "is auto installed.")
-			else:
-				pass
+				# module_logger.debug(pack.name, " is auto installed.")
 		
 		# sort installed packages and auto-installed packages
 		installed_pkgs.sort()
@@ -130,12 +188,11 @@ class AppBackup():
 	
 	def backup_pkg_save_to_file(self):
 		
-		installed_packages=self.backup_pkg()
 		# Save the package selection
 		filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
-		file_path = os.path.join(self.backup_dir, filename)
+		file_path = os.path.join(self.backup_dest, filename)
 		with open(file_path, "w") as f:
-			for pack in installed_packages:
+			for pack in self.installed_packages:
 				f.write("%s\t%s\n" % (pack, "install"))
 	
 	def restore_pkg_validate_file(self, filechooser):
@@ -153,8 +210,34 @@ class AppBackup():
 							return
 			self.builder.get_object("button_forward").set_sensitive(True)
 		except Exception as detail:
-			self.show_message(_("An error occurred while reading the file."))
-			print (detail)
-
-if __name__ == "__main__":
-	AppBackup()
+			self.show_message(Gtk.window(), _("An error occurred while reading the file."))
+			module_logger.debug(detail)
+	
+	def show_apps_list(self):
+		module_logger.debug(_("Showing backup apps list..."))
+		model = Gtk.ListStore(bool, str, str)
+		model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
+		self.installed_packages = self.backup_pkg_list()
+		
+		package_records = apt_pkg.PackageRecords(self.cache)
+		for item in self.installed_packages:
+			try:
+				name = item
+				if name in self.cache:
+					pkg = self.cache[name]
+					if pkg.current_ver:
+						package_records.lookup(pkg.version_list[0].translated_description.file_list[0])
+						desc = "%s\n<small>%s</small>" % (pkg.name, GLib.markup_escape_text(package_records.short_desc))
+						model.append([True, pkg.name, desc])
+			except Exception as e:
+				print(e)
+		
+		self.builder.get_object("treeview_packages").set_model(model)
+	
+	def backup_apps(self, widget):
+		module_logger.debug(_("Starting app backup list process"))
+		self.stack.set_visible_child_name("appbackup_page2")
+		self.button_back.set_sensitive(True)
+		self.button_back.show()
+		self.button_forward.show()
+		self.show_apps_list()

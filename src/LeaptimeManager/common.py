@@ -32,6 +32,9 @@ import string
 
 from random import choice
 
+# imports from current package
+
+
 # i18n
 APP = 'leaptime-manager'
 LOCALE_DIR = "/usr/share/locale"
@@ -69,3 +72,10 @@ __version__ = open(version_file, 'r').readlines()[0]
 CONFIG_DIR = os.path.expanduser('~/.config/leaptime-manager/')
 CONFIG_FILE = os.path.join(CONFIG_DIR+'config.cfg')
 UI_PATH = os.path.dirname(os.path.realpath(__file__)) + "/ui/"
+
+class leaptime_common():
+	"""
+	Common functions used by other modules.
+	"""
+	def init(self):
+		pass
