@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.40.0 -->
+<!-- Generated with glade 3.40.0 
+
+Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+
+This file is part of LeapTime Manager.
+
+LeapTime Manager is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+LeapTime Manager is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with LeapTime Manager.  If not, see <http://www.gnu.org/licenses/>.
+
+Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+
+-->
 <interface>
   <requires lib="gtk+" version="3.24"/>
   <object class="GtkImage" id="image_deselect_all">

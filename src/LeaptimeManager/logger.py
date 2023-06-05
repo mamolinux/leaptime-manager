@@ -1,19 +1,19 @@
 # Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 #
-# This file is part of leaptime-manager.
+# This file is part of LeapTime Manager.
 #
-# leaptime-manager is free software: you can redistribute it and/or modify
+# LeapTime Manager is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# leaptime-manager is distributed in the hope that it will be useful,
+# LeapTime Manager is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with leaptime-manager. If not, see <http://www.gnu.org/licenses/>
+# along with LeapTime Manager. If not, see <http://www.gnu.org/licenses/>
 # or write to the Free Software Foundation, Inc., 51 Franklin Street,
 # Fifth Floor, Boston, MA 02110-1301, USA..
 #
@@ -41,7 +41,7 @@ _ = gettext.gettext
 class LoggerWindow():
 	"""GUI class for Logger Window.
 	
-	This class displays the Logger window in where the user can see the logs of Leaptime Manager project.
+	This class displays the Logger window in where the user can see the logs of LeapTime Manager project.
 	"""
 	
 	def __init__(self, widget):
@@ -60,7 +60,7 @@ class LoggerWindow():
 		log_builder.add_from_file(logger_ui)
 		self.logger_dlg = log_builder.get_object("logger_dlg")
 		self.logger_dlg.set_transient_for(widget)
-		self.logger_dlg.set_title(_("Leaptime Manager Logs"))
+		self.logger_dlg.set_title(_("LeapTime Manager Logs"))
 		self.logger_dlg.add_buttons(Gtk.STOCK_REFRESH, Gtk.ResponseType.OK)
 		self.logger_dlg.add_buttons(Gtk.STOCK_CLOSE, Gtk.ResponseType.CLOSE)
 		self.logview = log_builder.get_object("log_view")

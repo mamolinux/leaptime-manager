@@ -1,19 +1,19 @@
 # Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 #
-# This file is part of leaptime-manager.
+# This file is part of LeapTime Manager.
 #
-# leaptime-manager is free software: you can redistribute it and/or modify
+# LeapTime Manager is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# leaptime-manager is distributed in the hope that it will be useful,
+# LeapTime Manager is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with leaptime-manager. If not, see <http://www.gnu.org/licenses/>
+# along with LeapTime Manager. If not, see <http://www.gnu.org/licenses/>
 # or write to the Free Software Foundation, Inc., 51 Franklin Street,
 # Fifth Floor, Boston, MA 02110-1301, USA..
 #
@@ -59,7 +59,7 @@ class AboutWindow():
 		self.about_dlg.set_title(_("About"))
 
 		self.about_dlg.set_logo_icon_name("leaptime-manager")
-		self.about_dlg.set_program_name(_("Leaptime Manager"))
+		self.about_dlg.set_program_name(_("LeapTime Manager"))
 		self.about_dlg.set_version(__version__)
 
 		self.about_dlg.set_website_label("Official Website")
