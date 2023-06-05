@@ -108,15 +108,16 @@ class AppBackup():
 		# Back button
 		page = self.stack.get_visible_child_name()
 		module_logger.debug("Previous page: %s", page)
-		if page == "appbackup_page1" or "apprestore_page1":
+		if page == "appbackup_page1" or page == "apprestore_page1":
+			# Show App backup main page
 			self.stack.set_visible_child_name("appbackup_main")
 			self.button_back.set_sensitive(False)
 			self.button_back.hide()
 			self.button_forward.hide()
 		elif page == "appbackup_page2":
+			# show manually installed packages list page
 			self.stack.set_visible_child_name("appbackup_page1")
 			self.show_apps_list()
-			self.button_back.set_sensitive(True)
 			self.button_back.show()
 			self.button_forward.show()
 		elif page == "apprestore_page2":
@@ -131,14 +132,9 @@ class AppBackup():
 			self.button_back.show()
 			self.button_forward.show()
 			self.button_apply.hide()
-		# else:
-		# 	if page == "appbackup_page1":
-		# 		self.builder.get_object("button_back").hide()
-		# 		self.builder.get_object("button_forward").hide()
-		# 	self.stack.set_child_by_name(page)
 		
-		page = self.stack.get_visible_child_name()
-		module_logger.debug("Showing page: %s", page)
+		curr_page = self.stack.get_visible_child_name()
+		module_logger.debug("Showing page: %s", curr_page)
 	
 	def forward_callback(self, widget):
 		# Go forward
@@ -146,7 +142,6 @@ class AppBackup():
 		module_logger.debug("Previous page: %s", page)
 		self.builder.get_object("button_back").set_sensitive(True)
 		if page == "appbackup_page1":
-			# show progress of packages page
 			self.stack.set_visible_child_name("appbackup_page2")
 			self.button_forward.set_sensitive(True)
 			self.button_back.show()
@@ -214,6 +209,9 @@ class AppBackup():
 				row[0] = selection
 	
 	def backup_pkg_list(self):
+		# Update apt cache
+		apt_pkg.init()
+		self.cache = apt_pkg.Cache()					# all cache packages
 		# package object list of all available packages in all repo
 		allpacks_list = [pack for pack in self.cache.packages]
 		
@@ -262,13 +260,16 @@ class AppBackup():
 		return installed_packages
 	
 	def backup_pkg_save_to_file(self):
-		# Save the package selection
-		filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
-		file_path = os.path.join(self.backup_dest, filename)
-		with open(file_path, "w") as f:
-			for row in self.builder.get_object("treeview_backup_list").get_model():
-				if row[0]:
-					f.write("%s\t%s\n" % (row[1], "install"))
+		try:
+			# Save the package selection
+			filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
+			file_path = os.path.join(self.backup_dest, filename)
+			with open(file_path, "w") as f:
+				for row in self.builder.get_object("treeview_backup_list").get_model():
+					if row[0]:
+						f.write("%s\t%s\n" % (row[1], "install"))
+		except:
+			show_message(self.window, _("No backup destination is selected."))
 	
 	def show_apps_list(self):
 		module_logger.debug(_("Showing backup apps list..."))
@@ -404,11 +405,12 @@ class AppBackup():
 	
 	def backup_apps(self, widget):
 		module_logger.debug(_("Starting app backup list process"))
+		# show manually installed packages list page
+		self.show_apps_list()
 		self.stack.set_visible_child_name("appbackup_page1")
 		self.button_back.set_sensitive(True)
 		self.button_back.show()
 		self.button_forward.show()
-		self.show_apps_list()
 	
 	def restore_apps(self, widget):
 		module_logger.debug(_("Starting app restore list process"))
