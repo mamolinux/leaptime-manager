@@ -22,11 +22,12 @@
 
 # import the necessary modules!
 import gettext
+import json
 import locale
 import logging
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR
+from LeaptimeManager.common import APP, LOCALE_DIR, LTM_backend
 
 # i18n
 locale.bindtextdomain(APP, LOCALE_DIR)
@@ -36,3 +37,32 @@ _ = gettext.gettext
 
 # logger
 module_logger = logging.getLogger('LeaptimeManager.database_rw')
+
+class appbackup_db():
+	
+	def __init__(self):
+		self.manager = LTM_backend()
+	
+	def write_db(self, app_db_list, filename, timestamp, repeat, backup_dest):
+		module_logger.debug(_("Writing backup to database."))
+		app_db_dict = {
+			 "name" : timestamp,
+			 "filename" : filename,
+			 "created" : timestamp,
+			 "repeat" : repeat,
+			 "location" : backup_dest
+			}
+		app_db_list.append(app_db_dict)
+		json_object = json.dumps(app_db_list, indent=2)
+		with open(self.manager.app_backup_db, 'w') as f:
+			f.write(json_object)
+			f.write("\n")
+	
+	def read_db(self):
+		module_logger.debug(_("Reading backups from database."))
+		with open(self.manager.app_backup_db, 'r') as f:
+			try:
+				app_db_list = json.load(f)
+			except:
+				app_db_list = []
+			return app_db_list

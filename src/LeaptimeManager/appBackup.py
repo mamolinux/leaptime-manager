@@ -38,10 +38,11 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GLib
 from aptdaemon.enums import *
 from aptdaemon.gtk3widgets import (AptConfirmDialog, AptErrorDialog,
-                                   AptProgressDialog, AptStatusIcon)
+								   AptProgressDialog, AptStatusIcon)
 
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR
+from LeaptimeManager.database_rw import appbackup_db
 from LeaptimeManager.dialogs import show_message
 
 # i18n
@@ -53,6 +54,9 @@ _ = gettext.gettext
 # logger
 module_logger = logging.getLogger('LeaptimeManager.appBackup')
 
+# Constants
+COL_NAME, COL_FILENAME, COL_CREATED, COL_REPEAT, COL_LOCATION = range(5)
+
 class AppBackup():
 	
 	def __init__(self, builder, window, stack, button_back, button_forward, button_apply) -> None:
@@ -62,6 +66,7 @@ class AppBackup():
 		self.stack = stack
 		apt_pkg.init()
 		self.cache = apt_pkg.Cache()					# all cache packages
+		self.db_manager = appbackup_db()
 		
 		# nav buttons
 		self.button_back = button_back
@@ -71,6 +76,39 @@ class AppBackup():
 		self.button_back.connect("clicked", self.back_callback)
 		self.button_forward.connect("clicked", self.forward_callback)
 		self.button_apply.connect("clicked", self.forward_callback)
+		
+		# Existing backup list treeview
+		self.allbackup_tree = self.builder.get_object("treeview_all_appbackup_list")
+		# Saved name column
+		column = Gtk.TreeViewColumn(_("Name"), Gtk.CellRendererText(), text=COL_NAME)
+		column.set_sort_column_id(COL_NAME)
+		column.set_resizable(True)
+		self.allbackup_tree.append_column(column)
+		# Saved file name column
+		column = Gtk.TreeViewColumn(_("File Name"), Gtk.CellRendererText(), text=COL_FILENAME)
+		column.set_sort_column_id(COL_NAME)
+		column.set_resizable(True)
+		self.allbackup_tree.append_column(column)
+		# Created on column
+		column = Gtk.TreeViewColumn(_("Created"), Gtk.CellRendererText(), text=COL_CREATED)
+		column.set_sort_column_id(COL_CREATED)
+		column.set_resizable(True)
+		self.allbackup_tree.append_column(column)
+		# Repeat job column
+		column = Gtk.TreeViewColumn(_("Repeat"), Gtk.CellRendererText(), text=COL_REPEAT)
+		column.set_sort_column_id(COL_REPEAT)
+		column.set_resizable(True)
+		self.allbackup_tree.append_column(column)
+		# Save location column
+		column = Gtk.TreeViewColumn(_("Location"), Gtk.CellRendererText(), text=COL_LOCATION)
+		column.set_sort_column_id(COL_LOCATION)
+		column.set_resizable(True)
+		self.allbackup_tree.append_column(column)
+		
+		self.allbackup_tree.show()
+		self.model = Gtk.TreeStore(str, str, str, str, str)  # icon, name, browser, webapp
+		self.model.set_sort_column_id(COL_NAME, Gtk.SortType.ASCENDING)
+		self.allbackup_tree.set_model(self.model)
 		
 		# backup packages list treeview
 		t = self.builder.get_object("treeview_backup_list")
@@ -90,7 +128,7 @@ class AppBackup():
 		filechooser = self.builder.get_object("filechooserbutton_package_source")
 		filechooser.connect("file-set", self.restore_pkg_validate_file)
 		filechooser.set_filter(file_filter)
-
+		
 		# choose a package list
 		self.treeview_restore_list = self.builder.get_object("treeview_restore_list")
 		self.builder.get_object("button_select_list").connect("clicked", self.set_selection, self.treeview_restore_list, True, True)
@@ -114,6 +152,7 @@ class AppBackup():
 			self.button_back.set_sensitive(False)
 			self.button_back.hide()
 			self.button_forward.hide()
+			self.load_mainpage()
 		elif page == "appbackup_page2":
 			# show manually installed packages list page
 			self.stack.set_visible_child_name("appbackup_page1")
@@ -152,6 +191,7 @@ class AppBackup():
 			self.stack.set_visible_child_name("appbackup_main")
 			self.button_back.hide()
 			self.button_forward.hide()
+			self.load_mainpage()
 		elif page == "apprestore_page1":
 			self.stack.set_visible_child_name("apprestore_page2")
 			self.button_back.show()
@@ -183,6 +223,7 @@ class AppBackup():
 			self.button_back.set_sensitive(False)
 			self.button_back.hide()
 			self.button_forward.hide()
+			self.load_mainpage()
 		
 		page = self.stack.get_visible_child_name()
 		module_logger.debug("Showing page: %s", page)
@@ -194,7 +235,7 @@ class AppBackup():
 			checked = model.get_value(iter, 0)
 			model.set_value(iter, 0, (not checked))
 	
-	def celldatamethod_checkbox(self, column, cell, model, iter, user_data):
+	def celldatamethod_checkbox(self, column, cell, model, iter, app_list):
 		checked = model.get_value(iter, 0)
 		cell.set_property("active", checked)
 	
@@ -260,15 +301,19 @@ class AppBackup():
 		return installed_packages
 	
 	def backup_pkg_save_to_file(self):
-		try:
+		if self.backup_dest is not None:
 			# Save the package selection
-			filename = time.strftime("%Y-%m-%d-%H%M-packages.list", time.localtime())
-			file_path = os.path.join(self.backup_dest, filename)
+			time_now = time.localtime()
+			self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
+			self.filename = time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
+			file_path = os.path.join(self.backup_dest, self.filename)
 			with open(file_path, "w") as f:
 				for row in self.builder.get_object("treeview_backup_list").get_model():
 					if row[0]:
 						f.write("%s\t%s\n" % (row[1], "install"))
-		except:
+			self.repeat = ""
+			self.db_manager.write_db(self.app_db_list, self.filename, self.timestamp, self.repeat, self.backup_dest)
+		else:
 			show_message(self.window, _("No backup destination is selected."))
 	
 	def show_apps_list(self):
@@ -419,3 +464,17 @@ class AppBackup():
 		self.button_back.show()
 		self.button_forward.show()
 		self.button_apply.hide()
+	
+	def load_mainpage(self):
+		module_logger.debug(_("Loading main page with available backups lists."))
+		# Clear treeview and selection
+		self.app_db_list = self.db_manager.read_db()
+		print(self.app_db_list)
+		self.model.clear()
+		for backup in self.app_db_list:
+			iter = self.model.insert_before(None, None)
+			self.model.set_value(iter, COL_NAME, backup["name"])
+			self.model.set_value(iter, COL_FILENAME, backup["filename"])
+			self.model.set_value(iter, COL_CREATED, backup["created"])
+			self.model.set_value(iter, COL_REPEAT, backup["repeat"])
+			self.model.set_value(iter, COL_LOCATION, backup["location"])
