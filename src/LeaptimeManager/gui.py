@@ -174,6 +174,7 @@ class LeaptimeManagerWindow():
 		self.appbackup_stack.set_visible(True)
 		self.appbackup_stack.set_sensitive(True)
 		self.app_backup = True
+		self.AppBackup.load_mainpage()
 	
 	def show_UserData_stack(self, widget):
 		# hide all other modules except user data
