@@ -64,8 +64,6 @@ class AppBackup():
 		self.builder = builder
 		self.window = window
 		self.stack = stack
-		apt_pkg.init()
-		self.cache = apt_pkg.Cache()					# all cache packages
 		self.db_manager = appbackup_db()
 		
 		# nav buttons
@@ -250,9 +248,6 @@ class AppBackup():
 				row[0] = selection
 	
 	def backup_pkg_list(self):
-		# Update apt cache
-		apt_pkg.init()
-		self.cache = apt_pkg.Cache()					# all cache packages
 		# package object list of all available packages in all repo
 		allpacks_list = [pack for pack in self.cache.packages]
 		
@@ -317,6 +312,9 @@ class AppBackup():
 			show_message(self.window, _("No backup destination is selected."))
 	
 	def show_apps_list(self):
+		# Update apt cache
+		apt_pkg.init()
+		self.cache = apt_pkg.Cache()					# all cache packages
 		module_logger.debug(_("Showing backup apps list..."))
 		model = Gtk.ListStore(bool, str, str)
 		model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
@@ -469,7 +467,7 @@ class AppBackup():
 		module_logger.debug(_("Loading main page with available backups lists."))
 		# Clear treeview and selection
 		self.app_db_list = self.db_manager.read_db()
-		print(self.app_db_list)
+		module_logger.debug(_("Existing app backups: %s" % self.app_db_list))
 		self.model.clear()
 		for backup in self.app_db_list:
 			iter = self.model.insert_before(None, None)
