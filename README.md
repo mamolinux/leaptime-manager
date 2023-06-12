@@ -37,17 +37,24 @@ This App is currently under **development**. So, This is not what a regular user
 	</a>
 </p>
 
-Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems.
+Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems. The main purpose of this application is to help user backup and restore every component on a Debian/Ubuntu based system ergonimically, elegantly and separately.
 
 ## ToDo List
 **Software:**
-1. [ ] Apt backup
-2. [ ] Apt restore
+1. [x] Apt backup
+2. [x] Apt restore
+
 **Data:**
-1. [ ] Sync mode using `rsync` (Continuously synchonizes another directory/files)
-2. [ ] Backup Mode (Creates incremental backups)
-	1. [ ] Using `rsync`
-	2. [ ] By creating compressed tarballs (Reduces disk-space usage)
+Data backup should have two modes:
+1. [ ] Sync mode- where file(s) or directories are synchronized continuously with another keeping only the latest version. Useful for backing up static data like some script which are updated time to time or security keys like ssh or gpg keys. Use one of the following modes
+    1. [ ] Compressed backup - tar ball of data (Reduces disk-space usage)
+    2. [ ] Rsync: using `rsync`
+    3. [ ] Add option for user-defined time interval to sync data
+
+3. [ ] Incremental mode: Where incremental backups are created like any other backup app. Use one of the following modes
+    1. [ ] Compressed backup - tar ball of data (Reduces disk-space usage)
+    2. [ ] Rsync: using `rsync`
+    1. [ ] Add option for user-defined time interval to backup data
 
 ## Download Latest Version
 <p align="center">
@@ -57,12 +64,14 @@ Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for 
 </p>
 
 ## Features and Screenshots
-
-The main purpose of this application is to ...[Coming Soon or create a PR.]
+1. Backup manually installed applications to a list
+2. Restore applications from backup lists
 
 <p align="center">
 	<img src="https://github.com/hsbasu/leaptime-manager/raw/gh-pages/screenshots/main-window-light.png" alt="Main Window (Light)">
 	<img src="https://github.com/hsbasu/leaptime-manager/raw/gh-pages/screenshots/main-window-dark.png" alt="Main Window (Dark)">
+	<img src="https://github.com/hsbasu/leaptime-manager/raw/gh-pages/screenshots/apt-backup-main-light.png" alt="App backup main page (Light)">
+	<img src="https://github.com/hsbasu/leaptime-manager/raw/gh-pages/screenshots/apt-backup-main-dark.png" alt="App backup main page (Dark)">
 </p>
 
 
@@ -85,6 +94,7 @@ The main purpose of this application is to ...[Coming Soon or create a PR.]
 ## Dependencies
 ```
 python3
+python3-aptdaemon.gtk3widgets
 python3-configobj
 python3-gi
 python3-setproctitle
@@ -95,8 +105,8 @@ To use or test LeapTime Manager, you need these dependencies to be installed.
 ### Debian/Ubuntu based distro
 To install dependencies on Debian/Ubuntu based systems, run:
 ```
-sudo apt install python3 python3-configobj python3-gi \
-python3-setproctitle python3-tldextract redshift
+sudo apt install python3 python3-aptdaemon.gtk3widgets python3-configobj \
+python3-gi python3-setproctitle python3-tldextract
 ```
 **Note**: If you are using `gdebi` to install **LeapTime Manager** from a `.deb` file, it will automatically install the dependencies and you can skip this step.
 
@@ -115,19 +125,20 @@ cd leaptime-manager-master
 ```
 
 1. **Option 1:** Manually copying necessary files to root (`/`). For that, follow the steps below:
-	1. [**Optional**] To make translations/locales in languages other than **English**, run:
+	1. [**Optional**] [**In Progress**] To make translations/locales in languages other than **English**, run:
 		```
 		make
 		```
 		from the `leaptime-manager-master` in a terminal. It will create the translations/locales in `usr/share/locale`.
 	
-	2. Copy the contents of `usr/` to `/usr/`:
+	2. Install python package using `pip3`:
 		```
-		sudo cp -R usr /
+		sudo pip3 install .
 		```
+		It will install all files under `/usr/local/`
 	3. Compile `schemas` using:
 		```
-		sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+		sudo glib-compile-schemas /usr/local/share/glib-2.0/schemas
 		```
 
 2. **Option 2:** Build a debian package and install it. To build a debian package on your own:
