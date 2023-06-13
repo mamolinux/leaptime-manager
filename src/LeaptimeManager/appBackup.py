@@ -446,7 +446,8 @@ class AppBackup():
 		ac = aptdaemon.client.AptClient()
 		ac.install_packages(packages, reply_handler=self.apt_simulate_trans, error_handler=self.apt_on_error)
 	
-	def backup_apps(self, widget):
+	def on_backup_apps(self, widget):
+		# On add button press
 		module_logger.debug(_("Starting app backup list process"))
 		# show manually installed packages list page
 		self.show_apps_list()
@@ -455,7 +456,20 @@ class AppBackup():
 		self.button_back.show()
 		self.button_forward.show()
 	
-	def restore_apps(self, widget):
+	def on_edit_appbackup(self, widget):
+		# On edit button press
+		module_logger.debug(_("Editing backup file from database list."))
+	
+	def on_browse_appbackup(self, widget):
+		# On browse button press
+		module_logger.debug(_("Opening backup file from database list."))
+	
+	def on_remove_appbackup(self, widget):
+		# On remove button press
+		module_logger.debug(_("Removing backup from database list."))
+	
+	def on_restore_apps(self, widget):
+		# On restore button press
 		module_logger.debug(_("Starting app restore list process"))
 		self.stack.set_visible_child_name("apprestore_page1")
 		self.button_back.set_sensitive(True)
