@@ -3,11 +3,11 @@
 # output every command that modifies files on the build system.
 # export DH_VERBOSE = 1
 
-export PYBUILD_NAME=leaptime-manager
+export PYBUILD_NAME=LeaptimeManager
 export PYBUILD_INSTALL_ARGS_python3=--install-scripts=usr/bin
 
 %:
-	dh $@ --buildsystem=pybuild
+	dh $@ --with python3 --buildsystem=pybuild
 
 
 # If you need to rebuild the Sphinx documentation
@@ -24,7 +24,7 @@ export PYBUILD_INSTALL_ARGS_python3=--install-scripts=usr/bin
 #	docs/ usr/share/man/man1 # Manpage generator
 
 override_dh_install:
-	dh_install
+	dh_install -O--buildsystem=pybuild
 	rm -f debian/leaptime-manager/usr/share/glib-2.0/schemas/gschemas.compiled
 	rm -rf debian/leaptime-manager/usr/lib/python*/dist-packages/LeaptimeManager/__pycache__
 
