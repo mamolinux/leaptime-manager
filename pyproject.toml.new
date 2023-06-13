@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leaptime-manager"
+authors = [
+    {name = "Himadri Sekhar Basu", email = "hsb10@iitbbs.ac.in"},
+]
+description = "All-in-one GUI based backup manager"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {file = "LICENSE"}
+requires-python = ">=3.6"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: X11 Applications :: GTK",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved",
+  " :: GNU General Public License v2 or later (GPLv3+)",
+  "Operating System :: POSIX",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Administration",
+]
+dependencies = [
+	"aptdaemon",
+  "configobj",
+  "PyGObject",
+  "python-apt",
+  "setproctitle",
+]
+dynamic = ["version"]
+
+[project.scripts]
+leaptime-manager = "LeaptimeManager.main:start_LTMCli"
+
+[project.urls]
+Homepage = "https://hsbasu.github.io/leaptime-manager"
+Repository = "https://www.github.com/mamolinux/leaptime-manager"
+"Bug Tracker" = "https://www.github.com/mamolinux/leaptime-manager/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {file = "src/LeaptimeManager/VERSION"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = true
+
+[tool.setuptools.package-data]
+"*" = ["*VERSION", "*.ui"]
