@@ -1,3 +1,53 @@
+leaptime-manager (1.0.2) stable; urgency=medium
+
+  * new icon (#23)
+  * Add apps backup module; closes #1 (#24)
+    - Mostly copied from mintbackup tool's code
+    - Only uses apt cache. So compatible with all
+      debian derivatives
+    - lets user choose the destination directory
+      rather than some predefined location
+    - the backup is compatible with mintbackup
+  * fix lintian errors and warnings (#26)
+  * Update readme with version 1.0.1 (#25)
+    - Update name
+  * Add apps restore module; closes #3 (#27)
+    - Mostly copied from mintbackup tool's code
+    - Only uses apt cache. So compatible with all
+      debian derivatives
+    - lets user choose the source directory
+  * FIx dependency problems while testing (#28)
+    - Add python3-apt and python3-aptdaemon.gtk3widgets
+      as dependency
+    - Update workflows
+  * Clean up and update app backup module ui (#29)
+  * Update app name and copyright year (#30)
+  * Fix back button press on App backup page 2 (#31)
+    - Back button press on App backup page 2
+      returns to app backup main page.
+      Fixed and now it should return to page 1
+  * Show available app backups list on the main page (#32)
+    - Write backups info to a database
+    - Read from database for avaiable backups list
+    - Use json to create and load backups database
+  * Update and modify copyrights in ui files (#33)
+  * Update apt cache only when needed (#34)
+  * Update readme with new documentation (#38)
+    - Update dependecies
+    - Update description
+    - Update manual installion info
+    - Update features and screenshots
+  * Update python and debian packaging (#39)
+    - Calcuate debian dependecies from python dependecies
+    - Fix debian lintians
+  * Update desktop files and deprecating setup.cfg (#40)
+  * Add edit, browse and remove buttons (#41)
+    - Add inactive buttons and functions for
+      editing, browsing and removing app backup
+    - rename functions for backup and restore
+
+ -- Himadri Sekhar Basu <hsb10@iitbbs.ac.in>  Wed, 14 Jun 2023 01:29:22 +0530
+
 leaptime-manager (1.0.1) stable; urgency=medium
 
   * Create README.md
