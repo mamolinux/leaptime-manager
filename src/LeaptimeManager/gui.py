@@ -104,7 +104,12 @@ class LeaptimeManagerWindow():
 		
 		self.new_button = self.builder.get_object("add_button")
 		self.restore_button = self.builder.get_object("restore_button")
+		self.edit_button = self.builder.get_object("edit_button")
+		self.browse_button = self.builder.get_object("browse_button")
 		self.remove_button = self.builder.get_object("remove_button")
+		self.edit_button.set_sensitive(False)
+		self.browse_button.set_sensitive(False)
+		self.remove_button.set_sensitive(False)
 		
 		# nav buttons
 		self.button_back = self.builder.get_object("button_back")
@@ -116,6 +121,9 @@ class LeaptimeManagerWindow():
 		
 		self.new_button.connect("clicked", self.on_add_button)
 		self.restore_button.connect("clicked", self.on_restore_button)
+		self.edit_button.connect("clicked", self.on_edit_button)
+		self.browse_button.connect("clicked", self.on_browse_button)
+		self.remove_button.connect("clicked", self.on_remove_button)
 		
 		# Menubar
 		accel_group = Gtk.AccelGroup()
@@ -191,15 +199,35 @@ class LeaptimeManagerWindow():
 			self.UserData.userData(self.window)
 		if self.app_backup:
 			module_logger.debug(_("Starting app backup process..."))
-			self.AppBackup.backup_apps(widget)
+			self.AppBackup.on_backup_apps(widget)
 	
 	def on_restore_button(self, widget):
 		if self.user_data:
 			pass
 		elif self.app_backup:
 			module_logger.debug(_("Starting app restore process..."))
-			self.AppBackup.restore_apps(widget)
+			self.AppBackup.on_restore_apps(widget)
 	
+	def on_edit_button(self, widget):
+		if self.user_data:
+			pass
+		elif self.app_backup:
+			module_logger.debug(_("Starting app backup editing process..."))
+			self.AppBackup.on_edit_appbackup(widget)
+	
+	def on_browse_button(self, widget):
+		if self.user_data:
+			pass
+		elif self.app_backup:
+			module_logger.debug(_("Starting app backup browsing process..."))
+			self.AppBackup.on_browse_appbackup(widget)
+	
+	def on_remove_button(self, widget):
+		if self.user_data:
+			pass
+		elif self.app_backup:
+			module_logger.debug(_("Starting app backup remove process..."))
+			self.AppBackup.on_remove_appbackup(widget)
 
 def run_LTMwindow():
 	application = leaptime_manager("org.mamolinux.leaptime-manager", Gio.ApplicationFlags.FLAGS_NONE)
