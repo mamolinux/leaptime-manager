@@ -32,8 +32,8 @@ This App is currently under **development**. So, This is not what a regular user
 	<a href="#download-latest-version">
 		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/total?label=Downloads" alt="Downloads">
 	</a>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.1/leaptime-manager_1.0.1_all.deb">
-		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.1/leaptime-manager_1.0.1_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.2/leaptime-manager_1.0.2_all.deb">
+		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.2/leaptime-manager_1.0.2_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
 	</a>
 </p>
 
@@ -60,7 +60,7 @@ Data backup should have two modes:
 <p align="center">
 	<a href="https://github.com/mamolinux/leaptime-manager/zipball/master">Download Source (.zip)</a></br>
 	<a href="https://github.com/mamolinux/leaptime-manager/tarball/master">Download Source (.tar.gz)</a></br>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.1/leaptime-manager_1.0.1_all.deb">Download Binary (.deb)</a>
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.2/leaptime-manager_1.0.2_all.deb">Download Binary (.deb)</a>
 </p>
 
 ## Features and Screenshots
