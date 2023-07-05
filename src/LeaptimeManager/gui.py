@@ -70,6 +70,8 @@ class LeaptimeManagerWindow():
 		self.application = application
 		self.settings = Gio.Settings(schema_id="org.mamolinux.leaptime-manager")
 		self.icon_theme = Gtk.IconTheme.get_default()
+		self.user_data = True
+		self.app_backup = False
 		
 		# Set the Glade files
 		MainWindow = UI_PATH+"MainWindow.ui"
@@ -89,14 +91,12 @@ class LeaptimeManagerWindow():
 		self.main_box.add(self.appbackup_stack)
 		self.appbackup_stack.set_visible(False)
 		self.appbackup_stack.set_sensitive(False)
-		self.app_backup = False
 		
 		# User data stack
 		self.userdata_stack = self.builder.get_object("userdata_stack")
 		self.main_box.add(self.userdata_stack)
 		self.userdata_stack.set_visible(True)
 		self.userdata_stack.set_sensitive(True)
-		self.user_data = True
 		
 		# Buttons
 		self.apt_package_button = self.builder.get_object("apt_package")
@@ -158,9 +158,11 @@ class LeaptimeManagerWindow():
 		# Show all drop-down menu options
 		menu.show_all()
 		
-		self.UserData = UserData()
 		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack,
 			    self.button_back, self.button_forward, self.button_apply)
+		self.UserData = UserData(self.builder, self.window, self.userdata_stack,
+			    self.button_back, self.button_forward, self.button_apply)
+		self.show_UserData_stack(self.window)
 	
 	def open_about(self, signal, widget):
 		about_window = AboutWindow(widget)
@@ -185,25 +187,30 @@ class LeaptimeManagerWindow():
 		self.AppBackup.load_mainpage()
 	
 	def show_UserData_stack(self, widget):
+		module_logger.debug(_("Showing data backup stack."))
+		
 		# hide all other modules except user data
 		self.appbackup_stack.set_visible(False)
 		self.appbackup_stack.set_sensitive(False)
+		self.app_backup = False
 		self.userdata_stack.set_visible(True)
 		self.userdata_stack.set_sensitive(True)
 		self.user_data = True
-		self.app_backup = False
+		self.UserData.load_mainpage()
 	
 	def on_add_button(self, widget):
 		module_logger.debug(_("Add button clicked."))
 		if self.user_data:
-			self.UserData.userData(self.window)
+			module_logger.debug(_("Starting new data backup process..."))
+			self.UserData.on_backup_data(widget)
 		if self.app_backup:
 			module_logger.debug(_("Starting app backup process..."))
 			self.AppBackup.on_backup_apps(widget)
 	
 	def on_restore_button(self, widget):
 		if self.user_data:
-			pass
+			module_logger.debug(_("Starting data restore process..."))
+			self.UserData.on_restore_data(widget)
 		elif self.app_backup:
 			module_logger.debug(_("Starting app restore process..."))
 			self.AppBackup.on_restore_apps(widget)
