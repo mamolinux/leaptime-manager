@@ -68,6 +68,8 @@ __version__ = open(version_file, 'r').readlines()[0]
 
 # Constants
 CONFIG_DIR = os.path.expanduser('~/.config/leaptime-manager/')
+LOG_DIR = os.path.join(CONFIG_DIR+'logs/')
+DATA_LOG_DIR = os.path.join(LOG_DIR+'userdata/')
 CONFIG_FILE = os.path.join(CONFIG_DIR+'config.cfg')
 UI_PATH = os.path.dirname(os.path.realpath(__file__)) + "/ui/"
 
@@ -82,6 +84,11 @@ class LTM_backend():
 		else:
 			module_logger.debug(_("Creating configuration directory."))
 			os.makedirs(CONFIG_DIR)
+		if os.path.exists(DATA_LOG_DIR):
+			module_logger.debug(_("User data log directory exists. Nothing to do."))
+		else:
+			module_logger.debug(_("Creating user data log directory."))
+			os.makedirs(DATA_LOG_DIR)
 		
 		self.config = configparser.ConfigParser()
 		self.save_config()
@@ -98,14 +105,14 @@ class LTM_backend():
 		module_logger.debug(_("Loading existing configurations."))
 		self.config.read(CONFIG_FILE)
 		self.app_backup_db = self.config['db']['app-db']
-		self.userdata_db = self.config['db']['userdata-db']
+		self.data_backup_db = self.config['db']['userdata-db']
 		self.create_db_files()
 	
 	def save_config(self):
 		# Save main config file
 		if os.path.exists(CONFIG_FILE):
 			module_logger.debug(_("Configuration file exists. Validating configurations."))
-			self.validate_config
+			self.validate_config()
 		else:
 			module_logger.debug(_("Creating configuration files."))
 			self.config['db'] = {
@@ -121,8 +128,8 @@ class LTM_backend():
 			with open(self.app_backup_db, 'w') as f:
 				pass
 		# create user data backups database file
-		if not os.path.exists(self.userdata_db):
-			with open(self.userdata_db, 'w') as f:
+		if not os.path.exists(self.data_backup_db):
+			with open(self.data_backup_db, 'w') as f:
 				pass
 	
 	def validate_config(self):
