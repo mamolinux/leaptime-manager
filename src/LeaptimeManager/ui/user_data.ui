@@ -315,9 +315,7 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                         <property name="can-focus">True</property>
                         <property name="headers-visible">False</property>
                         <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="treeview_excludes_selection">
-                            <property name="mode">multiple</property>
-                          </object>
+                          <object class="GtkTreeSelection" id="treeview_excludes_selection"/>
                         </child>
                       </object>
                     </child>
@@ -339,10 +337,9 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                 <property name="spacing">5</property>
                 <property name="layout-style">start</property>
                 <child>
-                  <object class="GtkButton" id="button_remove_exclude">
-                    <property name="label" translatable="yes">Remove</property>
+                  <object class="GtkButton" id="button_add_file">
+                    <property name="label" translatable="yes">Exclude files</property>
                     <property name="visible">True</property>
-                    <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                   </object>
@@ -366,9 +363,10 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button_add_file">
-                    <property name="label" translatable="yes">Exclude files</property>
+                  <object class="GtkButton" id="button_remove_exclude">
+                    <property name="label" translatable="yes">Remove</property>
                     <property name="visible">True</property>
+                    <property name="sensitive">False</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                   </object>
@@ -392,9 +390,6 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
             <property name="position">1</property>
           </packing>
         </child>
-        <child>
-          <placeholder/>
-        </child>
       </object>
       <packing>
         <property name="name">databackup_page2</property>
@@ -412,9 +407,9 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
           <object class="GtkLabel">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="label" translatable="yes">These files and folders usually contain temporary data or preferences for your applications.</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">Hidden files and hidden folders located at the root of your home directory are not included by default.</property>
             <property name="selectable">True</property>
-            <property name="xalign">0</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -423,12 +418,40 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
           </packing>
         </child>
         <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">These files and folders usually contain temporary data or preferences for your applications.</property>
+            <property name="selectable">True</property>
+            <property name="xalign">0</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">start</property>
+            <property name="label" translatable="yes">If you want to include some of them in the backup, please add them to the list below.</property>
+            <property name="selectable">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="spacing">5</property>
             <child>
-              <object class="GtkScrolledWindow" id="scrolledwindow_excludes2">
+              <object class="GtkScrolledWindow" id="scrolledwindow_includes_data">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="shadow-type">out</property>
@@ -465,8 +488,8 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                 <property name="spacing">5</property>
                 <property name="layout-style">start</property>
                 <child>
-                  <object class="GtkButton" id="button_remove_include">
-                    <property name="label" translatable="yes">Remove</property>
+                  <object class="GtkButton" id="button_include_hidden_files">
+                    <property name="label" translatable="yes">Include files</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -491,8 +514,8 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button_include_hidden_files">
-                    <property name="label" translatable="yes">Include files</property>
+                  <object class="GtkButton" id="button_remove_include">
+                    <property name="label" translatable="yes">Remove</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -513,34 +536,6 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
           </object>
           <packing>
             <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">If you want to include some of them in the backup, please add them to the list below.</property>
-            <property name="selectable">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Hidden files and hidden folders located at the root of your home directory are not included by default.</property>
-            <property name="selectable">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
