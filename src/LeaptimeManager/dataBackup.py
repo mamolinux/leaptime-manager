@@ -171,6 +171,23 @@ class UserData():
 		self.builder.get_object("button_remove_exclude").connect("clicked", self.remove_item_from_treeview, treeview)
 		self.builder.get_object("treeview_excludes_selection").connect("changed", self.on_treeview_excludes_selection_changed)
 		
+		# set up inclusions page
+		treeview = self.builder.get_object("treeview_includes")
+		renderer = Gtk.CellRendererPixbuf()
+		column = Gtk.TreeViewColumn("", renderer)
+		column.add_attribute(renderer, "pixbuf", 1)
+		treeview.append_column(column)
+		renderer = Gtk.CellRendererText()
+		column = Gtk.TreeViewColumn('', renderer)
+		column.add_attribute(renderer, "text", 0)
+		treeview.append_column(column)
+		self.includes_model = Gtk.ListStore(str, GdkPixbuf.Pixbuf, str)
+		self.includes_model.set_sort_column_id(0, Gtk.SortType.ASCENDING)
+		treeview.set_model(self.includes_model)
+		self.builder.get_object("button_include_hidden_files").connect("clicked", self.add_item_to_treeview, treeview, self.file_icon, Gtk.FileChooserAction.OPEN, True)
+		self.builder.get_object("button_include_hidden_dirs").connect("clicked", self.add_item_to_treeview, treeview, self.dir_icon, Gtk.FileChooserAction.SELECT_FOLDER, True)
+		self.builder.get_object("button_remove_include").connect("clicked", self.remove_item_from_treeview, treeview)
+		
 	def back_callback(self, widget):
 		# Back button
 		page = self.stack.get_visible_child_name()
@@ -183,6 +200,13 @@ class UserData():
 			self.stack.set_visible_child_name("databackup_page1")
 			self.backup_name_entry.set_text(self.backup_name)
 			self.backup_desc_entry.set_text(self.backup_desc)
+		elif page == "databackup_page3":
+			# show page 2 (excludes page) of data backup
+			self.stack.set_visible_child_name("databackup_page2")
+			self.button_forward.show()
+			self.button_apply.hide()
+			# Cannot be returned from backup page 4 and 5
+			# So, no back button for page 4 and 5
 		
 		page = self.stack.get_visible_child_name()
 		module_logger.debug(_("Showing databackup page: %s on back button"), page)
@@ -205,6 +229,15 @@ class UserData():
 			self.button_forward.hide()
 			self.button_apply.show()
 			self.button_apply.set_label(_("Start Backup"))
+		elif page == "databackup_page3":
+			# Gather info from page 3
+			self.calculate_includes()
+			# show page 4 of data backup
+			self.stack.set_visible_child_name("databackup_page4")
+			self.button_back.hide()
+			self.button_apply.hide()
+			# start the actual backup in another thread
+			_async(self.backup_data)
 		
 		page = self.stack.get_visible_child_name()
 		module_logger.debug(_("Showing databackup page: %s on forward button"), page)
@@ -291,6 +324,20 @@ class UserData():
 					self.excluded_files.append(item)
 		module_logger.debug(_("Excluded files list: %s") % self.excluded_files)
 		module_logger.debug(_("Excluded folder list: %s") % self.excluded_dirs)
+	
+	def calculate_includes(self):
+		# Calculate includes
+		self.included_dirs = []
+		self.included_files = []
+		for row in self.includes_model:
+			item = row[2]
+			if os.path.exists(item):
+				if os.path.isdir(item):
+					self.included_dirs.append(item)
+				else:
+					self.included_files.append(item)
+		module_logger.debug(_("Included files list: %s") % self.included_files)
+		module_logger.debug(_("Included folder list: %s") % self.included_dirs)
 	
 	def backup_data(self):
 		if self.source_dir and self.dest_dir and os.access(self.backup_dest, os.W_OK):
