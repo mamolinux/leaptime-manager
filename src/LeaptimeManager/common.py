@@ -29,6 +29,7 @@ import locale
 import logging
 import os
 import string
+import time
 
 from random import choice
 
@@ -72,6 +73,24 @@ LOG_DIR = os.path.join(CONFIG_DIR+'logs/')
 DATA_LOG_DIR = os.path.join(LOG_DIR+'userdata/')
 CONFIG_FILE = os.path.join(CONFIG_DIR+'config.cfg')
 UI_PATH = os.path.dirname(os.path.realpath(__file__)) + "/ui/"
+
+# Used as a decorator to run things in the background
+def _async(func):
+	def wrapper(*args, **kwargs):
+		thread = Thread(target=func, args=args, kwargs=kwargs)
+		thread.daemon = True
+		thread.start()
+		return thread
+	return wrapper
+
+def _print_timing(func):
+    def wrapper(*arg):
+        t1 = time.time()
+        res = func(*arg)
+        t2 = time.time()
+        module_logger.info('%s took %0.3f ms' % (func.__name__, (t2 - t1) * 1000.0))
+        return res
+    return wrapper
 
 class LTM_backend():
 	"""
