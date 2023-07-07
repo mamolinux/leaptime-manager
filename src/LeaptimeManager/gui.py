@@ -161,7 +161,7 @@ class LeaptimeManagerWindow():
 		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack,
 			    self.button_back, self.button_forward, self.button_apply)
 		self.UserData = UserData(self.builder, self.window, self.userdata_stack,
-			    self.button_back, self.button_forward, self.button_apply)
+			    self.button_back, self.button_forward, self.button_apply, self.user_data)
 		self.show_UserData_stack(self.window)
 	
 	def open_about(self, signal, widget):

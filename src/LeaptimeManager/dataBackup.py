@@ -32,7 +32,8 @@ import tarfile
 import time
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import GdkPixbuf, Gtk
+gi.require_version("XApp", "1.0")
+from gi.repository import GLib, GdkPixbuf, Gtk, XApp
 
 # imports from current package
 from LeaptimeManager.common import APP, LOCALE_DIR, DATA_LOG_DIR, _async, _print_timing
@@ -62,7 +63,7 @@ class UserData():
 	GUI class for backing up and restoring user data
 	using rsync
 	"""
-	def __init__(self, builder, window, stack, button_back, button_forward, button_apply) -> None:
+	def __init__(self, builder, window, stack, button_back, button_forward, button_apply, user_data=False) -> None:
 		module_logger.info(_("Initializing user data backup class..."))
 		self.builder = builder
 		self.window = window
@@ -74,16 +75,16 @@ class UserData():
 		# backup default settings
 		self.tar_archive = None
 		self.follow_links = True
-		self.backup_name = ""
 		
 		# nav buttons
 		self.button_back = button_back
 		self.button_forward = button_forward
 		self.button_apply = button_apply
 		
-		self.button_back.connect("clicked", self.back_callback)
-		self.button_forward.connect("clicked", self.forward_callback)
-		self.button_apply.connect("clicked", self.forward_callback)
+		if user_data:
+			self.button_back.connect("clicked", self.back_callback)
+			self.button_forward.connect("clicked", self.forward_callback)
+			self.button_apply.connect("clicked", self.forward_callback)
 		
 		# entries
 		self.backup_name_entry = self.builder.get_object("data_backup_name")
@@ -188,10 +189,24 @@ class UserData():
 		self.builder.get_object("button_include_hidden_dirs").connect("clicked", self.add_item_to_treeview, treeview, self.dir_icon, Gtk.FileChooserAction.SELECT_FOLDER, True)
 		self.builder.get_object("button_remove_include").connect("clicked", self.remove_item_from_treeview, treeview)
 		
+		# Progressbars
+		self.progressbar = self.builder.get_object("progressbar1")
+		# Errors treeview for backup
+		ren = Gtk.CellRendererText()
+		column = Gtk.TreeViewColumn("", ren)
+		column.add_attribute(ren, "text", 0)
+		self.builder.get_object("treeview_backup_errors").append_column(column)
+		column = Gtk.TreeViewColumn("", ren)
+		column.add_attribute(ren, "text", 1)
+		self.builder.get_object("treeview_backup_errors").append_column(column)
+		
+		self.errors = Gtk.ListStore(str, str)
+	
 	def back_callback(self, widget):
 		# Back button
 		page = self.stack.get_visible_child_name()
 		module_logger.debug(_("Previous page: %s"), page)
+		
 		if page == "databackup_page1" or page == "datarestore_page1":
 			# Show App backup main page
 			self.load_mainpage()
@@ -237,10 +252,20 @@ class UserData():
 			self.button_back.hide()
 			self.button_apply.hide()
 			# start the actual backup in another thread
-			_async(self.backup_data)
+			_async(self.backup_data)()
+		elif page == "databackup_page4":
+			# show page 5 of data backup
+			self.stack.set_visible_child_name("databackup_page5")
+			self.button_forward.hide()
+			self.button_apply.show()
+			self.button_apply.set_label(_("Finish"))
+		elif page == "databackup_page5":
+			# show main page of data backup
+			self.stack.set_visible_child_name("databackup_main")
+			self.load_mainpage()
 		
-		page = self.stack.get_visible_child_name()
-		module_logger.debug(_("Showing databackup page: %s on forward button"), page)
+		curr_page = self.stack.get_visible_child_name()
+		module_logger.debug(_("Showing databackup page: %s on forward button"), curr_page)
 	
 	def on_select_src(self, filechooser):
 		self.source_dir = filechooser.get_filename()
@@ -339,8 +364,160 @@ class UserData():
 		module_logger.debug(_("Included files list: %s") % self.included_files)
 		module_logger.debug(_("Included folder list: %s") % self.included_dirs)
 	
+	def scan_dirs(self, callback):
+		for top, dirs, files in os.walk(top=self.source_dir, onerror=None, followlinks=self.follow_links):
+			if not self.operating:
+				break
+			if top == self.source_dir:
+				# Remove hidden dirs in the root of the source directory
+				dirs[:] = [d for d in dirs if (not d.startswith(".") or os.path.join(top, d) in self.included_dirs)]
+			
+			# Remove excluded dirs in the source directory
+			dirs[:] = [d for d in dirs if (not os.path.join(top, d) in self.excluded_dirs)]
+			
+			for f in files:
+				if not self.operating:
+					break
+				if top == self.source_dir:
+					# Skip hidden files in the root of the source directory, unless included
+					if f.startswith(".") and os.path.join(top, f) not in self.included_files:
+						continue
+				path = os.path.join(top, f)
+				if os.path.exists(path):
+					if os.path.islink(path) and not self.follow_links:
+						# Skip links if appropriate
+						continue
+					if stat.S_ISFIFO(os.stat(path).st_mode):  # If file is a named pipe
+						# Skip named pipes, they can cause program to hang.
+						self.errors.append([_("Skipping %s because named pipes are not supported.") % path, None])
+						continue
+					if path not in self.excluded_files:
+						callback(path)
+	
+	def callback_count(self, path):
+		file_size = os.path.getsize(path)
+		self.total_size += file_size
+		self.num_files += 1
+		if (self.total_size % 10000 == 0):
+			GLib.idle_add(self.progressbar.pulse)
+	
+	def callback_add_to_tar(self, path):
+		try:
+			rel_path = os.path.relpath(path)
+			GLib.idle_add(self.set_progress, rel_path)
+			self.tar_archive.add(path, arcname=rel_path, recursive=False)
+			self.archived_files += 1
+			archived_file_size = os.path.getsize(path)
+			self.archived_file_size += archived_file_size
+		except Exception as detail:
+			print(detail)
+			self.errors.append([path, str(detail)])
+	
+	def set_progress(self, path):
+		fraction = float(self.archived_file_size) / float(self.total_size)
+		int_fraction = int(fraction * 100)
+		self.progressbar.set_fraction(fraction)
+		self.progressbar.set_text(str(int_fraction) + "%")
+		self.builder.get_object("label_current_file").set_label(_("Backing up:"))
+		self.builder.get_object("label_current_file_value").set_label(path)
+		XApp.set_window_progress(self.window, int_fraction)
+	
+	def set_widgets_before_backup(self):
+		self.builder.get_object("button_apply").hide()
+		self.builder.get_object("button_forward").hide()
+		self.builder.get_object("button_back").hide()
+		self.progressbar.set_text(_("Calculating..."))
+	
+	def set_widgets_after_backup(self):
+		if len(self.errors) > 0:
+			self.builder.get_object("label_finished_status").set_markup(_("The following errors occurred:"))
+			self.builder.get_object("image_finished").set_from_icon_name("dialog-error-symbolic", Gtk.IconSize.DIALOG)
+			self.builder.get_object("treeview_backup_errors").set_model(self.errors)
+			self.builder.get_object("win_errors").show_all()
+		else:
+			if not self.operating:
+				self.builder.get_object("label_finished_status").set_markup(_("The backup was aborted."))
+				self.builder.get_object("image_finished").set_from_icon_name("dialog-warning-symbolic", Gtk.IconSize.DIALOG)
+			else:
+				self.builder.get_object("image_finished").set_from_icon_name("success-symbolic", Gtk.IconSize.DIALOG)
+				self.builder.get_object("label_finished_status").set_markup(_("Your files were successfully saved in %s.") % self.tarfilename)
+		self.button_forward.show()
+		self.operating = False
+		self.progressbar.set_fraction(1.0)
+		self.progressbar.set_text(str(100) + "%")
+		XApp.set_window_progress(self.window, 0)
+	
+	@_print_timing
+	def tar_backup(self):
+		# Does the actual copying
+		try:
+			self.operating = True
+			
+			if self.tar_backup_format == "tar":
+				backup_mode = "w"
+			elif self.tar_backup_format == "tar.gz":
+				backup_mode = "w:gz"
+			elif self.tar_backup_format == "tar.bz2":
+				backup_mode = "w:bz2"
+			elif self.tar_backup_format == "tar.xz":
+				backup_mode = "w:xz"
+			else:
+				module_logger.error("Invalid format %s. Please choose between tar, tar.gz, tar.bz2 or tar.xz." % self.tar_backup_format)
+				self.operating = False
+				sys.exit(1)
+			
+			GLib.idle_add(self.set_widgets_before_backup)
+			
+			os.chdir(self.source_dir)
+			
+			# get a count of all the files
+			self.num_files = 0
+			self.total_size = 0
+			
+			self.scan_dirs(self.callback_count)
+			module_logger.debug(_("Number of files: %s, Total size in byte: %s" % (self.num_files, self.total_size)))
+			# Create META file
+			try:
+				of = os.path.join(self.dest_dir, META_FILE)
+				lines = ["num_files: %s\ntotal_size: %s\n" % (self.num_files, self.total_size)]
+				with open(of, "w") as out:
+					out.writelines(lines)
+			except Exception as detail:
+				print(detail)
+				self.errors.append([_("Warning: The meta file could not be saved. This backup will not be accepted for restoration."), None])
+			
+			self.tar_archive = None
+			
+			try:
+				self.tar_archive = tarfile.open(name=self.temp_filename, dereference=self.follow_links, mode=backup_mode, bufsize=1024)
+				metafile = os.path.join(self.dest_dir, META_FILE)
+				self.tar_archive.add(metafile, arcname=META_FILE, recursive=False)
+			except Exception as detail:
+				print(detail)
+				self.errors.append([str(detail), None])
+			
+			self.archived_files = 0
+			self.archived_file_size = 0
+			self.scan_dirs(self.callback_add_to_tar)
+			
+			try:
+				self.tar_archive.close()
+				os.remove(metafile)
+				os.rename(self.temp_filename, self.tarfilename)
+			except Exception as detail:
+				print(detail)
+				self.errors.append([str(detail), None])
+			
+			if self.archived_files < self.num_files:
+				self.errors.append([_("Warning: Some files were not saved. Only %(archived)d files were backed up out of %(total)d.") % {'archived': self.archived_files, 'total': self.num_files}, None])
+			
+			GLib.idle_add(self.set_widgets_after_backup)
+		
+		except Exception as e:
+			print(e)
+	
 	def backup_data(self):
-		if self.source_dir and self.dest_dir and os.access(self.backup_dest, os.W_OK):
+		if self.source_dir and self.dest_dir and os.access(self.dest_dir, os.W_OK):
 			time_now = time.localtime()
 			self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
 			backuplog = DATA_LOG_DIR + self.backup_name + '.log'
@@ -355,7 +532,10 @@ class UserData():
 				module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.dest_dir))
 			else:
 				module_logger.info(_("Starting backup using tarball method..."))
-				# show_message(self.window, _("This feature has not been implented yet. Use rsync method."))
+				self.temp_filename = os.path.join(self.dest_dir, "%s.%s.part" % (self.timestamp, self.tar_backup_format))
+				self.tarfilename = os.path.join(self.dest_dir, "%s.%s" % (self.timestamp, self.tar_backup_format))
+				self.tar_backup()
+				module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.tarfilename))
 			
 			self.repeat = ""
 			self.db_manager.write_db(self.data_db_list, self.backup_name, self.backup_method,
@@ -365,7 +545,7 @@ class UserData():
 				module_logger.error(_("No source directory selected."))
 			if not self.dest_dir:
 				module_logger.error(_("No destination directory selected."))
-			if not os.access(self.backup_dest, os.W_OK):
+			if not os.access(self.dest_dir, os.W_OK):
 				self.show_message(_("You do not have the permission to write in the selected directory."))
 	
 	# Page load definition functions
