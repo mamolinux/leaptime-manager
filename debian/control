@@ -19,6 +19,7 @@ Rules-Requires-Root: no
 Package: leaptime-manager
 Architecture: all
 Depends: python3-aptdaemon.gtk3widgets,
+         gir1.2-xapp-1.0,
          ${python3:Depends},
          ${misc:Depends}
 Description: All-in-one Backup Manager
