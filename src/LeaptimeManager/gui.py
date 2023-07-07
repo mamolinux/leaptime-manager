@@ -86,7 +86,7 @@ class LeaptimeManagerWindow():
 		self.window = self.builder.get_object("main_window")
 		self.main_box = self.builder.get_object("main_box")
 		
-		# App backup stack
+		# Get app backup stack
 		self.appbackup_stack = self.builder.get_object("app_backup_stack")
 		self.main_box.add(self.appbackup_stack)
 		self.appbackup_stack.set_visible(False)
@@ -159,7 +159,7 @@ class LeaptimeManagerWindow():
 		menu.show_all()
 		
 		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack,
-			    self.button_back, self.button_forward, self.button_apply)
+			    self.button_back, self.button_forward, self.button_apply, self.app_backup)
 		self.UserData = UserData(self.builder, self.window, self.userdata_stack,
 			    self.button_back, self.button_forward, self.button_apply, self.user_data)
 		self.show_UserData_stack(self.window)
@@ -177,6 +177,7 @@ class LeaptimeManagerWindow():
 	
 	def show_appbackup_stack(self, widget):
 		module_logger.debug(_("Showing app backup stack."))
+		
 		# hide all other modules except app backup
 		self.userdata_stack.set_visible(False)
 		self.userdata_stack.set_sensitive(False)
