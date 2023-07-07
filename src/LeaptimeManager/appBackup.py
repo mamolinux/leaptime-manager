@@ -59,7 +59,7 @@ COL_NAME, COL_FILENAME, COL_CREATED, COL_REPEAT, COL_LOCATION = range(5)
 
 class AppBackup():
 	
-	def __init__(self, builder, window, stack, button_back, button_forward, button_apply) -> None:
+	def __init__(self, builder, window, stack, button_back, button_forward, button_apply, app_backup=False) -> None:
 		module_logger.info("Initializing App backup module...")
 		self.builder = builder
 		self.window = window
@@ -71,9 +71,10 @@ class AppBackup():
 		self.button_forward = button_forward
 		self.button_apply = button_apply
 		
-		self.button_back.connect("clicked", self.back_callback)
-		self.button_forward.connect("clicked", self.forward_callback)
-		self.button_apply.connect("clicked", self.forward_callback)
+		if app_backup:
+			self.button_back.connect("clicked", self.back_callback)
+			self.button_forward.connect("clicked", self.forward_callback)
+			self.button_apply.connect("clicked", self.forward_callback)
 		
 		# Existing backup list treeview
 		self.allbackup_tree = self.builder.get_object("treeview_all_appbackup_list")
@@ -84,7 +85,7 @@ class AppBackup():
 		self.allbackup_tree.append_column(column)
 		# Saved file name column
 		column = Gtk.TreeViewColumn(_("File Name"), Gtk.CellRendererText(), text=COL_FILENAME)
-		column.set_sort_column_id(COL_NAME)
+		column.set_sort_column_id(COL_FILENAME)
 		column.set_resizable(True)
 		self.allbackup_tree.append_column(column)
 		# Created on column
@@ -146,10 +147,6 @@ class AppBackup():
 		module_logger.debug("Previous page: %s", page)
 		if page == "appbackup_page1" or page == "apprestore_page1":
 			# Show App backup main page
-			self.stack.set_visible_child_name("appbackup_main")
-			self.button_back.set_sensitive(False)
-			self.button_back.hide()
-			self.button_forward.hide()
 			self.load_mainpage()
 		elif page == "appbackup_page2":
 			# show manually installed packages list page
@@ -171,7 +168,7 @@ class AppBackup():
 			self.button_apply.hide()
 		
 		curr_page = self.stack.get_visible_child_name()
-		module_logger.debug("Showing page: %s", curr_page)
+		module_logger.debug("Showing appbackup page: %s on back button", curr_page)
 	
 	def forward_callback(self, widget):
 		# Go forward
@@ -224,7 +221,7 @@ class AppBackup():
 			self.load_mainpage()
 		
 		page = self.stack.get_visible_child_name()
-		module_logger.debug("Showing page: %s", page)
+		module_logger.debug("Showing appbackup page: %s on forward button", page)
 	
 	def toggled_cb(self, ren, path, treeview):
 		model = treeview.get_model()
@@ -446,6 +443,26 @@ class AppBackup():
 		ac = aptdaemon.client.AptClient()
 		ac.install_packages(packages, reply_handler=self.apt_simulate_trans, error_handler=self.apt_on_error)
 	
+	# Stack pages load functions
+	def load_mainpage(self):
+		module_logger.debug(_("Loading main page with available backups lists."))
+		# Clear treeview and selection
+		self.app_db_list = self.db_manager.read_db()
+		module_logger.debug(_("Existing app backups: %s" % self.app_db_list))
+		self.stack.set_visible_child_name("appbackup_main")
+		self.button_back.set_sensitive(False)
+		self.button_back.hide()
+		self.button_forward.hide()
+		self.model.clear()
+		for backup in self.app_db_list:
+			iter = self.model.insert_before(None, None)
+			self.model.set_value(iter, COL_NAME, backup["name"])
+			self.model.set_value(iter, COL_FILENAME, backup["filename"])
+			self.model.set_value(iter, COL_CREATED, backup["created"])
+			self.model.set_value(iter, COL_REPEAT, backup["repeat"])
+			self.model.set_value(iter, COL_LOCATION, backup["location"])
+	
+	# Main button definitions
 	def on_backup_apps(self, widget):
 		# On add button press
 		module_logger.debug(_("Starting app backup list process"))
@@ -456,18 +473,6 @@ class AppBackup():
 		self.button_back.show()
 		self.button_forward.show()
 	
-	def on_edit_appbackup(self, widget):
-		# On edit button press
-		module_logger.debug(_("Editing backup file from database list."))
-	
-	def on_browse_appbackup(self, widget):
-		# On browse button press
-		module_logger.debug(_("Opening backup file from database list."))
-	
-	def on_remove_appbackup(self, widget):
-		# On remove button press
-		module_logger.debug(_("Removing backup from database list."))
-	
 	def on_restore_apps(self, widget):
 		# On restore button press
 		module_logger.debug(_("Starting app restore list process"))
@@ -477,16 +482,17 @@ class AppBackup():
 		self.button_forward.show()
 		self.button_apply.hide()
 	
-	def load_mainpage(self):
-		module_logger.debug(_("Loading main page with available backups lists."))
-		# Clear treeview and selection
-		self.app_db_list = self.db_manager.read_db()
-		module_logger.debug(_("Existing app backups: %s" % self.app_db_list))
-		self.model.clear()
-		for backup in self.app_db_list:
-			iter = self.model.insert_before(None, None)
-			self.model.set_value(iter, COL_NAME, backup["name"])
-			self.model.set_value(iter, COL_FILENAME, backup["filename"])
-			self.model.set_value(iter, COL_CREATED, backup["created"])
-			self.model.set_value(iter, COL_REPEAT, backup["repeat"])
-			self.model.set_value(iter, COL_LOCATION, backup["location"])
+	def on_edit_appbackup(self, widget):
+		# On edit button press
+		module_logger.debug(_("Editing backup file from database list."))
+		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
+	def on_browse_appbackup(self, widget):
+		# On browse button press
+		module_logger.debug(_("Opening backup file from database list."))
+		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
+	def on_remove_appbackup(self, widget):
+		# On remove button press
+		module_logger.debug(_("Removing backup from database list."))
+		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
