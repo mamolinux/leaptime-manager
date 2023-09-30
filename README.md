@@ -37,7 +37,7 @@ This App is currently under **development**. So, This is not what a regular user
 	</a>
 </p>
 
-Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems. The main purpose of this application is to help user backup and restore every component on a Debian/Ubuntu based system ergonimically, elegantly and separately.
+Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems. The main purpose of this application is to help user backup and restore every component on a Debian/Ubuntu based system ergonomically, elegantly and separately.
 
 ## ToDo List
 **Software:**
