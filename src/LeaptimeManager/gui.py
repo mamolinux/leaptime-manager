@@ -158,8 +158,9 @@ class LeaptimeManagerWindow():
 		# Show all drop-down menu options
 		menu.show_all()
 		
-		self.UserData = UserData(self.builder, self.window, self.userdata_stack,
-			    self.button_back, self.button_forward, self.button_apply, self.user_data)
+		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack)
+		
+		self.UserData = UserData(self.builder, self.window, self.userdata_stack)
 		self.show_UserData_stack(self.window)
 	
 	def open_about(self, signal, widget):
@@ -183,9 +184,8 @@ class LeaptimeManagerWindow():
 		self.appbackup_stack.set_visible(True)
 		self.appbackup_stack.set_sensitive(True)
 		self.app_backup = True
+		self.AppBackup.reload_nav_btns(self.button_back, self.button_forward, self.button_apply, self.app_backup)
 		
-		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack,
-			    self.button_back, self.button_forward, self.button_apply, self.app_backup)
 		self.AppBackup.load_mainpage()
 	
 	def show_UserData_stack(self, widget):
@@ -198,9 +198,8 @@ class LeaptimeManagerWindow():
 		self.userdata_stack.set_visible(True)
 		self.userdata_stack.set_sensitive(True)
 		self.user_data = True
+		self.UserData.reload_nav_btns(self.button_back, self.button_forward, self.button_apply, self.app_backup)
 		
-		self.UserData = UserData(self.builder, self.window, self.userdata_stack,
-			    self.button_back, self.button_forward, self.button_apply, self.user_data)
 		self.UserData.load_mainpage()
 	
 	def on_add_button(self, widget):

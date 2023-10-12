@@ -63,7 +63,7 @@ class UserData():
 	GUI class for backing up and restoring user data
 	using rsync
 	"""
-	def __init__(self, builder, window, stack, button_back, button_forward, button_apply, user_data=False) -> None:
+	def __init__(self, builder, window, stack) -> None:
 		module_logger.info(_("Initializing user data backup class..."))
 		self.builder = builder
 		self.window = window
@@ -75,16 +75,6 @@ class UserData():
 		# backup default settings
 		self.tar_archive = None
 		self.follow_links = True
-		
-		# nav buttons
-		self.button_back = button_back
-		self.button_forward = button_forward
-		self.button_apply = button_apply
-		
-		if user_data:
-			self.button_back.connect("clicked", self.back_callback)
-			self.button_forward.connect("clicked", self.forward_callback)
-			self.button_apply.connect("clicked", self.forward_callback)
 		
 		# entries
 		self.backup_name_entry = self.builder.get_object("data_backup_name")
@@ -591,3 +581,15 @@ class UserData():
 		self.button_back.show()
 		self.button_forward.show()
 		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
+	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
+		
+		# nav buttons
+		self.button_back = button_back
+		self.button_forward = button_forward
+		self.button_apply = button_apply
+		
+		if app_backup:
+			self.button_back.connect("clicked", self.back_callback)
+			self.button_forward.connect("clicked", self.forward_callback)
+			self.button_apply.connect("clicked", self.forward_callback)

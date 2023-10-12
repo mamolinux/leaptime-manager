@@ -59,22 +59,12 @@ COL_NAME, COL_FILENAME, COL_CREATED, COL_REPEAT, COL_LOCATION = range(5)
 
 class AppBackup():
 	
-	def __init__(self, builder, window, stack, button_back, button_forward, button_apply, app_backup=False) -> None:
+	def __init__(self, builder, window, stack) -> None:
 		module_logger.info("Initializing App backup module...")
 		self.builder = builder
 		self.window = window
 		self.stack = stack
 		self.db_manager = appbackup_db()
-		
-		# nav buttons
-		self.button_back = button_back
-		self.button_forward = button_forward
-		self.button_apply = button_apply
-		
-		if app_backup:
-			self.button_back.connect("clicked", self.back_callback)
-			self.button_forward.connect("clicked", self.forward_callback)
-			self.button_apply.connect("clicked", self.forward_callback)
 		
 		# Existing backup list treeview
 		self.allbackup_tree = self.builder.get_object("treeview_all_appbackup_list")
@@ -496,3 +486,15 @@ class AppBackup():
 		# On remove button press
 		module_logger.debug(_("Removing backup from database list."))
 		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
+	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
+		
+		# nav buttons
+		self.button_back = button_back
+		self.button_forward = button_forward
+		self.button_apply = button_apply
+		
+		if app_backup:
+			self.button_back.connect("clicked", self.back_callback)
+			self.button_forward.connect("clicked", self.forward_callback)
+			self.button_apply.connect("clicked", self.forward_callback)
