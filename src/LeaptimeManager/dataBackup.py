@@ -63,12 +63,18 @@ class UserData():
 	GUI class for backing up and restoring user data
 	using rsync
 	"""
-	def __init__(self, builder, window, stack) -> None:
+	def __init__(self, builder, window, stack, edit_button, browse_button, remove_button) -> None:
 		module_logger.info(_("Initializing user data backup class..."))
 		self.builder = builder
 		self.window = window
 		self.stack = stack
 		self.db_manager = databackup_db()
+		
+		# Acivate action buttons
+		self.edit_button = edit_button
+		self.browse_button = browse_button
+		self.remove_button = remove_button
+		
 		# inidicates whether an operation is taking place.
 		self.operating = False
 		
@@ -122,6 +128,7 @@ class UserData():
 		self.model = Gtk.TreeStore(str, str, str, str, str, str, str)  # name, method, source, destination, created, repeat, comment
 		self.model.set_sort_column_id(COL_NAME, Gtk.SortType.ASCENDING)
 		self.allbackup_tree.set_model(self.model)
+		self.allbackup_tree.get_selection().connect("changed", self.on_backup_selected)
 		
 		# Select source
 		filechooser_src = self.builder.get_object("filechooserbutton_backup_source")
@@ -526,10 +533,19 @@ class UserData():
 				self.tarfilename = os.path.join(self.dest_dir, "%s.%s" % (self.timestamp, self.tar_backup_format))
 				self.tar_backup()
 				module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.tarfilename))
+				data_backup_dict = {
+					"name" : self.backup_name,
+					"method" : self.backup_method,
+					"source" : self.source_dir,
+					"destination" : self.dest_dir,
+					"filename": os.path.basename(self.tarfilename),
+					"created" : self.timestamp,
+					"repeat" : self.repeat,
+					"comment" : self.backup_desc
+					}
 			
-			self.repeat = ""
-			self.db_manager.write_db(self.data_db_list, self.backup_name, self.backup_method,
-				 self.source_dir, self.dest_dir, self.timestamp, self.repeat, self.backup_desc)
+			self.data_db_list.append(data_backup_dict)
+			self.db_manager.write_db(self.data_db_list)
 		else:
 			if not self.source_dir:
 				module_logger.error(_("No source directory selected."))
@@ -563,9 +579,10 @@ class UserData():
 	def on_backup_selected(self, selection):
 		model, iter = selection.get_selected()
 		if iter is not None:
-			self.selected_webapp = model.get_value(iter, COL_NAME)
-			self.remove_button.set_sensitive(True)
+			self.selected_databackup = model.get_value(iter, COL_NAME)
 			self.edit_button.set_sensitive(True)
+			self.browse_button.set_sensitive(True)
+			self.remove_button.set_sensitive(True)
 	
 	# Action definitions for buttons on the main panel at the top
 	def on_backup_data(self, widget):
@@ -581,6 +598,31 @@ class UserData():
 		self.button_back.show()
 		self.button_forward.show()
 		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
+	def on_remove_databackup(self, widget):
+		# On remove button press
+		module_logger.debug(_("Removing data backup from database list."))
+		# remove backup file
+		for i in range(len(self.data_db_list)):
+			if self.data_db_list[i]['name'] == self.selected_databackup:
+				backup_dict = self.data_db_list[i]
+				method = backup_dict["method"]
+				if method == "rsync":
+					pass
+				else:
+					backup_filepath = os.path.join(backup_dict["destination"], backup_dict["filename"])
+				# Remove backup file(s)
+				try:
+					module_logger.info(_("Deleteing file: %s" % backup_filepath))
+					os.remove(backup_filepath)
+				except Exception as e:
+					module_logger.error(_("%s" % e))
+				# remove backup entry from database
+				del self.data_db_list[i]
+				break
+		
+		self.db_manager.write_db(self.data_db_list)
+		self.load_mainpage()
 	
 	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
 		
