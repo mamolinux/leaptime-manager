@@ -43,16 +43,8 @@ class appbackup_db():
 	def __init__(self):
 		self.manager = LTM_backend()
 	
-	def write_db(self, app_db_list, filename, timestamp, repeat, backup_dest):
+	def write_db(self, app_db_list):
 		module_logger.debug(_("Writing backup to database."))
-		app_db_dict = {
-			 "name" : timestamp,
-			 "filename" : filename,
-			 "created" : timestamp,
-			 "repeat" : repeat,
-			 "location" : backup_dest
-			}
-		app_db_list.append(app_db_dict)
 		json_object = json.dumps(app_db_list, indent=2)
 		with open(self.manager.app_backup_db, 'w') as f:
 			f.write(json_object)

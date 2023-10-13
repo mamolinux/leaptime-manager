@@ -30,6 +30,8 @@ import gi
 import locale
 import logging
 import os
+import random
+import string
 import time
 import aptdaemon.client
 import aptdaemon.errors
@@ -59,12 +61,17 @@ COL_NAME, COL_FILENAME, COL_CREATED, COL_REPEAT, COL_LOCATION = range(5)
 
 class AppBackup():
 	
-	def __init__(self, builder, window, stack) -> None:
+	def __init__(self, builder, window, stack, edit_button, browse_button, remove_button) -> None:
 		module_logger.info("Initializing App backup module...")
 		self.builder = builder
 		self.window = window
 		self.stack = stack
 		self.db_manager = appbackup_db()
+		
+		# Acivate action buttons
+		self.edit_button = edit_button
+		self.browse_button = browse_button
+		self.remove_button = remove_button
 		
 		# Existing backup list treeview
 		self.allbackup_tree = self.builder.get_object("treeview_all_appbackup_list")
@@ -95,9 +102,10 @@ class AppBackup():
 		self.allbackup_tree.append_column(column)
 		
 		self.allbackup_tree.show()
-		self.model = Gtk.TreeStore(str, str, str, str, str)  # icon, name, browser, webapp
+		self.model = Gtk.TreeStore(str, str, str, str, str)  # name, filename, created, Repeat, path
 		self.model.set_sort_column_id(COL_NAME, Gtk.SortType.ASCENDING)
 		self.allbackup_tree.set_model(self.model)
+		self.allbackup_tree.get_selection().connect("changed", self.on_appbackup_selected)
 		
 		# backup packages list treeview
 		t = self.builder.get_object("treeview_backup_list")
@@ -285,6 +293,7 @@ class AppBackup():
 	def backup_pkg_save_to_file(self):
 		if self.backup_dest is not None:
 			# Save the package selection
+			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(4))
 			time_now = time.localtime()
 			self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
 			self.filename = time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
@@ -294,7 +303,16 @@ class AppBackup():
 					if row[0]:
 						f.write("%s\t%s\n" % (row[1], "install"))
 			self.repeat = ""
-			self.db_manager.write_db(self.app_db_list, self.filename, self.timestamp, self.repeat, self.backup_dest)
+			app_backup_dict = {
+				"name" : uuid,
+				"filename" : self.filename,
+				"created" : self.timestamp,
+				"repeat" : self.repeat,
+				"location" : self.backup_dest
+			}
+			
+			self.app_db_list.append(app_backup_dict)
+			self.db_manager.write_db(self.app_db_list)
 		else:
 			show_message(self.window, _("No backup destination is selected."))
 	
@@ -485,7 +503,18 @@ class AppBackup():
 	def on_remove_appbackup(self, widget):
 		# On remove button press
 		module_logger.debug(_("Removing backup from database list."))
-		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+		# remove backup file
+		for i in range(len(self.app_db_list)):
+			if self.app_db_list[i]['name'] == self.selected_appbackup:
+				backup_dict = self.app_db_list[i]
+				backup_filepath = os.path.join(backup_dict["location"], backup_dict["filename"])
+				os.remove(backup_filepath)
+				# remove from database
+				del self.app_db_list[i]
+				break
+		
+		self.db_manager.write_db(self.app_db_list)
+		self.load_mainpage()
 	
 	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
 		
@@ -498,3 +527,11 @@ class AppBackup():
 			self.button_back.connect("clicked", self.back_callback)
 			self.button_forward.connect("clicked", self.forward_callback)
 			self.button_apply.connect("clicked", self.forward_callback)
+	
+	def on_appbackup_selected(self, selection):
+		model, iter = selection.get_selected()
+		if iter is not None:
+			self.selected_appbackup = model.get_value(iter, COL_NAME)
+			self.edit_button.set_sensitive(True)
+			self.browse_button.set_sensitive(True)
+			self.remove_button.set_sensitive(True)
