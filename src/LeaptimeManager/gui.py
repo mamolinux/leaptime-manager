@@ -160,7 +160,7 @@ class LeaptimeManagerWindow():
 		
 		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack, self.edit_button, self.browse_button, self.remove_button)
 		
-		self.UserData = UserData(self.builder, self.window, self.userdata_stack)
+		self.UserData = UserData(self.builder, self.window, self.userdata_stack, self.edit_button, self.browse_button, self.remove_button)
 		self.show_UserData_stack(self.window)
 	
 	def open_about(self, signal, widget):
@@ -235,7 +235,8 @@ class LeaptimeManagerWindow():
 	
 	def on_remove_button(self, widget):
 		if self.user_data:
-			pass
+			module_logger.debug(_("Starting data backup remove process..."))
+			self.UserData.on_remove_databackup(widget)
 		elif self.app_backup:
 			module_logger.debug(_("Starting app backup remove process..."))
 			self.AppBackup.on_remove_appbackup(widget)

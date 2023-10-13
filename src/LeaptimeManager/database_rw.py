@@ -64,18 +64,8 @@ class databackup_db():
 	def __init__(self):
 		self.manager = LTM_backend()
 	
-	def write_db(self, data_db_list, name, method, src, dest, timestamp, repeat, comment):
+	def write_db(self, data_db_list):
 		module_logger.debug(_("Writing data backup to database."))
-		data_db_dict = {
-			 "name" : name,
-			 "method" : method,
-			 "source" : src,
-			 "destination" : dest,
-			 "created" : timestamp,
-			 "repeat" : repeat,
-			 "comment" : comment
-			}
-		data_db_list.append(data_db_dict)
 		json_object = json.dumps(data_db_list, indent=2)
 		with open(self.manager.data_backup_db, 'w') as f:
 			f.write(json_object)
