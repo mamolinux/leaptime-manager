@@ -158,7 +158,7 @@ class LeaptimeManagerWindow():
 		# Show all drop-down menu options
 		menu.show_all()
 		
-		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack)
+		self.AppBackup = AppBackup(self.builder, self.window, self.appbackup_stack, self.edit_button, self.browse_button, self.remove_button)
 		
 		self.UserData = UserData(self.builder, self.window, self.userdata_stack)
 		self.show_UserData_stack(self.window)
