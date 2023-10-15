@@ -31,6 +31,7 @@ import sys
 import tarfile
 import time
 
+
 gi.require_version("Gtk", "3.0")
 gi.require_version("XApp", "1.0")
 from gi.repository import GLib, GdkPixbuf, Gtk, XApp
@@ -55,8 +56,151 @@ META_FILE = ".meta"
 
 class UserData_backend():
 	
-	def __init__(self) -> None:
+	def __init__(self, errors) -> None:
 		module_logger.info(_("Initializing User Data backend class..."))
+		self.errors = errors
+	
+	def scan_dirs(self, callback):
+		copy_files = []
+		for top, dirs, files in os.walk(top=self.source_dir, onerror=None, followlinks=self.follow_links):
+			if not self.operating:
+				break
+			if top == self.source_dir:
+				# Remove hidden dirs in the root of the source directory
+				dirs[:] = [d for d in dirs if (not d.startswith(".") or os.path.join(top, d) in self.included_dirs)]
+			
+			# Remove excluded dirs in the source directory
+			dirs[:] = [d for d in dirs if (not os.path.join(top, d) in self.excluded_dirs)]
+			
+			for f in files:
+				if not self.operating:
+					break
+				if top == self.source_dir:
+					# Skip hidden files in the root of the source directory, unless included
+					if f.startswith(".") and os.path.join(top, f) not in self.included_files:
+						continue
+				path = os.path.join(top, f)
+				if os.path.exists(path):
+					if os.path.islink(path) and not self.follow_links:
+						# Skip links if appropriate
+						continue
+					if stat.S_ISFIFO(os.stat(path).st_mode):  # If file is a named pipe
+						# Skip named pipes, they can cause program to hang.
+						self.errors.append([_("Skipping %s because named pipes are not supported.") % path, None])
+						continue
+					if path not in self.excluded_files:
+						callback(path)
+						copy_files.append(path)
+		
+		copy_files.sort()
+		
+		return copy_files
+	
+	def callback_count_total(self, path):
+		file_size = os.path.getsize(path)
+		self.total_size += file_size
+		self.num_files += 1
+	
+	def callback_add_to_tar(self, path, archived_files, archived_file_size, backuplog):
+		try:
+			self.archived_files = archived_files
+			self.archived_file_size = archived_file_size
+			self.backuplog = backuplog
+			rel_path = os.path.relpath(path)
+			self.tar_archive.add(path, arcname=rel_path, recursive=False)
+			self.archived_files += 1
+			archived_file_size = os.path.getsize(path)
+			self.archived_file_size += archived_file_size
+			backuplog = "[%s]: %s    -->    %s\n" % (str(self.archived_files), path, self.tarfilename)
+			module_logger.debug(backuplog)
+			self.backuplog += backuplog
+			return (self.archived_files, self.archived_file_size, self.backuplog)
+		except Exception as detail:
+			print(detail)
+			self.errors.append([path, str(detail)])
+			return
+	
+	def prep_tar_backup(self, operating, follow_links, backup_name, source_dir, dest_dir, excluded_files, excluded_dirs, included_files, included_dirs, tar_backup_format):
+		self.operating = operating
+		self.follow_links = follow_links
+		self.backup_name = backup_name
+		self.source_dir = source_dir
+		self.dest_dir = dest_dir
+		self.excluded_files = excluded_files
+		self.excluded_dirs = excluded_dirs
+		self.included_files = included_files
+		self.included_dirs = included_dirs
+		self.tar_backup_format = tar_backup_format
+		time_now = time.localtime()
+		self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
+		self.backuplog = DATA_LOG_DIR + self.backup_name + '.log'
+		self.temp_filename = os.path.join(self.dest_dir, "%s-%s.%s.part" % (self.backup_name, time.strftime("%Y-%m-%d_%H-%M", time_now), self.tar_backup_format))
+		self.tarfilename = os.path.join(self.dest_dir, "%s-%s.%s" % (self.backup_name, time.strftime("%Y-%m-%d_%H-%M", time_now), self.tar_backup_format))
+		
+		try:
+			if self.tar_backup_format == "tar":
+				self.backup_mode = "w"
+			elif self.tar_backup_format == "tar.gz":
+				self.backup_mode = "w:gz"
+			elif self.tar_backup_format == "tar.bz2":
+				self.backup_mode = "w:bz2"
+			elif self.tar_backup_format == "tar.xz":
+				self.backup_mode = "w:xz"
+			else:
+				module_logger.error("Invalid format %s. Please choose between tar, tar.gz, tar.bz2 or tar.xz." % self.tar_backup_format)
+				self.operating = False
+				sys.exit(1)
+			
+			# get a count of all the files
+			self.num_files = 0
+			self.total_size = 0
+			self.copy_files = self.scan_dirs(self.callback_count_total)
+			module_logger.debug(_("Number of files: %s, Total size in byte: %s" % (self.num_files, self.total_size)))
+			module_logger.debug(_("List of files to copy: %s" % "\n".join(self.copy_files)))
+			
+			# Create META file
+			try:
+				of = os.path.join(self.dest_dir, META_FILE)
+				lines = ["num_files: %s\ntotal_size: %s\n" % (self.num_files, self.total_size)]
+				with open(of, "w") as out:
+					out.writelines(lines)
+			except Exception as detail:
+				print(detail)
+				self.errors.append([_("Warning: The meta file could not be saved. This backup will not be accepted for restoration."), None])
+			
+			return (self.timestamp, self.tarfilename, self.num_files, self.total_size, self.copy_files)
+		except Exception as e:
+			print(e)
+	
+	def add_meta_tar_backup(self):
+		try:
+			self.tar_archive = None
+			
+			try:
+				self.tar_archive = tarfile.open(name=self.temp_filename, dereference=self.follow_links, mode=self.backup_mode, bufsize=1024)
+				metafile = os.path.join(self.dest_dir, META_FILE)
+				self.tar_archive.add(metafile, arcname=META_FILE, recursive=False)
+				os.remove(metafile)
+			except Exception as detail:
+				print(detail)
+				self.errors.append([str(detail), None])
+		except Exception as e:
+			print(e)
+	
+	def finish_tar_backup(self):
+		try:
+			try:
+				self.tar_archive.close()
+				os.rename(self.temp_filename, self.tarfilename)
+			except Exception as detail:
+				print(detail)
+				self.errors.append([str(detail), None])
+			
+			if self.archived_files < self.num_files:
+				self.errors.append([_("Warning: Some files were not saved. Only %(archived)d files were backed up out of %(total)d.") % {'archived': self.archived_files, 'total': self.num_files}, None])
+		
+		except Exception as e:
+			print(e)
 
 class UserData():
 	"""
@@ -79,7 +223,6 @@ class UserData():
 		self.operating = False
 		
 		# backup default settings
-		self.tar_archive = None
 		self.follow_links = True
 		
 		# entries
@@ -198,6 +341,8 @@ class UserData():
 		self.builder.get_object("treeview_backup_errors").append_column(column)
 		
 		self.errors = Gtk.ListStore(str, str)
+		
+		self.manager = UserData_backend(self.errors)
 	
 	def back_callback(self, widget):
 		# Back button
@@ -361,57 +506,8 @@ class UserData():
 		module_logger.debug(_("Included files list: %s") % self.included_files)
 		module_logger.debug(_("Included folder list: %s") % self.included_dirs)
 	
-	def scan_dirs(self, callback):
-		for top, dirs, files in os.walk(top=self.source_dir, onerror=None, followlinks=self.follow_links):
-			if not self.operating:
-				break
-			if top == self.source_dir:
-				# Remove hidden dirs in the root of the source directory
-				dirs[:] = [d for d in dirs if (not d.startswith(".") or os.path.join(top, d) in self.included_dirs)]
-			
-			# Remove excluded dirs in the source directory
-			dirs[:] = [d for d in dirs if (not os.path.join(top, d) in self.excluded_dirs)]
-			
-			for f in files:
-				if not self.operating:
-					break
-				if top == self.source_dir:
-					# Skip hidden files in the root of the source directory, unless included
-					if f.startswith(".") and os.path.join(top, f) not in self.included_files:
-						continue
-				path = os.path.join(top, f)
-				if os.path.exists(path):
-					if os.path.islink(path) and not self.follow_links:
-						# Skip links if appropriate
-						continue
-					if stat.S_ISFIFO(os.stat(path).st_mode):  # If file is a named pipe
-						# Skip named pipes, they can cause program to hang.
-						self.errors.append([_("Skipping %s because named pipes are not supported.") % path, None])
-						continue
-					if path not in self.excluded_files:
-						callback(path)
-	
-	def callback_count(self, path):
-		file_size = os.path.getsize(path)
-		self.total_size += file_size
-		self.num_files += 1
-		if (self.total_size % 10000 == 0):
-			GLib.idle_add(self.progressbar.pulse)
-	
-	def callback_add_to_tar(self, path):
-		try:
-			rel_path = os.path.relpath(path)
-			GLib.idle_add(self.set_progress, rel_path)
-			self.tar_archive.add(path, arcname=rel_path, recursive=False)
-			self.archived_files += 1
-			archived_file_size = os.path.getsize(path)
-			self.archived_file_size += archived_file_size
-		except Exception as detail:
-			print(detail)
-			self.errors.append([path, str(detail)])
-	
-	def set_progress(self, path):
-		fraction = float(self.archived_file_size) / float(self.total_size)
+	def set_progress(self, archived_file_size, total_size, backuplog):
+		fraction = float(archived_file_size) / float(total_size)
 		int_fraction = int(fraction * 100)
 		self.progressbar.set_fraction(fraction)
 		self.progressbar.set_text(str(int_fraction) + "%")
@@ -444,80 +540,37 @@ class UserData():
 		self.progressbar.set_text(str(100) + "%")
 		XApp.set_window_progress(self.window, 0)
 	
-	@_print_timing
 	def tar_backup(self):
 		# Does the actual copying
 		try:
 			self.operating = True
 			
-			if self.tar_backup_format == "tar":
-				backup_mode = "w"
-			elif self.tar_backup_format == "tar.gz":
-				backup_mode = "w:gz"
-			elif self.tar_backup_format == "tar.bz2":
-				backup_mode = "w:bz2"
-			elif self.tar_backup_format == "tar.xz":
-				backup_mode = "w:xz"
-			else:
-				module_logger.error("Invalid format %s. Please choose between tar, tar.gz, tar.bz2 or tar.xz." % self.tar_backup_format)
-				self.operating = False
-				sys.exit(1)
+			os.chdir(self.source_dir)
+			
+			self.timestamp, self.tarfilename, self.num_files, self.total_size, self.copy_files = self.manager.prep_tar_backup(self.operating, self.follow_links, self.backup_name, self.source_dir, self.dest_dir, self.excluded_files, self.excluded_dirs, self.included_files, self.included_dirs, self.tar_backup_format)
 			
 			GLib.idle_add(self.set_widgets_before_backup)
 			
-			os.chdir(self.source_dir)
-			
-			# get a count of all the files
-			self.num_files = 0
-			self.total_size = 0
-			
-			self.scan_dirs(self.callback_count)
-			module_logger.debug(_("Number of files: %s, Total size in byte: %s" % (self.num_files, self.total_size)))
-			# Create META file
-			try:
-				of = os.path.join(self.dest_dir, META_FILE)
-				lines = ["num_files: %s\ntotal_size: %s\n" % (self.num_files, self.total_size)]
-				with open(of, "w") as out:
-					out.writelines(lines)
-			except Exception as detail:
-				print(detail)
-				self.errors.append([_("Warning: The meta file could not be saved. This backup will not be accepted for restoration."), None])
-			
-			self.tar_archive = None
-			
-			try:
-				self.tar_archive = tarfile.open(name=self.temp_filename, dereference=self.follow_links, mode=backup_mode, bufsize=1024)
-				metafile = os.path.join(self.dest_dir, META_FILE)
-				self.tar_archive.add(metafile, arcname=META_FILE, recursive=False)
-			except Exception as detail:
-				print(detail)
-				self.errors.append([str(detail), None])
+			self.manager.add_meta_tar_backup()
 			
 			self.archived_files = 0
 			self.archived_file_size = 0
-			self.scan_dirs(self.callback_add_to_tar)
+			self.backuplog = ""
+			for path in self.copy_files:
+				self.archived_files, self.archived_file_size, self.backuplog = self.manager.callback_add_to_tar(path, self.archived_files, self.archived_file_size, self.backuplog)
+				GLib.idle_add(self.set_progress, self.archived_file_size, self.total_size, self.backuplog)
 			
-			try:
-				self.tar_archive.close()
-				os.remove(metafile)
-				os.rename(self.temp_filename, self.tarfilename)
-			except Exception as detail:
-				print(detail)
-				self.errors.append([str(detail), None])
-			
-			if self.archived_files < self.num_files:
-				self.errors.append([_("Warning: Some files were not saved. Only %(archived)d files were backed up out of %(total)d.") % {'archived': self.archived_files, 'total': self.num_files}, None])
+			self.manager.finish_tar_backup()
 			
 			GLib.idle_add(self.set_widgets_after_backup)
 		
 		except Exception as e:
 			print(e)
 	
+	@_print_timing
 	def backup_data(self):
 		if self.source_dir and self.dest_dir and os.access(self.dest_dir, os.W_OK):
-			time_now = time.localtime()
-			self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
-			backuplog = DATA_LOG_DIR + self.backup_name + '.log'
+			self.repeat = ""
 			if self.backup_method == "rsync":
 				module_logger.info(_("Starting backup using Rsync method..."))
 				show_message(self.window, _("This feature has not been implented yet. Use tarball method."))
@@ -529,8 +582,6 @@ class UserData():
 				module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.dest_dir))
 			else:
 				module_logger.info(_("Starting backup using tarball method..."))
-				self.temp_filename = os.path.join(self.dest_dir, "%s.%s.part" % (self.timestamp, self.tar_backup_format))
-				self.tarfilename = os.path.join(self.dest_dir, "%s.%s" % (self.timestamp, self.tar_backup_format))
 				self.tar_backup()
 				module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.tarfilename))
 				data_backup_dict = {
