@@ -198,7 +198,7 @@ class LeaptimeManagerWindow():
 		self.userdata_stack.set_visible(True)
 		self.userdata_stack.set_sensitive(True)
 		self.user_data = True
-		self.UserData.reload_nav_btns(self.button_back, self.button_forward, self.button_apply, self.app_backup)
+		self.UserData.reload_nav_btns(self.button_back, self.button_forward, self.button_apply, self.user_data)
 		
 		self.UserData.load_mainpage()
 	
