@@ -617,6 +617,26 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
             <property name="position">2</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="shadow-type">in</property>
+            <child>
+              <object class="GtkTextView" id="databackup_log_view">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="name">databackup_page4</property>

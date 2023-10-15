@@ -112,7 +112,7 @@ class UserData_backend():
 			archived_file_size = os.path.getsize(path)
 			self.archived_file_size += archived_file_size
 			backuplog = "[%s]: %s    -->    %s\n" % (str(self.archived_files), path, self.tarfilename)
-			module_logger.debug(backuplog)
+			module_logger.info(backuplog)
 			self.backuplog += backuplog
 			return (self.archived_files, self.archived_file_size, self.backuplog)
 		except Exception as detail:
@@ -511,8 +511,10 @@ class UserData():
 		int_fraction = int(fraction * 100)
 		self.progressbar.set_fraction(fraction)
 		self.progressbar.set_text(str(int_fraction) + "%")
-		self.builder.get_object("label_current_file").set_label(_("Backing up:"))
-		self.builder.get_object("label_current_file_value").set_label(path)
+		self.logview = self.builder.get_object("databackup_log_view")
+		self.logview.set_editable(False)
+		self.logview.set_wrap_mode(Gtk.WrapMode.WORD)
+		self.logview.get_buffer().set_text(backuplog)
 		XApp.set_window_progress(self.window, int_fraction)
 	
 	def set_widgets_before_backup(self):
@@ -627,6 +629,18 @@ class UserData():
 		self.button_forward.hide()
 		self.button_apply.hide()
 	
+	def reload_nav_btns(self, button_back, button_forward, button_apply, user_data=False):
+		module_logger.debug(_("Reloading navigation buttons for data backup."))
+		# nav buttons
+		self.button_back = button_back
+		self.button_forward = button_forward
+		self.button_apply = button_apply
+		
+		if user_data:
+			self.button_back.connect("clicked", self.back_callback)
+			self.button_forward.connect("clicked", self.forward_callback)
+			self.button_apply.connect("clicked", self.forward_callback)
+	
 	def on_backup_selected(self, selection):
 		model, iter = selection.get_selected()
 		if iter is not None:
@@ -674,15 +688,3 @@ class UserData():
 		
 		self.db_manager.write_db(self.data_db_list)
 		self.load_mainpage()
-	
-	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
-		
-		# nav buttons
-		self.button_back = button_back
-		self.button_forward = button_forward
-		self.button_apply = button_apply
-		
-		if app_backup:
-			self.button_back.connect("clicked", self.back_callback)
-			self.button_forward.connect("clicked", self.forward_callback)
-			self.button_apply.connect("clicked", self.forward_callback)
