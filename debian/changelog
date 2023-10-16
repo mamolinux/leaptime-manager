@@ -1,3 +1,64 @@
+leaptime-manager (1.0.3) stable; urgency=medium
+
+  * Add ui for user data backup (#42)
+  * Update readme with version 1.0.2 (#43)
+  * Setup page 1 for user data backup (#44)
+  * Setup page 2 for user data backup (#45)
+    - Backup on a different thread
+    - Support excluded folder and files
+    - on forward, show page 3
+    - On back button, show page 1
+  * Setup page 3 for user data backup (#45) (#46)
+    - Support included folder and files
+    - on forward, show page 4
+    - On back button, show page 2
+  * Add missing dependencies (#49)
+  * Create backup using tarball; closes #47 (#48)
+    - Support user defined source
+    - Support user defined destination
+    - Support tar formats: tar, tar.gz,
+      tar.bz2 and tar.xz
+    - Track all existing backups
+  * Update codeql action (#50)
+  * Update app backup module (#51)
+    - Fix logging back-forward buttons
+      on debugging
+    - Fix filename column on main page
+    - Load main page using a function
+    - Show not implemented message when
+      clicked on buttons
+  * Fix appbackup and typo in README (#53)
+    - Initialize appbackup module
+      when apt button is clicked
+    - Reinitialize user data module
+      when user_data button is clicked
+  * Fix debian and python packaging (#54)
+    - Remove python-apt from setup.cfg
+    - Add python3-apt to debian packaging
+  * Fix navigation buttons (#55)
+    - We use same back-forward nav buttons
+      for all the modules. This creates confusion
+      when clicking navigation buttons and prevents
+      loading correct pages from the active modules.
+    - Navigation buttons are reloaded every time
+      user chooses different modules.
+  * Add option to remove app backups (#56)
+  * Add option to remove tar backups (#57)
+    - Removes tar file
+    - Removes the backup entry from
+      the database
+  * Create backend for data backup (#58)
+    - Create backend for data backup to
+      support cli environment and sheduled
+      repetitive backup
+  * Fix nav buttons and add data Backup logging (#59)
+    - Fix reloading navigation buttons
+    - Add Backup logging on progress page
+    - Log Backup progress to log file
+  * Add edit and browse option for user data (#60)
+
+ -- Himadri Sekhar Basu <hsb10@iitbbs.ac.in>  Mon, 16 Oct 2023 20:21:01 +0530
+
 leaptime-manager (1.0.2) stable; urgency=medium
 
   * new icon (#23)
