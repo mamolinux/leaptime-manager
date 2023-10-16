@@ -221,14 +221,16 @@ class LeaptimeManagerWindow():
 	
 	def on_edit_button(self, widget):
 		if self.user_data:
-			pass
+			module_logger.debug(_("Starting data backup editing process..."))
+			self.UserData.on_edit_databackup(widget)
 		elif self.app_backup:
 			module_logger.debug(_("Starting app backup editing process..."))
 			self.AppBackup.on_edit_appbackup(widget)
 	
 	def on_browse_button(self, widget):
 		if self.user_data:
-			pass
+			module_logger.debug(_("Starting data backup browsing process..."))
+			self.UserData.on_browse_databackup(widget)
 		elif self.app_backup:
 			module_logger.debug(_("Starting app backup browsing process..."))
 			self.AppBackup.on_browse_appbackup(widget)
