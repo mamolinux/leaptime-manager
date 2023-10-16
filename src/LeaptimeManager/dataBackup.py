@@ -664,6 +664,16 @@ class UserData():
 		self.button_forward.show()
 		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
 	
+	def on_edit_databackup(self, widget):
+		# On edit button press
+		module_logger.debug(_("Editing backup file from database list."))
+		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
+	def on_browse_databackup(self, widget):
+		# On browse button press
+		module_logger.debug(_("Opening backup file/directory from database list."))
+		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+	
 	def on_remove_databackup(self, widget):
 		# On remove button press
 		module_logger.debug(_("Removing data backup from database list."))
