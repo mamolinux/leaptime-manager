@@ -108,23 +108,23 @@ class AppBackup():
 		self.allbackup_tree.get_selection().connect("changed", self.on_appbackup_selected)
 		
 		# backup packages list treeview
-		t = self.builder.get_object("treeview_backup_list")
-		self.builder.get_object("button_select").connect("clicked", self.set_selection, t, True, False)
-		self.builder.get_object("button_deselect").connect("clicked", self.set_selection, t, False, False)
+		self.treeview_backup_list = self.builder.get_object("treeview_backup_list")
+		self.builder.get_object("button_select").connect("clicked", self.set_selection, self.treeview_backup_list, True, False)
+		self.builder.get_object("button_deselect").connect("clicked", self.set_selection, self.treeview_backup_list, False, False)
 		tog = Gtk.CellRendererToggle()
-		tog.connect("toggled", self.toggled_cb, t)
+		tog.connect("toggled", self.toggled_cb, self.treeview_backup_list)
 		c1 = Gtk.TreeViewColumn("", tog, active=0)
 		c1.set_cell_data_func(tog, self.celldatamethod_checkbox)
-		t.append_column(c1)
+		self.treeview_backup_list.append_column(c1)
 		c2 = Gtk.TreeViewColumn("", Gtk.CellRendererText(), markup=2)
-		t.append_column(c2)
+		self.treeview_backup_list.append_column(c2)
 		
 		# File chooser to select existing apps list
 		file_filter = Gtk.FileFilter()
 		file_filter.add_pattern ("*.list")
-		filechooser = self.builder.get_object("filechooserbutton_package_source")
-		filechooser.connect("file-set", self.restore_pkg_validate_file)
-		filechooser.set_filter(file_filter)
+		self.restore_filechooser = self.builder.get_object("filechooserbutton_package_source")
+		self.restore_filechooser.connect("file-set", self.restore_pkg_validate_file)
+		self.restore_filechooser.set_filter(file_filter)
 		
 		# choose a package list
 		self.treeview_restore_list = self.builder.get_object("treeview_restore_list")
@@ -138,6 +138,8 @@ class AppBackup():
 		self.treeview_restore_list.append_column(c1)
 		c2 = Gtk.TreeViewColumn("", Gtk.CellRendererText(), markup=1)
 		self.treeview_restore_list.append_column(c2)
+		
+		self.selected_appbackup = None
 	
 	def back_callback(self, widget):
 		# Back button
@@ -172,7 +174,7 @@ class AppBackup():
 		# Go forward
 		page = self.stack.get_visible_child_name()
 		module_logger.debug("Previous page: %s", page)
-		self.builder.get_object("button_back").set_sensitive(True)
+		self.button_back.set_sensitive(True)
 		if page == "appbackup_page1":
 			self.stack.set_visible_child_name("appbackup_page2")
 			self.button_forward.set_sensitive(True)
@@ -193,7 +195,7 @@ class AppBackup():
 			self.restore_pkg_load_from_file(widget)
 		elif page == "apprestore_page2":
 			inst = False
-			model = self.builder.get_object("treeview_restore_list").get_model()
+			model = self.treeview_restore_list.get_model()
 			if len(model) == 0:
 				show_message(self.window, _("No packages need to be installed."))
 				return
@@ -299,7 +301,7 @@ class AppBackup():
 			self.filename = time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
 			file_path = os.path.join(self.backup_dest, self.filename)
 			with open(file_path, "w") as f:
-				for row in self.builder.get_object("treeview_backup_list").get_model():
+				for row in self.treeview_backup_list.get_model():
 					if row[0]:
 						f.write("%s\t%s\n" % (row[1], "install"))
 			self.repeat = ""
@@ -338,7 +340,7 @@ class AppBackup():
 			except Exception as e:
 				print(e)
 		
-		self.builder.get_object("treeview_backup_list").set_model(model)
+		self.treeview_backup_list.set_model(model)
 	
 	def restore_pkg_validate_file(self, filechooser):
 		self.backup_src = filechooser.get_filename()
@@ -350,9 +352,10 @@ class AppBackup():
 					if line != "":
 						if not line.endswith("\tinstall") and not line.endswith(" install"):
 							show_message(self.window, _("The selected file is not a valid software selection."))
-							self.builder.get_object("button_forward").set_sensitive(False)
+							self.button_forward.set_sensitive(False)
 							return
-			self.builder.get_object("button_forward").set_sensitive(True)
+			module_logger.debug(_("Validation passed for restore file: %s" % self.backup_src))
+			self.button_forward.set_sensitive(True)
 		except Exception as detail:
 			show_message(self.window, _("An error occurred while reading the file."))
 			module_logger.debug(detail)
@@ -444,7 +447,7 @@ class AppBackup():
 	
 	def restore_pkg_install_packages(self):
 		packages = []
-		model = self.builder.get_object("treeview_restore_list").get_model()
+		model = self.treeview_restore_list.get_model()
 		for row in model:
 			if row[0]:
 				packages.append(row[3])
@@ -470,6 +473,15 @@ class AppBackup():
 			self.model.set_value(iter, COL_REPEAT, backup["repeat"])
 			self.model.set_value(iter, COL_LOCATION, backup["location"])
 	
+	def on_appbackup_selected(self, selection):
+		model, iter = selection.get_selected()
+		if iter is not None:
+			self.selected_appbackup = model.get_value(iter, COL_NAME)
+			module_logger.debug(_("Selected app backup: %s" % self.selected_appbackup))
+			self.edit_button.set_sensitive(True)
+			self.browse_button.set_sensitive(True)
+			self.remove_button.set_sensitive(True)
+	
 	# Main button definitions
 	def on_backup_apps(self, widget):
 		# On add button press
@@ -486,6 +498,15 @@ class AppBackup():
 		module_logger.debug(_("Starting app restore list process"))
 		self.stack.set_visible_child_name("apprestore_page1")
 		self.button_back.set_sensitive(True)
+		self.button_forward.set_sensitive(False)
+		# restore from backup file
+		for i in range(len(self.app_db_list)):
+			if self.app_db_list[i]['name'] == self.selected_appbackup:
+				backup_dict = self.app_db_list[i]
+				backup_filepath = os.path.join(backup_dict["location"], backup_dict["filename"])
+				module_logger.debug(_("Restoring from file: %s" % backup_filepath))
+				self.restore_filechooser.set_filename(backup_filepath)
+				self.restore_pkg_validate_file(self.restore_filechooser)
 		self.button_back.show()
 		self.button_forward.show()
 		self.button_apply.hide()
@@ -502,7 +523,7 @@ class AppBackup():
 	
 	def on_remove_appbackup(self, widget):
 		# On remove button press
-		module_logger.debug(_("Removing backup from database list."))
+		module_logger.debug(_("Removing app backup from database list."))
 		# remove backup file
 		for i in range(len(self.app_db_list)):
 			if self.app_db_list[i]['name'] == self.selected_appbackup:
@@ -527,11 +548,3 @@ class AppBackup():
 			self.button_back.connect("clicked", self.back_callback)
 			self.button_forward.connect("clicked", self.forward_callback)
 			self.button_apply.connect("clicked", self.forward_callback)
-	
-	def on_appbackup_selected(self, selection):
-		model, iter = selection.get_selected()
-		if iter is not None:
-			self.selected_appbackup = model.get_value(iter, COL_NAME)
-			self.edit_button.set_sensitive(True)
-			self.browse_button.set_sensitive(True)
-			self.remove_button.set_sensitive(True)
