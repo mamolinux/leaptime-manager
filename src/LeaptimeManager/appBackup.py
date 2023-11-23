@@ -482,6 +482,18 @@ class AppBackup():
 			self.browse_button.set_sensitive(True)
 			self.remove_button.set_sensitive(True)
 	
+	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
+		module_logger.debug(_("Reloading navigation buttons for app backup."))
+		# nav buttons
+		self.button_back = button_back
+		self.button_forward = button_forward
+		self.button_apply = button_apply
+		
+		if app_backup:
+			self.button_back.connect("clicked", self.back_callback)
+			self.button_forward.connect("clicked", self.forward_callback)
+			self.button_apply.connect("clicked", self.forward_callback)
+	
 	# Main button definitions
 	def on_backup_apps(self, widget):
 		# On add button press
@@ -536,15 +548,3 @@ class AppBackup():
 		
 		self.db_manager.write_db(self.app_db_list)
 		self.load_mainpage()
-	
-	def reload_nav_btns(self, button_back, button_forward, button_apply, app_backup=False):
-		
-		# nav buttons
-		self.button_back = button_back
-		self.button_forward = button_forward
-		self.button_apply = button_apply
-		
-		if app_backup:
-			self.button_back.connect("clicked", self.back_callback)
-			self.button_forward.connect("clicked", self.forward_callback)
-			self.button_apply.connect("clicked", self.forward_callback)
