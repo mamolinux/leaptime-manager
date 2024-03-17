@@ -585,7 +585,7 @@ class UserData():
 			else:
 				module_logger.info(_("Starting backup using tarball method..."))
 				self.tar_backup()
-				module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.tarfilename))
+				module_logger.info(_("%(source_dir)s is backed up into %(tarfile)s" % {'source_dir': self.source_dir, 'tarfile': self.tarfilename}))
 				data_backup_dict = {
 					"name" : self.backup_name,
 					"method" : self.backup_method,

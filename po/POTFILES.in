@@ -1,0 +1,16 @@
+data/leaptime-manager.desktop.in
+data/org.mamolinux.leaptime-manager.gschema.xml
+src/LeaptimeManager/about_window.py
+src/LeaptimeManager/appBackup.py
+src/LeaptimeManager/common.py
+src/LeaptimeManager/dataBackup.py
+src/LeaptimeManager/database_rw.py
+src/LeaptimeManager/dialogs.py
+src/LeaptimeManager/gui.py
+src/LeaptimeManager/__init__.py
+src/LeaptimeManager/logger.py
+src/LeaptimeManager/main.py
+src/LeaptimeManager/ui/app_backup.ui
+src/LeaptimeManager/ui/logger.ui
+src/LeaptimeManager/ui/MainWindow.ui
+src/LeaptimeManager/ui/user_data.ui
