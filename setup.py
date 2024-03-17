@@ -1,11 +1,14 @@
-import glob, os
-from subprocess import check_output
+import glob
+import os
+import sys
+
+import subprocess
 
 from setuptools import setup
 from distutils.log import info
 import distutils.command.install_data
 
-for line in check_output('dpkg-parsechangelog --format rfc822'.split(),
+for line in subprocess.check_output('dpkg-parsechangelog --format rfc822'.split(),
                          universal_newlines=True).splitlines():
     header, colon, value = line.lower().partition(':')
     if header == 'version':
@@ -33,9 +36,33 @@ class install_data(distutils.command.install_data.install_data):
         gschema_dir = os.path.join(self.install_dir, gschema_dir_suffix)
         self.spawn(["glib-compile-schemas", gschema_dir])
 
-setup(data_files=[('share/applications', glob.glob("data/applications/*.desktop")),
-            ('share/icons/hicolor/scalable/apps', glob.glob("data/icons/*")),
-            (gschema_dir_suffix, glob.glob("data/*.xml"))
-            ],
-            cmdclass = {'install_data': install_data}
+data_files = [('share/applications', glob.glob("data/applications/*.desktop")),
+			('share/icons/hicolor/scalable/apps', glob.glob("data/icons/*")),
+			(gschema_dir_suffix, glob.glob("data/schema/*.xml"))
+			]
+
+def create_mo_files():
+	po_files = glob.glob("po/*.po")
+	prefix = 'leaptime-manager'
+	
+	for po_file in po_files:
+		po_name = os.path.splitext(os.path.split(po_file)[1])[0]
+		replace_txt = "%s-" % prefix
+		lang = po_name.replace(replace_txt, '')
+		os.makedirs("build/locale/%s" % lang, exist_ok=True)
+		mo = "build/locale/%s/%s.mo" % (lang, prefix)
+		subprocess.run(['msgfmt', po_file, '-o', str(mo)], check=True)
+		
+		mo_file = map(lambda i: ('share/locale/%s/LC_MESSAGES' % lang, [i+'/%s.mo' % prefix]), glob.glob('build/locale/%s' % lang))
+		data_files.extend(mo_file)
+
+create_mo_files()
+
+if sys.argv[-1] == 'clean':
+    print("Cleaning up ...")
+    os.system('rm -rf build')
+    sys.exit()
+
+setup(data_files=data_files,
+		cmdclass = {'install_data': install_data}
 )
