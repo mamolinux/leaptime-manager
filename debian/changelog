@@ -49,7 +49,7 @@ leaptime-manager (1.0.3) stable; urgency=medium
       the database
   * Create backend for data backup (#58)
     - Create backend for data backup to
-      support cli environment and sheduled
+      support cli environment and scheduled
       repetitive backup
   * Fix nav buttons and add data Backup logging (#59)
     - Fix reloading navigation buttons
