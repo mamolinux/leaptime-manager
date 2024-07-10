@@ -38,7 +38,7 @@ class install_data(distutils.command.install_data.install_data):
 
 data_files = [('share/applications', glob.glob("data/applications/*.desktop")),
 			('share/icons/hicolor/scalable/apps', glob.glob("data/icons/*")),
-			(gschema_dir_suffix, glob.glob("data/schema/*.xml"))
+			(gschema_dir_suffix, glob.glob("data/*.xml"))
 			]
 
 def create_mo_files():

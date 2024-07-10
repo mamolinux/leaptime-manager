@@ -1,5 +1,6 @@
 [build-system]
 requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "leaptime-manager"
@@ -42,7 +43,7 @@ leaptime-manager = "LeaptimeManager.main:start_LTMCli"
 where = ["src"]
 
 [tool.setuptools.package-data]
-"*" = ["*VERSION", "*.ui"]
+"*" = ["*.ui"]
 
 [tool.setuptools.dynamic]
 version = {file = "src/LeaptimeManager/VERSION"}
