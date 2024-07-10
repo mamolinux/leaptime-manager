@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         language: [ 'python' ]
@@ -34,8 +34,8 @@ jobs:
       
       - name: install-deps
         run: |
-          sudo apt install gettext gir1.2-gtk-3.0 gir1.2-xapp-1.0 python3 python3-apt \
+          sudo apt install gettext gir1.2-gtk-3.0 python3-build python3-setuptools python3 python3-apt \
           python3-aptdaemon.gtk3widgets python3-gi python3-configobj python3-setproctitle
       
       - name: make
-        run: ./test/test -qq
+        run: ./test/test
