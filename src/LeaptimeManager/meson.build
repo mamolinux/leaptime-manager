@@ -1,6 +1,7 @@
 python_sources = [
   'about_window.py',
 	'appBackup.py',
+	'cli_args.py',
 	'common.py',
 	'dataBackup.py',
 	'database_rw.py',
