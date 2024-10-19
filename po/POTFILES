@@ -1,3 +1,5 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
 data/leaptime-manager.desktop.in
 data/org.mamolinux.leaptime-manager.gschema.xml
 src/LeaptimeManager/about_window.py
