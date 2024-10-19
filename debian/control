@@ -11,6 +11,9 @@ Build-Depends: debhelper-compat (= 13),
                meson,
                python3-all,
                pybuild-plugin-pyproject,
+               python3-docutils,
+               python3-sphinx,
+               python3-sphinx-argparse
 Standards-Version: 4.6.0
 Homepage: https://hsbasu.github.io/leaptime-manager
 #Vcs-Browser: https://salsa.debian.org/debian/leaptime-manager
@@ -24,7 +27,8 @@ Depends: gir1.2-xapp-1.0,
          python3-apt,
          python3-aptdaemon.gtk3widgets,
          ${python3:Depends},
-         ${misc:Depends}
+         ${misc:Depends},
+         ${sphinxdoc:Depends}
 Description: All-in-one Backup Manager
  Aiming to be an all-in-one, friendly to new-users,
  GUI based backup manager for Debian/Ubuntu based systems.
