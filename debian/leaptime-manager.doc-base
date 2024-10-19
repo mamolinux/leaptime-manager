@@ -1,0 +1,13 @@
+Document: leaptime-manager
+Title: Debian LeapTime Manager Manual
+Author: 
+Abstract: This manual describes what
+ LeapTime Manager is and how it can be
+ used to backup and restore different
+ system components like packages, user
+ settings, and system and user files.
+Section: System/Administration
+
+Format: HTML
+Index: /usr/share/doc/leaptime-manager/html/index.html
+Files: /usr/share/doc/leaptime-manager/html/*.html
