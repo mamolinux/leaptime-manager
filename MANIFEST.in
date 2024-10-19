@@ -1,5 +1,6 @@
 include debian/changelog
 global-exclude *.py[cod]
 graft data*
+graft po*
 include src/leaptime-manager.in
 graft src/LeapTimeManager/ui*
