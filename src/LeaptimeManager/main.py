@@ -21,14 +21,15 @@
 #
 
 # import the necessary modules!
-import argparse
 import gettext
 import locale
 import logging
 import setproctitle
 import sys
 
-from LeaptimeManager.common import APP, description, LOCALE_DIR, LOGFILE, __version__
+# imports from current package
+from LeaptimeManager.common import APP, LOCALE_DIR, LOGFILE, __version__
+from LeaptimeManager.cli_args import command_line_args
 from LeaptimeManager.gui import run_LTMwindow
 
 
@@ -41,12 +42,7 @@ _ = gettext.gettext
 setproctitle.setproctitle(APP)
 
 # Parse arguments
-parser = argparse.ArgumentParser(prog=APP, description=description, conflict_handler='resolve')
-
-parser.add_argument('-g', '--gui', action='store_true', dest='start_window', default=False, help=("Start GUI window"))
-parser.add_argument('-v', '--verbose', action='store_true', dest='show_debug', default=False, help=("Print debug messages to stdout i.e. terminal"))
-parser.add_argument('-V', '--version', action='store_true', dest='show_version', default=False, help=("Show version and exit"))
-
+parser = command_line_args()
 args = parser.parse_args()
 
 if args.show_version:
@@ -80,17 +76,12 @@ if args.show_debug:
 	
 	# add formatter to the handler
 	cHandler.setFormatter(log_format)
-
+	
 	# add the handler to the logger
 	logger.addHandler(cHandler)
 
 # module logger
 module_logger = logging.getLogger('LeaptimeManager.main')
-
-def start_LTMGui():
-	# initiaing app window
-	run_LTMwindow()
-	sys.exit(0)
 
 def start_LTMCli():
 	module_logger.info("Work In Progress...")
@@ -98,11 +89,8 @@ def start_LTMCli():
 if args.start_window:
 	# start GUI from terminal
 	module_logger.debug("Starting GUI from terminal...")
-	start_LTMGui()
-
-if __name__ == "__main__":
-	if args.start_window:
-		# start GUI from terminal
-		start_LTMGui()
-	else:
-		start_LTMCli()
+	# initiaing app window
+	run_LTMwindow()
+else:
+	# initiaing cli
+	start_LTMCli()
