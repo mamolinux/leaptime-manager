@@ -3,12 +3,14 @@ Section: admin
 Priority: optional
 Maintainer: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 Build-Depends: debhelper-compat (= 13),
+               desktop-file-utils,
                dh-python,
                gettext,
                libglib2.0-bin,
+               libgtk-4-bin,
+               meson,
+               python3-all,
                pybuild-plugin-pyproject,
-               python3,
-               python3-setuptools
 Standards-Version: 4.6.0
 Homepage: https://hsbasu.github.io/leaptime-manager
 #Vcs-Browser: https://salsa.debian.org/debian/leaptime-manager
@@ -31,6 +33,8 @@ Description: All-in-one Backup Manager
 
 # Package: leaptime-manager-doc
 # Architecture: all
+# Depends: ${misc:Depends},
+#          ${sphinxdoc:Depends}
 # Description: documentation for leaptime-manager
 #  Documentations for CLI and GUI environment for
-#  Leaptime Manager.
+#  LeapTime Manager.
