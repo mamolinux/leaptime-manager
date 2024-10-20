@@ -43,7 +43,7 @@ from aptdaemon.gtk3widgets import (AptConfirmDialog, AptErrorDialog,
 								   AptProgressDialog, AptStatusIcon)
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR
+from LeaptimeManager.cli_args import APP, LOCALE_DIR
 from LeaptimeManager.database_rw import appbackup_db
 from LeaptimeManager.dialogs import show_message
 

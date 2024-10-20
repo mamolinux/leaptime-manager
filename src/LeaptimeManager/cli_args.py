@@ -19,18 +19,22 @@
 #
 # Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 #
+
+# import the necessary modules!
 import argparse
 import gettext
 import locale
 
-from LeaptimeManager.common import  APP, LOCALE_DIR, description
-
 
 # i18n
+APP = 'leaptime-manager'
+LOCALE_DIR = "/usr/share/locale"
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
 _ = gettext.gettext
+
+description = _("Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems.")
 
 def command_line_args():
 	# Parse arguments

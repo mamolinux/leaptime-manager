@@ -34,10 +34,11 @@ import time
 from random import choice
 from threading import Thread
 
+# imports from current package
+from LeaptimeManager.cli_args import  APP, LOCALE_DIR
+
 
 # i18n
-APP = 'leaptime-manager'
-LOCALE_DIR = "/usr/share/locale"
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
@@ -62,10 +63,8 @@ LOGFILE = create_logfile()
 # logger
 module_logger = logging.getLogger('LeaptimeManager.common')
 
-description = _("Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems.")
-
 # get version
-version_file = os.path.abspath(os.path.dirname(__file__))+'/VERSION'
+version_file = os.path.dirname(os.path.abspath(__file__))+'/VERSION'
 __version__ = open(version_file, 'r').readlines()[0]
 
 # Constants

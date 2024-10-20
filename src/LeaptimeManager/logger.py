@@ -28,7 +28,8 @@ import locale
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-from LeaptimeManager.common import APP, LOCALE_DIR, LOGFILE, UI_PATH
+from LeaptimeManager.cli_args import  APP, LOCALE_DIR
+from LeaptimeManager.common import LOGFILE, UI_PATH
 
 
 # i18n

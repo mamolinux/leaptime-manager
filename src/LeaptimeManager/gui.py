@@ -30,7 +30,8 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gio, Gdk
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR, UI_PATH, __version__
+from LeaptimeManager.cli_args import  APP, LOCALE_DIR
+from LeaptimeManager.common import UI_PATH, __version__
 from LeaptimeManager.about_window import AboutWindow
 from LeaptimeManager.logger import LoggerWindow
 from LeaptimeManager.appBackup import AppBackup

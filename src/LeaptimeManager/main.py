@@ -28,8 +28,8 @@ import setproctitle
 import sys
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR, LOGFILE, __version__
-from LeaptimeManager.cli_args import command_line_args
+from LeaptimeManager.common import LOGFILE, __version__
+from LeaptimeManager.cli_args import APP, LOCALE_DIR, command_line_args
 from LeaptimeManager.gui import run_LTMwindow
 
 
