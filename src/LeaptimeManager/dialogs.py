@@ -31,7 +31,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR
+from LeaptimeManager.cli_args import  APP, LOCALE_DIR
 
 # i18n
 locale.bindtextdomain(APP, LOCALE_DIR)

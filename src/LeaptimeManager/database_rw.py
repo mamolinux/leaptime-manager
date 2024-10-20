@@ -27,7 +27,8 @@ import locale
 import logging
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR, LTM_backend
+from LeaptimeManager.cli_args import  APP, LOCALE_DIR
+from LeaptimeManager.common import LTM_backend
 
 # i18n
 locale.bindtextdomain(APP, LOCALE_DIR)

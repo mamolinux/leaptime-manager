@@ -37,7 +37,8 @@ gi.require_version("XApp", "1.0")
 from gi.repository import GLib, GdkPixbuf, Gtk, XApp
 
 # imports from current package
-from LeaptimeManager.common import APP, LOCALE_DIR, DATA_LOG_DIR, _async, _print_timing
+from LeaptimeManager.cli_args import  APP, LOCALE_DIR
+from LeaptimeManager.common import DATA_LOG_DIR, _async, _print_timing
 from LeaptimeManager.database_rw import databackup_db
 from LeaptimeManager.dialogs import show_message
 
