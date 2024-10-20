@@ -1,0 +1,6 @@
+aptdaemon
+configobj
+PyGObject
+python-apt
+setproctitle
+tldextract
