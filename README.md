@@ -39,6 +39,29 @@ This App is currently under **development**. So, This is not what a regular user
 
 Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for Debian/Ubuntu based systems. The main purpose of this application is to help user backup and restore every component on a Debian/Ubuntu based system ergonomically, elegantly and separately.
 
+## Contents
+- [ToDo List](#todo-list)
+- [Download Latest Version](#download-latest-version)
+	- [Stores/Ubuntu Private Archive](#storesubuntu-private-archive)
+	- [Github Releases](#github-releases)
+- [Features and Screenshots](#features-and-screenshots)
+- [Dependencies](#dependencies)
+	- [Build Dependencies](#build-dependencies)
+	- [Runtime Dependencies](#runtime-dependencies)
+	- [Debian/Ubuntu based systems](#debianubuntu-based-distro)
+	- [Other Linux-based systems](#other-linux-based-distro)
+- [Installation](#installation)
+	- [1. Download and install binary files](#1-download-and-install-binary-files)
+	- [2. Build and Install from source](#2-build-and-install-from-source)
+		- [Debian/Ubuntu based systems](#debianubuntu-based-systems)
+		- [Other Linux-based systems](#other-linux-based-systems)
+- [User Manual](#user-manual)
+- [Issue Tracking and Contributing](#issue-tracking-and-contributing)
+	- [For Developers](#for-developers)
+	- [Translation](#translation)
+- [Contributors](#contributors)
+	- [Authors](#author)
+
 ## ToDo List
 **Software:**
 1. [x] Apt backup
@@ -57,15 +80,27 @@ Data backup should have two modes:
     1. [ ] Add option for user-defined time interval to backup data
 
 ## Download Latest Version
+
+### Stores/Ubuntu Private Archive
+Add the Launchpad PPA
+```$
+sudo add-apt-repository ppa:mamolinux/gui-apps
+sudo apt update
+sudo apt install leaptime-manager
+```
+
+### Github Releases
+Get the debian package archive from GitHub. For installation, check [here](#installation).
 <p align="center">
 	<a href="https://github.com/mamolinux/leaptime-manager/zipball/master">Download Source (.zip)</a></br>
 	<a href="https://github.com/mamolinux/leaptime-manager/tarball/master">Download Source (.tar.gz)</a></br>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.2/leaptime-manager_1.0.2_all.deb">Download Binary (.deb)</a>
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.3/leaptime-manager_1.0.3_all.deb">Download Binary (.deb)</a>
 </p>
 
 ## Features and Screenshots
-1. Backup manually installed applications to a list
-2. Restore applications from backup lists
+1. Backup manually installed Apt packages to a list
+2. Restore apt packages from backup lists
+3. Backup user data to a tarball.
 
 <p align="center">
 	<img src="https://github.com/hsbasu/leaptime-manager/raw/gh-pages/screenshots/main-window-light.png" alt="Main Window (Light)">
@@ -75,24 +110,23 @@ Data backup should have two modes:
 </p>
 
 
-## Contents
-- [ToDo List](#todo-list)
-- [Download Latest Version](#download-latest-version)
-- [Features and Screenshots](#features-and-screenshots)
-- [Dependencies](#dependencies)
-	- [Debian/Ubuntu based systems](#debianubuntu-based-distro)
-	- [Other Linux-based systems](#other-linux-based-distro)
-- [Installation](#build-and-install-the-latest-version)
-	- [Debian/Ubuntu based systems](#debianubuntu-based-systems)
-	- [Other Linux-based systems](#other-linux-based-systems)
-	- [For Developers](#for-developers)
-- [User Manual](#user-manual)
-- [Issue Tracking and Contributing](#issue-tracking-and-contributing)
-- [Contributors](#contributors)
-	- [Authors](#author)
-
 ## Dependencies
+### Build Dependencies
+The following dependencies are required to build **LeapTime Manager**.
+```$
+gettext
+desktop-file-utils
+libglib2.0-bin
+libgtk-4-bin
+meson
+python3
+python3-sphinx
+python3-sphinx-argparse
 ```
+### Runtime Dependencies
+The following dependencies are required to run **LeapTime Manager**.
+```
+gir1.2-gtk-3.0
 python3
 python3-aptdaemon.gtk3widgets
 python3-configobj
@@ -100,23 +134,34 @@ python3-gi
 python3-setproctitle
 python3-tldextract
 ```
-To use or test LeapTime Manager, you need these dependencies to be installed.
 
 ### Debian/Ubuntu based distro
-To install dependencies on Debian/Ubuntu based systems, run:
+To install runtime dependencies on Debian/Ubuntu based systems, run:
 ```
-sudo apt install python3 python3-aptdaemon.gtk3widgets python3-configobj \
-python3-gi python3-setproctitle python3-tldextract
+sudo apt install gir1.2-gtk-3.0 python3 python3-aptdaemon.gtk3widgets \
+python3-configobj python3-gi python3-setproctitle python3-tldextract
 ```
-**Note**: If you are using `gdebi` to install **LeapTime Manager** from a `.deb` file, it will automatically install the dependencies and you can skip this step.
+**Note**: If you are using `gdebi` to install **LeapTime Manager** from a downloaded/built `.deb` file, it will automatically install the dependencies and you can skip this step.
 
 ### Other Linux-based distro
 Replace `apt install` in the command given in [Debian/Ubuntu based distros](#debianubuntu-based-distro) and use the command for the package manager of the target system(eg. `yum install`, `dnf install`, `pacman -S` etc.)
 
 **Note**: There might be cases where one or more dependencies might not be available for your system. But that is highly unlikely. In such situations, please [create an issue](#issue-tracking-and-contributing).
 
-## Build and Install the Latest Version
-### Debian/Ubuntu based systems
+## Installation
+There are two ways, this app can be installed on a Debian/Ubuntu based system.
+
+### 1. Download and install binary files
+Download the latest binary .deb files from [here](https://github.com/mamolinux/leaptime-manager/releases/latest). Then install the GUI Frontend from terminal as
+```$
+sudo dpkg -i leaptime-manager*.deb
+sudo apt install -f
+```
+
+### 2. Build and Install From Source
+If you are having trouble installing the pre-built binary, build them from the source.
+
+#### Debian/Ubuntu based systems
 There are two methods, this app can be installed/used on a Debian/Ubuntu based system. First, download and unzip the source package using:
 ```
 wget https://github.com/mamolinux/leaptime-manager/archive/refs/heads/master.zip
@@ -124,21 +169,28 @@ unzip master.zip
 cd leaptime-manager-master
 ```
 
-1. **Option 1:** Manually copying necessary files to root (`/`). For that, follow the steps below:
-	1. [**Optional**] [**In Progress**] To make translations/locales in languages other than **English**, run:
+1. **Option 1:** Manually copying necessary files. For that, follow the steps below:
+	1. Install python package sources using `meson`:
 		```
-		make
+		rm -rf builddir
+		meson setup -Dprefix=$HOME/.local builddir
+		meson compile -C builddir --verbose
+		meson install -C builddir
 		```
-		from the `leaptime-manager-master` in a terminal. It will create the translations/locales in `usr/share/locale`.
-	
-	2. Install python package using `pip3`:
+		It will install all files under `/home/<yourusername>/.local`. To **remove** the locally (`/home/<yourusername>/.local`) installed files, run:
 		```
-		sudo pip3 install .
+		ninja uninstall -C builddir
 		```
-		It will install all files under `/usr/local/`
-	3. Compile `schemas` using:
+	2. To manually install for all users:
 		```
-		sudo glib-compile-schemas /usr/local/share/glib-2.0/schemas
+		rm -rf builddir
+		meson setup builddir
+		meson compile -C builddir --verbose
+		sudo meson install -C builddir
+		```
+		The last step requires **Administrative Privilege**. So, be careful before using this. To **remove** the installed files, run:
+		```
+		sudo ninja uninstall -C builddir
 		```
 
 2. **Option 2:** Build a debian package and install it. To build a debian package on your own:
@@ -155,15 +207,9 @@ cd leaptime-manager-master
 		```
 After it is installed, run `leaptime-manager` from terminal or use the `leaptime-manager.desktop`.
 
-### Other Linux-based systems
+#### Other Linux-based systems
 1. Install the [dependencies](#other-linux-based-distro).
 2. From instructions for [Debian/Ubuntu based systems](#debianubuntu-based-systems), follow **Option 1**.
-
-
-### For Developers
-Instructions for devs are coming soon or create a [PR](https://github.com/mamolinux/leaptime-manager/compare).
-
-**I have no knowledge on how to use `meson` or `npm` for testing. If you can offer any help regarding this, please start a discussion [here](https://github.com/mamolinux/leaptime-manager/discussions) or create a [PR](https://github.com/mamolinux/leaptime-manager/compare). It will be more than welcome.**
 
 ## User Manual
 Coming Soon or create a PR.
@@ -171,8 +217,29 @@ Coming Soon or create a PR.
 ## Issue Tracking and Contributing
 If you are interested to contribute and enrich the code, you are most welcome. You can do it by:
 1. If you find a bug, to open a new issue with details: [Click Here](https://github.com/mamolinux/leaptime-manager/issues)
-
 2. If you know how to fix a bug or want to add new feature/documentation to the existing package, please create a [Pull Request](https://github.com/mamolinux/leaptime-manager/compare).
+
+### For Developers
+I am managing these apps all by myself during my free time. There are times when I can't contribute for months. So a little help is always welcome. If you want to test **LeapTime Manager**,
+1. Get the source package and unzip it using:
+	```
+	wget https://github.com/mamolinux/leaptime-manager/archive/refs/heads/master.zip
+	unzip master.zip
+	cd leaptime-manager-master
+	```
+2. Make desired modifications.
+3. Manually install using [option 2](#2-build-and-install-from-source).
+4. Test it by running in debug mode from terminal:	
+	```
+	leaptime-manager --gui --verbose
+	```
+
+### Translation
+All translations are done using using [Launchpad Translations](https://translations.launchpad.net/mamolinux). To help translate **LeapTime Manager** in your favourite language follow these steps:
+1. Go to [translations page](https://translations.launchpad.net/mamolinux/trunk/+pots/leaptime-manager) on Launchpad.
+2. Click on the language, you want to translate.
+3. Translate strings.
+4. Finally, click on **Save & Continue**.
 
 ## Contributors
 
