@@ -32,6 +32,7 @@ import logging
 import os
 import random
 import string
+import subprocess
 import time
 import aptdaemon.client
 import aptdaemon.errors
@@ -530,8 +531,12 @@ class AppBackup():
 	
 	def on_browse_appbackup(self, widget):
 		# On browse button press
-		module_logger.debug(_("Opening backup file from database list."))
-		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+		module_logger.debug(_("Opening directory of backup file from database list."))
+		# Open directory of backup file
+		for i in range(len(self.app_db_list)):
+			if self.app_db_list[i]['name'] == self.selected_appbackup:
+				backup_dict = self.app_db_list[i]
+				subprocess.Popen(['xdg-open', backup_dict["location"]])
 	
 	def on_remove_appbackup(self, widget):
 		# On remove button press
