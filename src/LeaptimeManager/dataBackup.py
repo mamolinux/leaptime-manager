@@ -27,6 +27,7 @@ import locale
 import logging
 import os
 import stat
+import subprocess
 import sys
 import tarfile
 import time
@@ -660,9 +661,9 @@ class UserData():
 	
 	def on_restore_data(self, widget):
 		module_logger.info(_("Starting Data restore..."))
-		self.button_back.set_sensitive(True)
-		self.button_back.show()
-		self.button_forward.show()
+		# self.button_back.set_sensitive(True)
+		# self.button_back.show()
+		# self.button_forward.show()
 		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
 	
 	def on_edit_databackup(self, widget):
@@ -673,7 +674,14 @@ class UserData():
 	def on_browse_databackup(self, widget):
 		# On browse button press
 		module_logger.debug(_("Opening backup file/directory from database list."))
-		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+		# Open backup destination directory
+		for i in range(len(self.data_db_list)):
+			if self.data_db_list[i]['name'] == self.selected_databackup:
+				backup_dict = self.data_db_list[i]
+				if backup_dict["method"] == "rsync":
+					subprocess.Popen(['xdg-open', backup_dict["destination"]])
+				else:
+					subprocess.Popen(['xdg-open', backup_dict["destination"]])
 	
 	def on_remove_databackup(self, widget):
 		# On remove button press
