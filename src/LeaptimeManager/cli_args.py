@@ -27,8 +27,8 @@ import locale
 
 
 # i18n
-APP = 'leaptime-manager'
-LOCALE_DIR = "/usr/share/locale"
+APP = '@appname@'
+LOCALE_DIR = "@localedir@"
 locale.bindtextdomain(APP, LOCALE_DIR)
 gettext.bindtextdomain(APP, LOCALE_DIR)
 gettext.textdomain(APP)
