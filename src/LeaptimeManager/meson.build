@@ -10,6 +10,7 @@ python_sources = [
 	'__init__.py',
 	'logger.py',
 	'main.py',
+	'scheduler.py',
 ]
 
 version_file = configure_file(
