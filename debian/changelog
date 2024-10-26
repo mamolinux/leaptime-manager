@@ -1,3 +1,104 @@
+leaptime-manager (1.0.4) stable; urgency=medium
+
+  * Skip app backup file selection page; closes #61 (#62)
+    - Skip backup file selection page when
+      an app backup is selected from the
+      database list
+    - Use predefined widget variables for
+      back button, treeview_restore_list,
+      treeview_backup_list and forward button
+  * reposition code for nav buttons (#63)
+  * Add a scrollbar to the main grid (#64)
+    - Use scrollbar for low resolution displays
+      where the whole window is not visible
+      simultaneously
+  * Update runner versions in workflows (#65)
+  * Initialize translation (#66)
+    - Add .pot template
+    - Add template update script
+    - Add translatable file list to POTFILES
+    - Remove generate_desktop_files
+  * Include translations in packaging (#67)
+  * Add gettext as build dependency (#68)
+  * Fix spelling error in d/changelog (#69)
+  * Update debian and python packaging (#70)
+    - Use debian pyproject build system
+    - Remove unsed files related to packaging
+    - Use both setup.cfg and pyproject.toml
+      for now so that debian uses python build
+      module.
+    - Add pybuild-plugin-pyproject as build
+      dependency
+  * Fix pybuild testing script and workflow (#72)
+  * Fix schema error and update python packaging (#71)
+  * Start porting to meson python build (#73)
+    - Update ci with latest ubuntu release
+      and build dependencies
+  * Install python sources using meson build (#74)
+    - Setup meson to install python sources
+      during python and meson builds
+    - Install executable binary using meson
+      and avoid using python builds for now
+    - Remove unnecessary python packaging files
+  * Include data files in meson build (#75)
+    - Add icons, desktop files and schema files
+      using meson
+    - Update test script
+  * Translate using meson (#76)
+    - Add necessary translation files
+    - Remove update-pot script
+    - Update test script
+  * Update debian packaging with meson build (#77)
+    - Use meson buildsystem for debian packaging
+    - Add meson build dependencies
+  * Prepare for documentation and manuals (#78)
+    - Separate command line args from main
+    - Add framework to build documentation
+      and manuals using sphinx
+    - Refactor python code in main
+  * Build and add docs to deb packaging (#79)
+    - Build unix manual from argparse options
+    - Build html docs from argparse options
+    - Add python3-docutils, python3-sphinx and
+      python3-sphinx-argparse as build dependencies
+    - Fix post install and remove scripts
+  * Update readme with version 1.0.3 (#80)
+  * Update readme with new instructions (#81)
+    - Separate build and runtime dependency
+    - Add meson build dependencies
+    - Update manual installation instructions
+    - Add launchpad PPA
+    - Update build instructions with meson
+    - Update instructions for devs
+    - Add translation instructions
+  * Override dh_python to include python depends (#82)
+    - Override dh_python3 to read python dependencies
+      from file requires.txt
+  * Fix debian build failure with correct import (#83)
+    - Import app id, locale dir and description
+      from cli_args file.
+  * Activate option to browse backups (#84)
+    - Click on Browse to open App backup
+      directory
+    - Click on Browse to open data tarball
+      backup directory
+  * Update meson build system (#85)
+    - Inject app name and translation directory
+      using meson
+    - Drop setuptools from pyproject
+  * Update CI and Release workflow (#86)
+    - Use Ubuntu 24.04
+    - Update build dependencies in
+      Release workflow
+    - Update action version
+    - Mark as latest release
+    - Create announcement
+    - Separate build and runtime
+      dependencies in CI workflow
+  * Prepare for scheduled backup (#87)
+
+ -- Himadri Sekhar Basu <hsb10@iitbbs.ac.in>  Sat, 26 Oct 2024 23:41:55 +0530
+
 leaptime-manager (1.0.3) stable; urgency=medium
 
   * Add ui for user data backup (#42)
