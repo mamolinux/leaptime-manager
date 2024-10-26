@@ -32,8 +32,8 @@ This App is currently under **development**. So, This is not what a regular user
 	<a href="#download-latest-version">
 		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/total?label=Downloads" alt="Downloads">
 	</a>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.3/leaptime-manager_1.0.3_all.deb">
-		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.3/leaptime-manager_1.0.3_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.4/leaptime-manager_1.0.4_all.deb">
+		<img src="https://img.shields.io/github/downloads/mamolinux/leaptime-manager/1.0.4/leaptime-manager_1.0.4_all.deb?color=blue&label=Downloads%40Latest%20Binary" alt="GitHub release (latest by date and asset)">
 	</a>
 </p>
 
@@ -65,6 +65,7 @@ Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for 
 ## ToDo List
 **Software:**
 1. [x] Apt backup
+	1. [ ] Scheduled app backup
 2. [x] Apt restore
 
 **Data:**
@@ -94,7 +95,7 @@ Get the debian package archive from GitHub. For installation, check [here](#inst
 <p align="center">
 	<a href="https://github.com/mamolinux/leaptime-manager/zipball/master">Download Source (.zip)</a></br>
 	<a href="https://github.com/mamolinux/leaptime-manager/tarball/master">Download Source (.tar.gz)</a></br>
-	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.3/leaptime-manager_1.0.3_all.deb">Download Binary (.deb)</a>
+	<a href="https://github.com/mamolinux/leaptime-manager/releases/download/1.0.4/leaptime-manager_1.0.4_all.deb">Download Binary (.deb)</a>
 </p>
 
 ## Features and Screenshots
@@ -126,8 +127,10 @@ python3-sphinx-argparse
 ### Runtime Dependencies
 The following dependencies are required to run **LeapTime Manager**.
 ```
+gir1.2-xapp-1.0
 gir1.2-gtk-3.0
 python3
+python3-apt
 python3-aptdaemon.gtk3widgets
 python3-configobj
 python3-gi
@@ -138,7 +141,7 @@ python3-tldextract
 ### Debian/Ubuntu based distro
 To install runtime dependencies on Debian/Ubuntu based systems, run:
 ```
-sudo apt install gir1.2-gtk-3.0 python3 python3-aptdaemon.gtk3widgets \
+sudo apt install gir1.2-xapp-1.0 gir1.2-gtk-3.0 python3 python3-aptdaemon.gtk3widgets \
 python3-configobj python3-gi python3-setproctitle python3-tldextract
 ```
 **Note**: If you are using `gdebi` to install **LeapTime Manager** from a downloaded/built `.deb` file, it will automatically install the dependencies and you can skip this step.
