@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.40.0 
 
-Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+Copyright (C) 2021-2024 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 
 This file is part of LeapTime Manager.
 
@@ -52,7 +52,9 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
           <object class="GtkTreeView" id="treeview_all_appbackup_list">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="vexpand">True</property>
             <property name="reorderable">True</property>
+            <property name="enable-grid-lines">horizontal</property>
             <child internal-child="selection">
               <object class="GtkTreeSelection"/>
             </child>
@@ -193,36 +195,65 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
       </packing>
     </child>
     <child>
-      <object class="GtkBox" id="backup_page2">
+      <!-- n-columns=2 n-rows=2 -->
+      <object class="GtkGrid" id="backup_page2">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="valign">start</property>
         <property name="border-width">5</property>
-        <property name="spacing">5</property>
-        <property name="baseline-position">top</property>
+        <property name="column-spacing">5</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">end</property>
+            <property name="label" translatable="yes">Name:</property>
+            <property name="selectable">True</property>
+            <attributes>
+              <attribute name="weight" value="semibold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="appbackup_name">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="hexpand">True</property>
+            <property name="placeholder-text" translatable="yes">Enter name of the backup.</property>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkLabel" id="label_package_dest">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="halign">end</property>
             <property name="label" translatable="yes">Please select a location to save the software selection (.list file):</property>
+            <property name="selectable">True</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
         <child>
           <object class="GtkFileChooserButton" id="filechooserbutton_package_dest">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="hexpand">True</property>
             <property name="action">select-folder</property>
             <property name="create-folders">False</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="left-attach">1</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
       </object>
@@ -254,6 +285,7 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
           <object class="GtkFileChooserButton" id="filechooserbutton_package_source">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="hexpand">True</property>
             <property name="create-folders">False</property>
           </object>
           <packing>
