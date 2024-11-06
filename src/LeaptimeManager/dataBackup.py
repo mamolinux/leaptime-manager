@@ -207,7 +207,7 @@ class UserData_backend():
 class UserData():
 	"""
 	GUI class for backing up and restoring user data
-	using rsync
+	using tarball or rsync
 	"""
 	def __init__(self, builder, window, stack, edit_button, browse_button, remove_button) -> None:
 		module_logger.info(_("Initializing user data backup class..."))
@@ -596,7 +596,9 @@ class UserData():
 					"filename": os.path.basename(self.tarfilename),
 					"created" : self.timestamp,
 					"repeat" : self.repeat,
-					"comment" : self.backup_desc
+					"comment" : self.backup_desc,
+					"exclude" : (self.excluded_dirs, self.excluded_files),
+					"include" : (self.included_dirs, self.included_files),
 					}
 			
 			self.data_db_list.append(data_backup_dict)
