@@ -42,6 +42,7 @@ from LeaptimeManager.cli_args import  APP, LOCALE_DIR
 from LeaptimeManager.common import DATA_LOG_DIR, _async, _print_timing
 from LeaptimeManager.database_rw import databackup_db
 from LeaptimeManager.dialogs import show_message
+from LeaptimeManager.scheduler import TimeChooserButton
 
 # i18n
 locale.bindtextdomain(APP, LOCALE_DIR)
@@ -283,6 +284,11 @@ class UserData():
 		filechooser_dest = self.builder.get_object("filechooserbutton_backup_dest")
 		filechooser_dest.connect("file-set", self.on_select_dest)
 		
+		# Mode Combo box
+		self.backup_mode_combo = self.builder.get_object("backup_mode_combo")
+		self.backup_mode_combo.set_active(0)
+		self.backup_mode_combo.connect("changed", self.mode_combo_changed)
+		
 		# Combo box
 		self.methods_combo = self.builder.get_object("methods_combo")
 		self.methods_combo.set_active(0)
@@ -292,6 +298,15 @@ class UserData():
 		self.tarballs_combo = self.builder.get_object("tar_format_combo")
 		self.tarballs_combo.set_active(0)
 		self.tarballs_combo.connect("changed", self.tar_format_combo_changed)
+		
+		# Schedule radio button
+		self.specific_time_btn = self.builder.get_object("specific_time_btn")
+		self.specific_time_btn.connect("toggled", self.toggled_schedule_btn)
+		self.specific_time_box = self.builder.get_object("specific_time_box")
+		self.backup_time_btn = TimeChooserButton()
+		self.specific_time_box.pack_start(self.backup_time_btn, False, False, 0)
+		self.specific_interval_btn = self.builder.get_object("specific_interval_btn")
+		self.specific_interval_btn.connect("toggled", self.toggled_schedule_btn)
 		
 		# set up exclusions page
 		self.iconTheme = Gtk.IconTheme.get_default()
@@ -417,6 +432,15 @@ class UserData():
 	def on_select_dest(self, filechooser):
 		self.dest_dir = filechooser.get_filename()
 	
+	def mode_combo_changed(self, combotext):
+		self.backup_mode = combotext.get_active_text().lower()
+		module_logger.debug(_("Using backup mode: %s"),self.backup_mode)
+		if self.backup_mode == "backup":
+			pass
+		else:
+			show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+			self.backup_mode_combo.set_active(0)
+	
 	def tar_format_combo_changed(self, combotext):
 		self.tar_backup_format = combotext.get_active_text()
 		module_logger.debug(_("Tarball format for backup: %s"),self.tar_backup_format)
@@ -430,6 +454,14 @@ class UserData():
 		else:
 			self.builder.get_object("tar_format_label").set_visible(True)
 			self.builder.get_object("tar_format_combo").set_visible(True)
+	
+	def toggled_schedule_btn(self, button):
+		if self.specific_time_btn.get_active():
+			self.builder.get_object("specific_time_box").set_visible(True)
+			self.builder.get_object("specific_interval_grid").set_visible(False)
+		elif self.specific_interval_btn.get_active():
+			self.builder.get_object("specific_time_box").set_visible(False)
+			self.builder.get_object("specific_interval_grid").set_visible(True)
 	
 	def on_treeview_excludes_selection_changed(self, selection):
 		liststore, treeiter = selection.get_selected()
