@@ -344,10 +344,14 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="orientation">vertical</property>
+                <property name="spacing">5</property>
                 <child>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="margin-top">5</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="spacing">5</property>
                     <child>
                       <object class="GtkRadioButton" id="specific_time_btn">
                         <property name="label" translatable="yes">Specific Time</property>
@@ -389,6 +393,11 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                   <object class="GtkBox" id="specific_time_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="margin-start">5</property>
+                    <property name="margin-end">5</property>
+                    <property name="margin-top">5</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="spacing">5</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
@@ -418,6 +427,11 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                   <!-- n-columns=5 n-rows=2 -->
                   <object class="GtkGrid" id="specific_interval_grid">
                     <property name="can-focus">False</property>
+                    <property name="margin-start">5</property>
+                    <property name="margin-end">5</property>
+                    <property name="margin-top">5</property>
+                    <property name="margin-bottom">5</property>
+                    <property name="row-spacing">5</property>
                     <property name="column-spacing">5</property>
                     <child>
                       <object class="GtkCheckButton" id="hourly_check">
