@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+# Copyright (C) 2021-2024 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 # 
 # This file is part of LeapTime Manager.
 # 
@@ -58,7 +58,7 @@ _ = gettext.gettext
 module_logger = logging.getLogger('LeaptimeManager.appBackup')
 
 # Constants
-COL_NAME, COL_FILENAME, COL_CREATED, COL_REPEAT, COL_LOCATION = range(5)
+COL_UUID, COL_NAME, COL_FILENAME, COL_CREATED, COL_REPEAT, COL_LOCATION = range(6)
 
 class AppBackup():
 	
@@ -103,7 +103,7 @@ class AppBackup():
 		self.allbackup_tree.append_column(column)
 		
 		self.allbackup_tree.show()
-		self.model = Gtk.TreeStore(str, str, str, str, str)  # name, filename, created, Repeat, path
+		self.model = Gtk.TreeStore(str, str, str, str, str, str)  # uuid, name, filename, created, Repeat, path
 		self.model.set_sort_column_id(COL_NAME, Gtk.SortType.ASCENDING)
 		self.allbackup_tree.set_model(self.model)
 		self.allbackup_tree.get_selection().connect("changed", self.on_appbackup_selected)
@@ -182,6 +182,7 @@ class AppBackup():
 			self.button_back.show()
 			self.button_forward.show()
 		elif page == "appbackup_page2":
+			self.backup_name = self.builder.get_object("appbackup_name").get_text()
 			self.backup_dest = self.builder.get_object("filechooserbutton_package_dest").get_filename()
 			self.backup_pkg_save_to_file()
 			self.stack.set_visible_child_name("appbackup_main")
@@ -296,10 +297,10 @@ class AppBackup():
 	def backup_pkg_save_to_file(self):
 		if self.backup_dest is not None:
 			# Save the package selection
-			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(4))
+			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
 			time_now = time.localtime()
 			self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
-			self.filename = time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
+			self.filename = self.backup_name+"_"+time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
 			file_path = os.path.join(self.backup_dest, self.filename)
 			with open(file_path, "w") as f:
 				for row in self.treeview_backup_list.get_model():
@@ -307,7 +308,8 @@ class AppBackup():
 						f.write("%s\t%s\n" % (row[1], "install"))
 			self.repeat = ""
 			app_backup_dict = {
-				"name" : uuid,
+				"uuid" : uuid,
+				"name" : self.backup_name,
 				"filename" : self.filename,
 				"created" : self.timestamp,
 				"repeat" : self.repeat,
@@ -455,11 +457,33 @@ class AppBackup():
 		ac = aptdaemon.client.AptClient()
 		ac.install_packages(packages, reply_handler=self.apt_simulate_trans, error_handler=self.apt_on_error)
 	
+	def back_compat(self):
+		# Do a backward compatibility check
+		module_logger.debug(_("Checking backward compatibility of app backups."))
+		self.temp_app_db_list = []
+		for backup in self.app_db_list:
+			if (not "uuid" in backup) or (len(backup["uuid"]) != 8) :
+				show_message(self.window, _("Selected app backup was created using an older version. This backup will now be updated to work with the current version. But, there is a possibility that it might not work. Check the logs and report any issue."))
+				backup["uuid"] = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
+			
+			app_backup_dict = {
+				"uuid" : backup["uuid"],
+				"name" : backup["name"],
+				"filename" : backup["filename"],
+				"created" : backup["created"],
+				"repeat" : backup["repeat"],
+				"location" : backup["location"]
+			}
+			
+			self.temp_app_db_list.append(app_backup_dict)
+			self.db_manager.write_db(self.temp_app_db_list)
+	
 	# Stack pages load functions
 	def load_mainpage(self):
 		module_logger.debug(_("Loading main page with available backups lists."))
 		# Clear treeview and selection
 		self.app_db_list = self.db_manager.read_db()
+		self.back_compat()
 		module_logger.debug(_("Existing app backups: %s" % self.app_db_list))
 		self.stack.set_visible_child_name("appbackup_main")
 		self.button_back.set_sensitive(False)
@@ -468,6 +492,7 @@ class AppBackup():
 		self.model.clear()
 		for backup in self.app_db_list:
 			iter = self.model.insert_before(None, None)
+			self.model.set_value(iter, COL_UUID, backup["uuid"])
 			self.model.set_value(iter, COL_NAME, backup["name"])
 			self.model.set_value(iter, COL_FILENAME, backup["filename"])
 			self.model.set_value(iter, COL_CREATED, backup["created"])
@@ -477,7 +502,7 @@ class AppBackup():
 	def on_appbackup_selected(self, selection):
 		model, iter = selection.get_selected()
 		if iter is not None:
-			self.selected_appbackup = model.get_value(iter, COL_NAME)
+			self.selected_appbackup = model.get_value(iter, COL_UUID)
 			module_logger.debug(_("Selected app backup: %s" % self.selected_appbackup))
 			self.edit_button.set_sensitive(True)
 			self.browse_button.set_sensitive(True)
@@ -514,7 +539,7 @@ class AppBackup():
 		self.button_forward.set_sensitive(False)
 		# restore from backup file
 		for i in range(len(self.app_db_list)):
-			if self.app_db_list[i]['name'] == self.selected_appbackup:
+			if self.app_db_list[i]['uuid'] == self.selected_appbackup:
 				backup_dict = self.app_db_list[i]
 				backup_filepath = os.path.join(backup_dict["location"], backup_dict["filename"])
 				module_logger.debug(_("Restoring from file: %s" % backup_filepath))
@@ -534,7 +559,7 @@ class AppBackup():
 		module_logger.debug(_("Opening directory of backup file from database list."))
 		# Open directory of backup file
 		for i in range(len(self.app_db_list)):
-			if self.app_db_list[i]['name'] == self.selected_appbackup:
+			if self.app_db_list[i]['uuid'] == self.selected_appbackup:
 				backup_dict = self.app_db_list[i]
 				subprocess.Popen(['xdg-open', backup_dict["location"]])
 	
@@ -543,7 +568,7 @@ class AppBackup():
 		module_logger.debug(_("Removing app backup from database list."))
 		# remove backup file
 		for i in range(len(self.app_db_list)):
-			if self.app_db_list[i]['name'] == self.selected_appbackup:
+			if self.app_db_list[i]['uuid'] == self.selected_appbackup:
 				backup_dict = self.app_db_list[i]
 				backup_filepath = os.path.join(backup_dict["location"], backup_dict["filename"])
 				os.remove(backup_filepath)

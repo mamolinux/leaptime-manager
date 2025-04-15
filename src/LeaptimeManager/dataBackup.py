@@ -1,4 +1,4 @@
-# Copyright (C) 2021-2023 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
+# Copyright (C) 2021-2024 Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
 # 
 # This file is part of LeapTime Manager.
 # 
@@ -26,7 +26,9 @@ import gi
 import locale
 import logging
 import os
+import random
 import stat
+import string
 import subprocess
 import sys
 import tarfile
@@ -54,7 +56,7 @@ _ = gettext.gettext
 module_logger = logging.getLogger('LeaptimeManager.dataBackup')
 
 # Constants
-COL_NAME, COL_METHOD, COL_SOURCE, COL_DESTINATION, COL_CREATED, COL_REPEAT, COL_COMMENT = range(7)
+COL_UUID, COL_NAME, COL_METHOD, COL_SOURCE, COL_DESTINATION, COL_CREATED, COL_REPEAT, COL_COMMENT = range(8)
 META_FILE = ".meta"
 
 class UserData_backend():
@@ -271,7 +273,7 @@ class UserData():
 		self.allbackup_tree.append_column(column)
 		
 		self.allbackup_tree.show()
-		self.model = Gtk.TreeStore(str, str, str, str, str, str, str)  # name, method, source, destination, created, repeat, comment
+		self.model = Gtk.TreeStore(str, str, str, str, str, str, str, str)  # uuid, name, method, source, destination, created, repeat, comment
 		self.model.set_sort_column_id(COL_NAME, Gtk.SortType.ASCENDING)
 		self.allbackup_tree.set_model(self.model)
 		self.allbackup_tree.get_selection().connect("changed", self.on_backup_selected)
@@ -607,6 +609,7 @@ class UserData():
 	def backup_data(self):
 		if self.source_dir and self.dest_dir and os.access(self.dest_dir, os.W_OK):
 			self.repeat = ""
+			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
 			if self.backup_method == "rsync":
 				module_logger.info(_("Starting backup using Rsync method..."))
 				show_message(self.window, _("This feature has not been implented yet. Use tarball method."))
@@ -621,6 +624,7 @@ class UserData():
 				self.tar_backup()
 				module_logger.info(_("%(source_dir)s is backed up into %(tarfile)s" % {'source_dir': self.source_dir, 'tarfile': self.tarfilename}))
 				data_backup_dict = {
+					"uuid" : uuid,
 					"name" : self.backup_name,
 					"method" : self.backup_method,
 					"source" : self.source_dir,
@@ -643,16 +647,55 @@ class UserData():
 			if not os.access(self.dest_dir, os.W_OK):
 				self.show_message(_("You do not have the permission to write in the selected directory."))
 	
+	def back_compat(self):
+		# Do a backward compatibility check
+		module_logger.debug(_("Checking backward compatibility of data backups."))
+		self.temp_data_db_list = []
+		for backup in self.data_db_list:
+			if (not "uuid" in backup) or (len(backup["uuid"]) != 8) :
+				show_message(self.window, _("Selected data backup was created using an older version. This backup will now be updated to work with the current version. But, there is a possibility that it might not work. Check the logs and report any issue."))
+				backup["uuid"] = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
+			
+			if not "method" in backup:
+				if "filename" in backup:
+					backup["method"] = "tarball"
+				else:
+					backup["method"] = "rsync"
+			
+			if not "exclude" in backup:
+				backup["exclude"] = ""
+			if not "include" in backup:
+				backup["include"] = ""
+			
+			data_backup_dict = {
+				"uuid" : backup["uuid"],
+				"name" : backup["name"],
+				"method" : backup["method"],
+				"source" : backup["source"],
+				"destination" : backup["destination"],
+				"filename": backup["filename"],
+				"created" : backup["created"],
+				"repeat" : backup["repeat"],
+				"comment" : backup["comment"],
+				"exclude" : backup["exclude"],
+				"include" : backup["include"],
+			}
+			
+			self.temp_data_db_list.append(data_backup_dict)
+			self.db_manager.write_db(self.temp_data_db_list)
+	
 	# Page load definition functions
 	def load_mainpage(self):
 		module_logger.debug(_("Loading main page with available data backups lists."))
 		# Clear treeview and selection
 		self.data_db_list = self.db_manager.read_db()
+		self.back_compat()
 		module_logger.debug(_("Existing data backups: %s" % self.data_db_list))
 		self.stack.set_visible_child_name("databackup_main")
 		self.model.clear()
 		for backup in self.data_db_list:
 			iter = self.model.insert_before(None, None)
+			self.model.set_value(iter, COL_UUID, backup["uuid"])
 			self.model.set_value(iter, COL_NAME, backup["name"])
 			self.model.set_value(iter, COL_METHOD, backup["method"])
 			self.model.set_value(iter, COL_SOURCE, backup["source"])
@@ -680,7 +723,7 @@ class UserData():
 	def on_backup_selected(self, selection):
 		model, iter = selection.get_selected()
 		if iter is not None:
-			self.selected_databackup = model.get_value(iter, COL_NAME)
+			self.selected_databackup = model.get_value(iter, COL_UUID)
 			self.edit_button.set_sensitive(True)
 			self.browse_button.set_sensitive(True)
 			self.remove_button.set_sensitive(True)
@@ -710,7 +753,7 @@ class UserData():
 		module_logger.debug(_("Opening backup file/directory from database list."))
 		# Open backup destination directory
 		for i in range(len(self.data_db_list)):
-			if self.data_db_list[i]['name'] == self.selected_databackup:
+			if self.data_db_list[i]['uuid'] == self.selected_databackup:
 				backup_dict = self.data_db_list[i]
 				if backup_dict["method"] == "rsync":
 					subprocess.Popen(['xdg-open', backup_dict["destination"]])
@@ -722,7 +765,7 @@ class UserData():
 		module_logger.debug(_("Removing data backup from database list."))
 		# remove backup file
 		for i in range(len(self.data_db_list)):
-			if self.data_db_list[i]['name'] == self.selected_databackup:
+			if self.data_db_list[i]['uuid'] == self.selected_databackup:
 				backup_dict = self.data_db_list[i]
 				method = backup_dict["method"]
 				if method == "rsync":
