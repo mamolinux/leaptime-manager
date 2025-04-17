@@ -78,6 +78,11 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
     <property name="icon-name">folder-recent</property>
     <property name="icon_size">3</property>
   </object>
+  <object class="GtkImage" id="image_system">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">system</property>
+  </object>
   <object class="GtkImage" id="image_userdata">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -133,6 +138,7 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Backup files in user's home directory and mounted devices.</property>
                             <property name="image">image_userdata</property>
                           </object>
                           <packing>
@@ -143,17 +149,32 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                         </child>
                         <child>
                           <object class="GtkButton" id="apt_package">
-                            <property name="label" translatable="yes">Apt Packages</property>
+                            <property name="label" translatable="yes">APT Packages</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <property name="tooltip-text" translatable="yes">Apt Packages</property>
+                            <property name="tooltip-text" translatable="yes">Backup Debian APT packages which were manually installed later and did not come with the system.</property>
                             <property name="image">image_apt_pkg</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
                             <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="system_backup">
+                            <property name="label" translatable="yes">System</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Backup the complete system. Some temporary, machine-specific files are automatically excluded. Backup of user's data is optional and is excluded by default.</property>
+                            <property name="image">image_system</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                         <child>
@@ -181,6 +202,8 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                       <object class="GtkBox" id="main_box">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <property name="orientation">vertical</property>
                         <property name="spacing">5</property>
                         <child>
@@ -189,6 +212,7 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                             <property name="can-focus">False</property>
                             <property name="halign">center</property>
                             <property name="valign">center</property>
+                            <property name="hexpand">True</property>
                             <child>
                               <object class="GtkToolItem" id="box">
                                 <property name="visible">True</property>
@@ -200,6 +224,8 @@ Author: Himadri Sekhar Basu <hsb10@iitbbs.ac.in>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
                                     <property name="spacing">5</property>
                                     <property name="homogeneous">True</property>
                                     <child>

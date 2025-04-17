@@ -36,6 +36,7 @@ from LeaptimeManager.about_window import AboutWindow
 from LeaptimeManager.logger import LoggerWindow
 from LeaptimeManager.appBackup import AppBackup
 from LeaptimeManager.dataBackup import UserData
+from LeaptimeManager.dialogs import show_message
 
 # logger
 module_logger = logging.getLogger('LeaptimeManager.gui')
@@ -73,19 +74,28 @@ class LeaptimeManagerWindow():
 		self.icon_theme = Gtk.IconTheme.get_default()
 		self.user_data = True
 		self.app_backup = False
+		self.system_backup = False
 		
 		# Set the Glade files
 		MainWindow = UI_PATH+"MainWindow.ui"
+		system_data_stack = UI_PATH+"system_data.ui"
 		app_backup_stack = UI_PATH+"app_backup.ui"
 		user_data_stack = UI_PATH+"user_data.ui"
 		self.builder = Gtk.Builder()
 		self.builder.add_from_file(MainWindow)
+		self.builder.add_from_file(system_data_stack)
 		self.builder.add_from_file(app_backup_stack)
 		self.builder.add_from_file(user_data_stack)
 		
 		# Create variables to quickly access dynamic widgets
 		self.window = self.builder.get_object("main_window")
 		self.main_box = self.builder.get_object("main_box")
+		
+		# System stack
+		self.system_stack = self.builder.get_object("system_stack")
+		self.main_box.add(self.system_stack)
+		self.system_stack.set_visible(True)
+		self.system_stack.set_sensitive(True)
 		
 		# Get app backup stack
 		self.appbackup_stack = self.builder.get_object("app_backup_stack")
@@ -100,6 +110,7 @@ class LeaptimeManagerWindow():
 		self.userdata_stack.set_sensitive(True)
 		
 		# Buttons
+		self.system_backup_button = self.builder.get_object("system_backup")
 		self.apt_package_button = self.builder.get_object("apt_package")
 		self.user_data_button = self.builder.get_object("user_data")
 		
@@ -117,6 +128,7 @@ class LeaptimeManagerWindow():
 		self.button_forward = self.builder.get_object("button_forward")
 		self.button_apply = self.builder.get_object("button_apply")
 		
+		self.system_backup_button.connect("clicked", self.show_System_stack)
 		self.apt_package_button.connect("clicked", self.show_appbackup_stack)
 		self.user_data_button.connect("clicked", self.show_UserData_stack)
 		
@@ -175,10 +187,31 @@ class LeaptimeManagerWindow():
 	def on_quit(self, widget):
 		self.application.quit()
 	
+	def show_System_stack(self, widget):
+		module_logger.debug(_("Showing System backup stack."))
+		
+		# hide all other modules except user data
+		self.appbackup_stack.set_visible(False)
+		self.appbackup_stack.set_sensitive(False)
+		self.app_backup = False
+		self.userdata_stack.set_visible(False)
+		self.userdata_stack.set_sensitive(False)
+		self.user_data = False
+		self.system_stack.set_visible(True)
+		self.system_stack.set_sensitive(True)
+		self.system_backup = True
+		show_message(self.window, _("This feature has not been implented yet. Please wait for future releases."))
+		
+		# ToDo: to be removed later
+		self.show_UserData_stack(self.window)
+	
 	def show_appbackup_stack(self, widget):
 		module_logger.debug(_("Showing app backup stack."))
 		
 		# hide all other modules except app backup
+		self.system_stack.set_visible(False)
+		self.system_stack.set_sensitive(False)
+		self.system_backup = False
 		self.userdata_stack.set_visible(False)
 		self.userdata_stack.set_sensitive(False)
 		self.user_data = False
@@ -196,6 +229,9 @@ class LeaptimeManagerWindow():
 		self.appbackup_stack.set_visible(False)
 		self.appbackup_stack.set_sensitive(False)
 		self.app_backup = False
+		self.system_stack.set_visible(False)
+		self.system_stack.set_sensitive(False)
+		self.system_backup = False
 		self.userdata_stack.set_visible(True)
 		self.userdata_stack.set_sensitive(True)
 		self.user_data = True
