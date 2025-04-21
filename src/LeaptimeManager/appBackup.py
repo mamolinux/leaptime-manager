@@ -22,18 +22,13 @@
 # A shameless partial rip-off from MintBackup tool
 
 # import the necessary modules!
-import apt
-# from apt import package
 import apt_pkg
 import gettext
 import gi
 import locale
 import logging
 import os
-import random
-import string
 import subprocess
-import time
 import aptdaemon.client
 import aptdaemon.errors
 
@@ -46,6 +41,7 @@ from aptdaemon.gtk3widgets import (AptConfirmDialog, AptErrorDialog,
 # imports from current package
 from LeaptimeManager.cli_args import APP, LOCALE_DIR
 from LeaptimeManager.database_rw import appbackup_db
+from LeaptimeManager.appBackup_backend import AppBackup_backend
 from LeaptimeManager.dialogs import show_message
 
 # i18n
@@ -68,6 +64,7 @@ class AppBackup():
 		self.window = window
 		self.stack = stack
 		self.db_manager = appbackup_db()
+		self.backup_manager = AppBackup_backend()
 		
 		# Acivate action buttons
 		self.edit_button = edit_button
@@ -246,104 +243,40 @@ class AppBackup():
 			else:
 				row[0] = selection
 	
-	def backup_pkg_list(self):
-		# package object list of all available packages in all repo
-		allpacks_list = [pack for pack in self.cache.packages]
-		
-		installer_log = "/var/log/installer/initial-status.gz"
-		if not os.path.isfile(installer_log):
-			return None
-		import gzip
-		try:
-			installer_log = gzip.open(installer_log, "r").read().decode('utf-8').splitlines()
-		except Exception as e:
-			# There are a number of different exceptions here, but there's only one response
-			module_logger.error("Could not get initial installed packages list (check /var/log/installer/initial-status.gz): %s" % str(e))
-			return None
-		initial_status = [x[9:] for x in installer_log if x.startswith("Package: ")]
-		if not initial_status:
-			return None
-		
-		installed_pkgs = []
-		auto_installed_pkgs = []
-		for pack in allpacks_list:
-			# list all installed packages
-			if apt.Package(any, pack).is_installed:
-				installed_pkgs.append(pack.name)
-				# module_logger.debug(pack.name, " is installed.")
-			# list all auto-installed packages
-			if apt_pkg.DepCache(self.cache).is_auto_installed(pack):
-				auto_installed_pkgs.append(pack.name)
-				# module_logger.debug(pack.name, " is auto installed.")
-		
-		# sort installed packages and auto-installed packages
-		installed_pkgs.sort()
-		auto_installed_pkgs.sort()
-		# find packages marked as manual
-		marked_manual_pakgs = []
-		for pack in installed_pkgs:
-			if pack not in auto_installed_pkgs:
-				marked_manual_pakgs.append(pack)
-		
-		# Manually installed packages
-		installed_packages = []
-		for pack in installed_pkgs:
-			if pack not in initial_status:
-				if pack in marked_manual_pakgs:
-					installed_packages += [pack]
-		
-		return installed_packages
-	
 	def backup_pkg_save_to_file(self):
 		if self.backup_dest is not None:
-			# Save the package selection
-			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
-			time_now = time.localtime()
-			self.timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
-			self.filename = self.backup_name+"_"+time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
-			file_path = os.path.join(self.backup_dest, self.filename)
-			with open(file_path, "w") as f:
-				for row in self.treeview_backup_list.get_model():
-					if row[0]:
-						f.write("%s\t%s\n" % (row[1], "install"))
-			self.repeat = ""
-			app_backup_dict = {
-				"uuid" : uuid,
-				"name" : self.backup_name,
-				"filename" : self.filename,
-				"created" : self.timestamp,
-				"repeat" : self.repeat,
-				"location" : self.backup_dest
-			}
-			
-			self.app_db_list.append(app_backup_dict)
-			self.db_manager.write_db(self.app_db_list)
+			self.backup_manager.pkg_backup_save_to_file(self.backup_name, self.backup_dest, self.cache)
 		else:
 			show_message(self.window, _("No backup destination is selected."))
+			self.stack.set_visible_child_name("appbackup_page2")
+			self.button_forward.set_sensitive(True)
+			self.button_back.show()
+			self.button_forward.show()
 	
 	def show_apps_list(self):
 		# Update apt cache
 		apt_pkg.init()
 		self.cache = apt_pkg.Cache()					# all cache packages
-		module_logger.debug(_("Showing backup apps list..."))
+		module_logger.debug(_("Showing manually installed apps list..."))
 		model = Gtk.ListStore(bool, str, str)
 		model.set_sort_column_id(1, Gtk.SortType.ASCENDING)
-		self.installed_packages = self.backup_pkg_list()
 		
-		package_records = apt_pkg.PackageRecords(self.cache)
-		for item in self.installed_packages:
-			try:
-				name = item
-				if name in self.cache:
-					pkg = self.cache[name]
-					if pkg.current_ver:
-						package_records.lookup(pkg.version_list[0].translated_description.file_list[0])
-						desc = "%s\n<small>%s</small>" % (pkg.name, GLib.markup_escape_text(package_records.short_desc))
-						model.append([True, pkg.name, desc])
-			except Exception as e:
-				print(e)
-		
-		self.treeview_backup_list.set_model(model)
+		try:
+			installed_pkg_list = self.backup_manager.create_installed_pkg_list(self.cache)
+			for item in installed_pkg_list:
+				model.append(item)
+			self.treeview_backup_list.set_model(model)
+			self.stack.set_visible_child_name("appbackup_page1")
+			self.button_back.set_sensitive(True)
+			self.button_back.show()
+			self.button_forward.show()
+		except Exception as e:
+			print(e)
+			show_message(self.window, _("Could not get manually installed packages. Check logs for more details."))
+			self.stack.set_visible_child_name("appbackup_main")
+			self.button_back.hide()
+			self.button_forward.hide()
+			self.load_mainpage()
 	
 	def restore_pkg_validate_file(self, filechooser):
 		self.backup_src = filechooser.get_filename()
@@ -457,33 +390,12 @@ class AppBackup():
 		ac = aptdaemon.client.AptClient()
 		ac.install_packages(packages, reply_handler=self.apt_simulate_trans, error_handler=self.apt_on_error)
 	
-	def back_compat(self):
-		# Do a backward compatibility check
-		module_logger.debug(_("Checking backward compatibility of app backups."))
-		self.temp_app_db_list = []
-		for backup in self.app_db_list:
-			if (not "uuid" in backup) or (len(backup["uuid"]) != 8) :
-				show_message(self.window, _("Selected app backup was created using an older version. This backup will now be updated to work with the current version. But, there is a possibility that it might not work. Check the logs and report any issue."))
-				backup["uuid"] = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
-			
-			app_backup_dict = {
-				"uuid" : backup["uuid"],
-				"name" : backup["name"],
-				"filename" : backup["filename"],
-				"created" : backup["created"],
-				"repeat" : backup["repeat"],
-				"location" : backup["location"]
-			}
-			
-			self.temp_app_db_list.append(app_backup_dict)
-			self.db_manager.write_db(self.temp_app_db_list)
-	
 	# Stack pages load functions
 	def load_mainpage(self):
 		module_logger.debug(_("Loading main page with available backups lists."))
 		# Clear treeview and selection
 		self.app_db_list = self.db_manager.read_db()
-		self.back_compat()
+		self.backup_manager.back_compat()
 		module_logger.debug(_("Existing app backups: %s" % self.app_db_list))
 		self.stack.set_visible_child_name("appbackup_main")
 		self.button_back.set_sensitive(False)
@@ -526,10 +438,6 @@ class AppBackup():
 		module_logger.debug(_("Starting app backup list process"))
 		# show manually installed packages list page
 		self.show_apps_list()
-		self.stack.set_visible_child_name("appbackup_page1")
-		self.button_back.set_sensitive(True)
-		self.button_back.show()
-		self.button_forward.show()
 	
 	def on_restore_apps(self, widget):
 		# On restore button press
