@@ -440,7 +440,8 @@ class UserData():
 	def tar_backup(self):
 		# Does the actual copying
 		try:
-			self.timestamp, self.tarfilename, self.num_files, self.total_size, copy_files = self.tar_manager.prep_tar_backup(self.backup_name, self.source_dir, self.dest_dir, self.excluded_files, self.excluded_dirs, self.included_files, self.included_dirs, self.tar_backup_format)
+			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
+			self.timestamp, self.tarfilename, self.num_files, self.total_size, copy_files = self.tar_manager.prep_tar_backup(uuid, self.backup_name, self.source_dir, self.dest_dir, self.excluded_files, self.excluded_dirs, self.included_files, self.included_dirs, self.tar_backup_format)
 			
 			self.tar_manager.add_meta_tar_backup()
 			
@@ -451,17 +452,13 @@ class UserData():
 				archived_files, self.archived_file_size, backuplog = self.tar_manager.callback_add_to_tar(path, archived_files, self.archived_file_size)
 				self.backuplog += backuplog
 				GLib.idle_add(self.set_progress, self.archived_file_size, self.total_size, self.backuplog)
-			self.tar_manager.finish_tar_backup(self.backuplog)
-			return (self.timestamp, self.tarfilename, self.num_files, self.total_size)
+			self.tar_manager.finish_tar_backup(self.backuplog, self.backup_desc, self.backup_method)
 		except Exception as e:
 			print(e)
-			return
 	
 	@_print_timing
 	def backup_data(self):
 		GLib.idle_add(self.set_widgets_before_backup)
-		self.repeat = ""
-		uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
 		if self.backup_method == "rsync":
 			module_logger.info(_("Starting backup using Rsync method..."))
 			show_message(self.window, _("This feature has not been implented yet. Use tarball method."))
@@ -473,25 +470,8 @@ class UserData():
 			module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.dest_dir))
 		else:
 			module_logger.info(_("Starting backup using tarball method..."))
-			timestamp, tarfilename, num_files, total_size = self.tar_backup()
+			self.tar_backup()
 			module_logger.info(_("%(source_dir)s is backed up into %(tarfile)s" % {'source_dir': self.source_dir, 'tarfile': self.tarfilename}))
-			data_backup_dict = {
-				"uuid" : uuid,
-				"name" : self.backup_name,
-				"method" : self.backup_method,
-				"source" : self.source_dir,
-				"destination" : self.dest_dir,
-				"filename": os.path.basename(tarfilename),
-				"created" : timestamp,
-				"repeat" : self.repeat,
-				"comment" : self.backup_desc,
-				"exclude" : (self.excluded_dirs, self.excluded_files),
-				"include" : (self.included_dirs, self.included_files),
-				"count" : num_files,
-				"size" : total_size,
-				}
-		self.data_db_list.append(data_backup_dict)
-		self.db_manager.write_db(self.data_db_list)
 		
 		GLib.idle_add(self.set_widgets_after_backup)
 	
@@ -512,7 +492,7 @@ class UserData():
 			self.model.set_value(iter, COL_SOURCE, backup["source"])
 			self.model.set_value(iter, COL_DESTINATION, backup["destination"])
 			self.model.set_value(iter, COL_CREATED, backup["created"])
-			self.model.set_value(iter, COL_REPEAT, backup["repeat"])
+			self.model.set_value(iter, COL_REPEAT, str(backup["repeat"]))
 			self.model.set_value(iter, COL_COMMENT, backup["comment"])
 		self.button_back.set_sensitive(False)
 		self.button_back.hide()
