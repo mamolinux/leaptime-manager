@@ -34,6 +34,7 @@ from pathlib import Path
 # imports from current package
 from LeaptimeManager.cli_args import  APP, LOCALE_DIR
 from LeaptimeManager.common import DATA_LOG_DIR
+from LeaptimeManager.database_rw import databackup_db
 from LeaptimeManager.dataBackup_backend import UserData_backend
 
 # i18n
@@ -49,14 +50,17 @@ module_logger = logging.getLogger('LeaptimeManager.tarball_backend')
 META_FILE = ".meta"
 
 class tar_backend():
-	
 	def __init__(self, errors) -> None:
 		module_logger.info(_("Initializing tarball manager backend class..."))
 		self.errors = errors
+		self.db_manager = databackup_db()
 		self.manager = UserData_backend(self.errors)
 		self.operating = self.manager.operating
+		self.data_db_list = self.db_manager.read_db()
 	
-	def prep_tar_backup(self, backup_name, source_dir, dest_dir, excluded_files, excluded_dirs, included_files, included_dirs, tar_backup_format):
+	def prep_tar_backup(self, uuid, backup_name, source_dir, dest_dir, excluded_files, excluded_dirs, included_files, included_dirs, tar_backup_format, repeat=False):
+		self.repeat = repeat
+		self.uuid = uuid
 		self.backup_name = backup_name
 		self.source_dir = source_dir
 		self.dest_dir = dest_dir
@@ -126,12 +130,32 @@ class tar_backend():
 		except Exception as e:
 			print(e)
 	
-	def finish_tar_backup(self, backuplog):
+	def finish_tar_backup(self, backuplog, desc="", backup_method="tarball"):
+		self.backup_method = backup_method
+		self.backup_desc = desc
 		try:
 			try:
 				self.tar_archive.close()
 				os.rename(self.temp_filename, self.tarfilename)
 				self.manager.write_log(self.backup_logfile, backuplog)
+				data_backup_dict = {
+					"uuid" : self.uuid,
+					"name" : self.backup_name,
+					"method" : self.backup_method,
+					"source" : self.source_dir,
+					"destination" : self.dest_dir,
+					"filename": os.path.basename(self.tarfilename),
+					"created" : self.timestamp,
+					"repeat" : self.repeat,
+					"comment" : self.backup_desc,
+					"exclude" : (self.excluded_dirs, self.excluded_files),
+					"include" : (self.included_dirs, self.included_files),
+					"logfile" : self.backup_logfile,
+					"count" : self.num_files,
+					"size" : self.total_size,
+					}
+				self.data_db_list.append(data_backup_dict)
+				self.db_manager.write_db(self.data_db_list)
 			except Exception as detail:
 				print(detail)
 				self.errors.append([str(detail), None])
