@@ -26,10 +26,7 @@ import gi
 import locale
 import logging
 import os
-import random
-import string
 import subprocess
-import time
 
 
 gi.require_version("Gtk", "3.0")
@@ -440,8 +437,7 @@ class UserData():
 	def tar_backup(self):
 		# Does the actual copying
 		try:
-			uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
-			self.timestamp, self.tarfilename, self.num_files, self.total_size, copy_files = self.tar_manager.prep_tar_backup(uuid, self.backup_name, self.source_dir, self.dest_dir, self.excluded_files, self.excluded_dirs, self.included_files, self.included_dirs, self.tar_backup_format)
+			self.timestamp, self.tarfilename, self.num_files, self.total_size, copy_files = self.tar_manager.prep_tar_backup(self.backup_name, self.source_dir, self.dest_dir, self.excluded_files, self.excluded_dirs, self.included_files, self.included_dirs, self.tar_backup_format)
 			
 			self.tar_manager.add_meta_tar_backup()
 			

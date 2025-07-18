@@ -25,6 +25,8 @@ import gettext
 import locale
 import logging
 import os
+import random
+import string
 import sys
 import tarfile
 import time
@@ -58,9 +60,9 @@ class tar_backend():
 		self.operating = self.manager.operating
 		self.data_db_list = self.db_manager.read_db()
 	
-	def prep_tar_backup(self, uuid, backup_name, source_dir, dest_dir, excluded_files, excluded_dirs, included_files, included_dirs, tar_backup_format, repeat=False):
+	def prep_tar_backup(self, backup_name, source_dir, dest_dir, excluded_files, excluded_dirs, included_files, included_dirs, tar_backup_format, repeat=False):
 		self.repeat = repeat
-		self.uuid = uuid
+		self.uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
 		self.backup_name = backup_name
 		self.source_dir = source_dir
 		self.dest_dir = dest_dir
