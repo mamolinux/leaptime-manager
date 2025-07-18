@@ -68,10 +68,10 @@ version_file = os.path.dirname(os.path.abspath(__file__))+'/VERSION'
 __version__ = open(version_file, 'r').readlines()[0]
 
 # Constants
-CONFIG_DIR = os.path.expanduser('~/.config/leaptime-manager/')
-LOG_DIR = os.path.join(CONFIG_DIR+'logs/')
-DATA_LOG_DIR = os.path.join(LOG_DIR+'userdata/')
-CONFIG_FILE = os.path.join(CONFIG_DIR+'config.cfg')
+CONFIG_DIR = os.path.expanduser('~/.config/leaptime-manager')
+LOG_DIR = os.path.join(CONFIG_DIR, 'logs')
+DATA_LOG_DIR = os.path.join(LOG_DIR, 'userdata')
+CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.cfg')
 UI_PATH = os.path.dirname(os.path.realpath(__file__)) + "/ui/"
 
 # Used as a decorator to run things in the background
@@ -135,8 +135,8 @@ class LTM_backend():
 		else:
 			module_logger.debug(_("Creating configuration files."))
 			self.config['db'] = {
-				'app-db': CONFIG_DIR+"apps_backup.json",
-				'userdata-db': CONFIG_DIR+"userdata_backups.json"
+				'app-db': os.path.join(CONFIG_DIR, "apps_backup.json"),
+				'userdata-db': os.path.join(CONFIG_DIR, "userdata_backups.json")
 			}
 			with open(CONFIG_FILE, 'w') as f:
 				self.config.write(f)
