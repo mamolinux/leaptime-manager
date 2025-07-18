@@ -1,17 +1,8 @@
-python_sources = [
-  'about_window.py',
-	'appBackup.py',
-	'cli_args.py',
-	'common.py',
-	'dataBackup.py',
-	'database_rw.py',
-	'dialogs.py',
-	'gui.py',
-	'__init__.py',
-	'logger.py',
-	'main.py',
-	'scheduler.py',
-]
+python_sources = files(
+  run_command(
+    'find', '.', '-name', '*.py', '-not', '-name', 'cli_args*', check: true
+  ).stdout().strip().split('\n')
+)
 
 version_file = configure_file(
   input: 'VERSION.in',
@@ -37,7 +28,11 @@ python.install_sources(
 )
 
 # Install assets like ui and icons
-ui = files('ui/app_backup.ui', 'ui/logger.ui', 'ui/MainWindow.ui', 'ui/user_data.ui')
+ui = files(
+  run_command(
+    'find', 'ui', '-name', '*.ui', check: true
+  ).stdout().strip().split('\n')
+)
 
 install_data(
   ui,
