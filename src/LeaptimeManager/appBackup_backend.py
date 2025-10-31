@@ -52,7 +52,6 @@ module_logger = logging.getLogger('LeaptimeManager.appBackup_backend')
 class AppBackup_backend():
 	def __init__(self) -> None:
 		self.db_manager = appbackup_db()
-		self.app_db_list = self.db_manager.read_db()
 	
 	def backup_pkg_list(self, cache):
 		self.cache = cache
@@ -150,6 +149,7 @@ class AppBackup_backend():
 	def back_compat(self):
 		# Do a backward compatibility check
 		module_logger.debug(_("Checking backward compatibility of app backups."))
+		self.app_db_list = self.db_manager.read_db()
 		self.temp_app_db_list = []
 		for backup in self.app_db_list:
 			if (not "uuid" in backup) or (len(backup["uuid"]) != 8) :

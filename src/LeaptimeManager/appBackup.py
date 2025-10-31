@@ -474,15 +474,29 @@ class AppBackup():
 	def on_remove_appbackup(self, widget):
 		# On remove button press
 		module_logger.debug(_("Removing app backup from database list."))
-		# remove backup file
-		for i in range(len(self.app_db_list)):
-			if self.app_db_list[i]['uuid'] == self.selected_appbackup:
-				backup_dict = self.app_db_list[i]
-				backup_filepath = os.path.join(backup_dict["location"], backup_dict["filename"])
-				os.remove(backup_filepath)
-				# remove from database
-				del self.app_db_list[i]
+		# remove app backup
+		found_index = -1
+		for i, backup_dict in enumerate(self.app_db_list):
+			if backup_dict['uuid'] == self.selected_appbackup:
+				found_index = i
 				break
 		
-		self.db_manager.write_db(self.app_db_list)
+		if found_index != -1:
+			backup_dict = self.app_db_list[found_index]
+			backup_filepath = os.path.join(backup_dict["location"], backup_dict["filename"])
+			
+			# Remove the physical backup file
+			try:
+				os.remove(backup_filepath)
+				module_logger.debug(_(f"Removed physical file: {backup_filepath}"))
+			except OSError as e:
+				# Log the error but continue to remove the entry from the DB list
+				module_logger.error(_(f"Error removing file {backup_filepath}: {e.strerror}"))
+
+			# Remove from database list (in-memory list), resulting in an empty list [] if it was the last item
+			del self.app_db_list[found_index]
+			
+			# Write the modified list back to the database file
+			self.db_manager.write_db(self.app_db_list)
+		
 		self.load_mainpage()
