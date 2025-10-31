@@ -40,8 +40,8 @@ def command_line_args():
 	# Parse arguments
 	parser = argparse.ArgumentParser(prog=APP, description=description, conflict_handler='resolve')
 	
-	parser.add_argument('-g', '--gui', action='store_true', dest='start_window', default=False, help=("Start GUI window"))
-	parser.add_argument('-v', '--verbose', action='store_true', dest='show_debug', default=False, help=("Print debug messages to stdout i.e. terminal"))
-	parser.add_argument('-V', '--version', action='store_true', dest='show_version', default=False, help=("Show version and exit"))
+	parser.add_argument('-g', '--gui', action='store_true', dest='start_window', default=False, help=_("Start GUI window"))
+	parser.add_argument('-v', '--verbose', action='store_true', dest='show_debug', default=False, help=_("Print debug messages to stdout i.e. terminal"))
+	parser.add_argument('-V', '--version', action='store_true', dest='show_version', default=False, help=_("Show version and exit"))
 	
 	return parser

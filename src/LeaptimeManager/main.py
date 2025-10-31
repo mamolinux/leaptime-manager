@@ -84,13 +84,16 @@ if args.show_debug:
 module_logger = logging.getLogger('LeaptimeManager.main')
 
 def start_LTMCli():
-	module_logger.info("Work In Progress...")
+	module_logger.info(_("Command line options are not available yet. Work In Progress..."))
+	parser.print_help()
+	sys.exit(0)
 
 if args.start_window:
 	# start GUI from terminal
-	module_logger.debug("Starting GUI from terminal...")
+	module_logger.debug(_("Starting GUI from terminal..."))
 	# initiaing app window
 	run_LTMwindow()
+	sys.exit(0)
 else:
 	# initiaing cli
 	start_LTMCli()
