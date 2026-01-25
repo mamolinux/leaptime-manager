@@ -1,17 +1,23 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
 data/leaptime-manager.desktop.in
-data/org.mamolinux.leaptime-manager.gschema.xml
+data/org.mamolinux.leaptime-manager.gschema.xml.in
 src/LeaptimeManager/about_window.py
 src/LeaptimeManager/appBackup.py
+src/LeaptimeManager/appBackup_backend.py
+src/LeaptimeManager/cli_args.py
 src/LeaptimeManager/common.py
 src/LeaptimeManager/dataBackup.py
+src/LeaptimeManager/dataBackup_backend.py
 src/LeaptimeManager/database_rw.py
 src/LeaptimeManager/dialogs.py
 src/LeaptimeManager/gui.py
 src/LeaptimeManager/__init__.py
 src/LeaptimeManager/logger.py
 src/LeaptimeManager/main.py
+src/LeaptimeManager/rsync_backend.py
+src/LeaptimeManager/scheduler.py
+src/LeaptimeManager/tarball_backend.py
 src/LeaptimeManager/ui/app_backup.ui
 src/LeaptimeManager/ui/logger.ui
 src/LeaptimeManager/ui/MainWindow.ui

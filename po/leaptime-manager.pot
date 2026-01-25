@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the leaptime-manager package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: leaptime-manager\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-08 14:36+0530\n"
+"POT-Creation-Date: 2026-01-26 02:45+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,685 +17,880 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: data/leaptime-manager.desktop.in:3 src/LeaptimeManager/about_window.py:62
-#: src/LeaptimeManager/dialogs.py:47 src/LeaptimeManager/ui/MainWindow.ui:429
+#: data/leaptime-manager.desktop.in:2 src/LeaptimeManager/about_window.py:63
+#: src/LeaptimeManager/dialogs.py:47 src/LeaptimeManager/ui/MainWindow.ui:452
 msgid "LeapTime Manager"
 msgstr ""
 
-#: data/leaptime-manager.desktop.in:4 src/LeaptimeManager/common.py:65
+#: data/leaptime-manager.desktop.in:3 src/LeaptimeManager/cli_args.py:37
 msgid ""
 "Aiming to be an all-in-one, friendly to new-users, GUI based backup manager "
 "for Debian/Ubuntu based systems."
 msgstr ""
 
-#: src/LeaptimeManager/about_window.py:59 src/LeaptimeManager/gui.py:143
+#: src/LeaptimeManager/about_window.py:60 src/LeaptimeManager/gui.py:156
 msgid "About"
 msgstr ""
 
-#: src/LeaptimeManager/about_window.py:72
+#: src/LeaptimeManager/about_window.py:73
 msgid "Maintainer"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:79 src/LeaptimeManager/dataBackup.py:238
+#. Saved name column
+#. Name column
+#: src/LeaptimeManager/appBackup.py:77 src/LeaptimeManager/dataBackup.py:85
 msgid "Name"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:84
+#. Saved file name column
+#: src/LeaptimeManager/appBackup.py:82
 msgid "File Name"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:89 src/LeaptimeManager/dataBackup.py:258
+#. Created on column
+#: src/LeaptimeManager/appBackup.py:87 src/LeaptimeManager/dataBackup.py:105
 msgid "Created"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:94 src/LeaptimeManager/dataBackup.py:263
+#. Repeat job column
+#: src/LeaptimeManager/appBackup.py:92 src/LeaptimeManager/dataBackup.py:110
 msgid "Repeat"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:99
+#. Save location column
+#: src/LeaptimeManager/appBackup.py:97
 msgid "Location"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:200
+#: src/LeaptimeManager/appBackup.py:199
 msgid "No packages need to be installed."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:207
+#: src/LeaptimeManager/appBackup.py:206
 msgid "No packages selected to install."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:319
+#: src/LeaptimeManager/appBackup.py:250
 msgid "No backup destination is selected."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:325
-msgid "Showing backup apps list..."
+#. all cache packages
+#: src/LeaptimeManager/appBackup.py:260
+msgid "Showing manually installed apps list..."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:354
+#: src/LeaptimeManager/appBackup.py:275
+msgid "Could not get manually installed packages. Check logs for more details."
+msgstr ""
+
+#: src/LeaptimeManager/appBackup.py:290
 msgid "The selected file is not a valid software selection."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:357
+#: src/LeaptimeManager/appBackup.py:293
 #, python-format
 msgid "Validation passed for restore file: %s"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:360 src/LeaptimeManager/appBackup.py:402
+#: src/LeaptimeManager/appBackup.py:296 src/LeaptimeManager/appBackup.py:338
 msgid "An error occurred while reading the file."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:384
+#: src/LeaptimeManager/appBackup.py:320
 msgid "Could not locate the package."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:459
+#: src/LeaptimeManager/appBackup.py:395
 msgid "Loading main page with available backups lists."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:462
+#: src/LeaptimeManager/appBackup.py:399
 #, python-format
 msgid "Existing app backups: %s"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:480
+#: src/LeaptimeManager/appBackup.py:418
 #, python-format
 msgid "Selected app backup: %s"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:486
+#: src/LeaptimeManager/appBackup.py:424
 msgid "Reloading navigation buttons for app backup."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:500
+#. On add button press
+#: src/LeaptimeManager/appBackup.py:438
 msgid "Starting app backup list process"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:510
+#. On restore button press
+#: src/LeaptimeManager/appBackup.py:444
 msgid "Starting app restore list process"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:519
+#: src/LeaptimeManager/appBackup.py:453
 #, python-format
 msgid "Restoring from file: %s"
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:528 src/LeaptimeManager/dataBackup.py:682
+#. On edit button press
+#: src/LeaptimeManager/appBackup.py:462 src/LeaptimeManager/dataBackup.py:583
 msgid "Editing backup file from database list."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:529 src/LeaptimeManager/appBackup.py:534
-#: src/LeaptimeManager/dataBackup.py:678 src/LeaptimeManager/dataBackup.py:683
-#: src/LeaptimeManager/dataBackup.py:688
+#. self.button_back.set_sensitive(True)
+#. self.button_back.show()
+#. self.button_forward.show()
+#: src/LeaptimeManager/appBackup.py:463 src/LeaptimeManager/dataBackup.py:293
+#: src/LeaptimeManager/dataBackup.py:579 src/LeaptimeManager/dataBackup.py:584
+#: src/LeaptimeManager/gui.py:203
 msgid ""
 "This feature has not been implented yet. Please wait for future releases."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:533
-msgid "Opening backup file from database list."
+#. On browse button press
+#: src/LeaptimeManager/appBackup.py:467
+msgid "Opening directory of backup file from database list."
 msgstr ""
 
-#: src/LeaptimeManager/appBackup.py:538
+#. On remove button press
+#: src/LeaptimeManager/appBackup.py:476
 msgid "Removing app backup from database list."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:101
+#. Do a backward compatibility check
+#: src/LeaptimeManager/appBackup_backend.py:151
+msgid "Checking backward compatibility of app backups."
+msgstr ""
+
+#: src/LeaptimeManager/appBackup_backend.py:156
+msgid ""
+"Selected app backup was created using an older version. This backup will now "
+"be updated to work with the current version. But, there is a possibility "
+"that it might not work. Check the logs and report any issue."
+msgstr ""
+
+#: src/LeaptimeManager/cli_args.py:43
+msgid "Start GUI window"
+msgstr ""
+
+#: src/LeaptimeManager/cli_args.py:44
+msgid "Print debug messages to stdout i.e. terminal"
+msgstr ""
+
+#: src/LeaptimeManager/cli_args.py:45
+msgid "Show version and exit"
+msgstr ""
+
+#: src/LeaptimeManager/common.py:100
 msgid "Initializing backend."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:103
+#: src/LeaptimeManager/common.py:102
 msgid "Configuration directory exists. Nothing to do."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:105
+#: src/LeaptimeManager/common.py:104
 msgid "Creating configuration directory."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:108
+#: src/LeaptimeManager/common.py:107
 msgid "User data log directory exists. Nothing to do."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:110
+#: src/LeaptimeManager/common.py:109
 msgid "Creating user data log directory."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:125
+#: src/LeaptimeManager/common.py:124
 msgid "Loading existing configurations."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:134
+#: src/LeaptimeManager/common.py:133
 msgid "Configuration file exists. Validating configurations."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:137
+#: src/LeaptimeManager/common.py:136
 msgid "Creating configuration files."
 msgstr ""
 
-#: src/LeaptimeManager/common.py:156
+#: src/LeaptimeManager/common.py:155
 msgid "Validating existing configurations."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:61
+#: src/LeaptimeManager/dataBackup.py:67
+msgid "Initializing user data backup class..."
+msgstr ""
+
+#. Method column
+#: src/LeaptimeManager/dataBackup.py:90
+msgid "Method"
+msgstr ""
+
+#. Source column
+#: src/LeaptimeManager/dataBackup.py:95
+msgid "Source"
+msgstr ""
+
+#. Destination column
+#: src/LeaptimeManager/dataBackup.py:100
+msgid "Destination"
+msgstr ""
+
+#. Comment column
+#: src/LeaptimeManager/dataBackup.py:115
+msgid "Comment"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:219 src/LeaptimeManager/dataBackup.py:243
+#, python-format
+msgid "Previous page: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:238
+#, python-format
+msgid "Showing databackup page: %s on back button"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:257
+msgid "Start Backup"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:272
+msgid "Finish"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:279
+#, python-format
+msgid "Showing databackup page: %s on forward button"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:289
+#, python-format
+msgid "Using backup mode: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:298
+#, python-format
+msgid "Tarball format for backup: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:302
+#, python-format
+msgid "Using backup method: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:329
+msgid "Data Backup - Select files"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:331
+msgid "Data Backup - Select folders"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:349
+#, python-format
+msgid "%s is not located in your source directory."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:362
+msgid "Gathering info on backup."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:371
+#, python-format
+msgid "Tar archive format: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:375 src/LeaptimeManager/dataBackup.py:376
+msgid "No source directory selected."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:378 src/LeaptimeManager/dataBackup.py:379
+msgid "No destination directory selected."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:381
+msgid ""
+"You do not have the permission to write in the selected destination "
+"directory."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:394
+#, python-format
+msgid "Excluded files list: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:395
+#, python-format
+msgid "Excluded folder list: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:408
+#, python-format
+msgid "Included files list: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:409
+#, python-format
+msgid "Included folder list: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:435
+msgid "Calculating..."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:439
+msgid "The following errors occurred:"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:445
+msgid "The backup was aborted."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:449
+#, python-format
+msgid "Your files were successfully saved in %s."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:460
+msgid "Starting backup using Rsync method..."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:497
+msgid "Starting backup using tarball method..."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:520
+#, python-format
+msgid "%(source_dir)s is backed up into %(tarfile)s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:524
+msgid "Loading main page with available data backups lists."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:528
+#, python-format
+msgid "Existing data backups: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:547
+msgid "Reloading navigation buttons for data backup."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:568
+msgid "Starting Data backup..."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:575
+msgid "Starting Data restore..."
+msgstr ""
+
+#. On browse button press
+#: src/LeaptimeManager/dataBackup.py:588
+msgid "Opening backup file/directory from database list."
+msgstr ""
+
+#. On remove button press
+#: src/LeaptimeManager/dataBackup.py:600
+msgid "Removing data backup from database list."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup.py:617
+#, python-format
+msgid "Deleteing file: %s"
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup_backend.py:49
 msgid "Initializing User Data backend class..."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:90
+#. Do a backward compatibility check
+#: src/LeaptimeManager/dataBackup_backend.py:62
+msgid "Checking backward compatibility of data backups."
+msgstr ""
+
+#: src/LeaptimeManager/dataBackup_backend.py:67
+msgid ""
+"Selected data backup was created using an older version. This backup will "
+"now be updated to work with the current version. But, there is a possibility "
+"that it might not work. Check the logs and report any issue."
+msgstr ""
+
+#. If file is a named pipe
+#. Skip named pipes, they can cause program to hang.
+#: src/LeaptimeManager/dataBackup_backend.py:143
 #, python-format
 msgid "Skipping %s because named pipes are not supported."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:161
+#: src/LeaptimeManager/database_rw.py:48
+msgid "Writing backup to database."
+msgstr ""
+
+#: src/LeaptimeManager/database_rw.py:55
+msgid "Reading backups from database."
+msgstr ""
+
+#: src/LeaptimeManager/database_rw.py:69
+msgid "Writing data backup to database."
+msgstr ""
+
+#: src/LeaptimeManager/database_rw.py:76
+msgid "Reading data backups from database."
+msgstr ""
+
+#: src/LeaptimeManager/dialogs.py:55
 #, python-format
-msgid "Number of files: %s, Total size in byte: %s"
+msgid "Remove %s"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:162
+#: src/LeaptimeManager/dialogs.py:56
 #, python-format
-msgid "List of files to copy: %s"
+msgid "Are you sure you want to delete '%s'?"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:172
-msgid ""
-"Warning: The meta file could not be saved. This backup will not be accepted "
-"for restoration."
+#: src/LeaptimeManager/dialogs.py:57
+msgid "This backup will be permanently lost."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:203
+#: src/LeaptimeManager/gui.py:148
+msgid "Show Logs"
+msgstr ""
+
+#. Add "Quit" option in drop-down menu
+#: src/LeaptimeManager/gui.py:162
+msgid "Quit"
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:191
+msgid "Showing System backup stack."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:209
+msgid "Showing app backup stack."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:226
+msgid "Showing data backup stack."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:243
+msgid "Add button clicked."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:245
+msgid "Starting new data backup process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:248
+msgid "Starting app backup process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:253
+msgid "Starting data restore process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:256
+msgid "Starting app restore process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:261
+msgid "Starting data backup editing process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:264
+msgid "Starting app backup editing process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:269
+msgid "Starting data backup browsing process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:272
+msgid "Starting app backup browsing process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:277
+msgid "Starting data backup remove process..."
+msgstr ""
+
+#: src/LeaptimeManager/gui.py:280
+msgid "Starting app backup remove process..."
+msgstr ""
+
+#: src/LeaptimeManager/logger.py:64
+msgid "LeapTime Manager Logs"
+msgstr ""
+
+#: src/LeaptimeManager/main.py:87
+msgid "Command line options are not available yet. Work In Progress..."
+msgstr ""
+
+#. start GUI from terminal
+#: src/LeaptimeManager/main.py:93
+msgid "Starting GUI from terminal..."
+msgstr ""
+
+#: src/LeaptimeManager/rsync_backend.py:180
+#: src/LeaptimeManager/tarball_backend.py:186
 #, python-format
 msgid ""
 "Warning: Some files were not saved. Only %(archived)d files were backed up "
 "out of %(total)d."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:214
-msgid "Initializing user data backup class..."
+#: src/LeaptimeManager/scheduler.py:99
+msgid "Select a time"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:243
-msgid "Method"
+#: src/LeaptimeManager/scheduler.py:114
+msgid "Hour"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:248
-msgid "Source"
+#: src/LeaptimeManager/scheduler.py:116
+msgid "Minute"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:253
-msgid "Destination"
+#: src/LeaptimeManager/scheduler.py:118
+msgid "Second"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:268
-msgid "Comment"
+#: src/LeaptimeManager/tarball_backend.py:56
+msgid "Initializing tarball manager backend class..."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:353 src/LeaptimeManager/dataBackup.py:377
-#, python-format
-msgid "Previous page: %s"
+#. filelist =
+#: src/LeaptimeManager/tarball_backend.py:113
+msgid "\n"
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:372
-#, python-format
-msgid "Showing databackup page: %s on back button"
+#: src/LeaptimeManager/tarball_backend.py:123
+msgid ""
+"Warning: The meta file could not be saved. This backup will not be accepted "
+"for restoration."
 msgstr ""
 
-#: src/LeaptimeManager/dataBackup.py:391
-msgid "Start Backup"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:406
-msgid "Finish"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:413
-#, python-format
-msgid "Showing databackup page: %s on forward button"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:423
-#, python-format
-msgid "Tarball format for backup: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:427
-#, python-format
-msgid "Using backup method: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:442
-msgid "Data Backup - Select files"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:444
-msgid "Data Backup - Select folders"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:462
-#, python-format
-msgid "%s is not located in your source directory."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:475
-msgid "Gathering info on backup."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:479
-#, python-format
-msgid "Name: %s, Description: %s, Source: %s, Destination: %s, Method: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:482
-#, python-format
-msgid "Tar archive format: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:495
-#, python-format
-msgid "Excluded files list: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:496
-#, python-format
-msgid "Excluded folder list: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:509
-#, python-format
-msgid "Included files list: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:510
-#, python-format
-msgid "Included folder list: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:527
-msgid "Calculating..."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:531
-msgid "The following errors occurred:"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:537
-msgid "The backup was aborted."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:541
-#, python-format
-msgid "Your files were successfully saved in %s."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:580
-msgid "Starting backup using Rsync method..."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:581
-msgid "This feature has not been implented yet. Use tarball method."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:587
-#, python-format
-msgid "%s is backed up into %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:599
-msgid "Starting backup using tarball method..."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:601
-#, python-format
-msgid "%(source_dir)s is backed up into %(tarfile)s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:617
-msgid "No source directory selected."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:619
-msgid "No destination directory selected."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:621
-msgid "You do not have the permission to write in the selected directory."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:625
-msgid "Loading main page with available data backups lists."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:628
-#, python-format
-msgid "Existing data backups: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:646
-msgid "Reloading navigation buttons for data backup."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:667
-msgid "Starting Data backup..."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:674
-msgid "Starting Data restore..."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:687
-msgid "Opening backup file/directory from database list."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:692
-msgid "Removing data backup from database list."
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:704
-#, python-format
-msgid "Deleteing file: %s"
-msgstr ""
-
-#: src/LeaptimeManager/dataBackup.py:707
-#, python-format
-msgid "%s"
-msgstr ""
-
-#: src/LeaptimeManager/database_rw.py:47
-msgid "Writing backup to database."
-msgstr ""
-
-#: src/LeaptimeManager/database_rw.py:54
-msgid "Reading backups from database."
-msgstr ""
-
-#: src/LeaptimeManager/database_rw.py:68
-msgid "Writing data backup to database."
-msgstr ""
-
-#: src/LeaptimeManager/database_rw.py:75
-msgid "Reading data backups from database."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:135
-msgid "Show Logs"
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:149
-msgid "Quit"
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:178
-msgid "Showing app backup stack."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:192
-msgid "Showing data backup stack."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:206
-msgid "Add button clicked."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:208
-msgid "Starting new data backup process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:211
-msgid "Starting app backup process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:216
-msgid "Starting data restore process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:219
-msgid "Starting app restore process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:224
-msgid "Starting data backup editing process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:227
-msgid "Starting app backup editing process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:232
-msgid "Starting data backup browsing process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:235
-msgid "Starting app backup browsing process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:240
-msgid "Starting data backup remove process..."
-msgstr ""
-
-#: src/LeaptimeManager/gui.py:243
-msgid "Starting app backup remove process..."
-msgstr ""
-
-#: src/LeaptimeManager/logger.py:63
-msgid "LeapTime Manager Logs"
-msgstr ""
-
-#: src/LeaptimeManager/ui/app_backup.ui:82
+#: src/LeaptimeManager/ui/app_backup.ui:84
 msgid "Please select the applications you want to save."
 msgstr ""
 
-#: src/LeaptimeManager/ui/app_backup.ui:132
-#: src/LeaptimeManager/ui/app_backup.ui:352
+#: src/LeaptimeManager/ui/app_backup.ui:134
+#: src/LeaptimeManager/ui/app_backup.ui:384
 msgid "Select all"
 msgstr ""
 
-#: src/LeaptimeManager/ui/app_backup.ui:146
-#: src/LeaptimeManager/ui/app_backup.ui:339
+#: src/LeaptimeManager/ui/app_backup.ui:148
+#: src/LeaptimeManager/ui/app_backup.ui:371
 msgid "Deselect all"
 msgstr ""
 
-#: src/LeaptimeManager/ui/app_backup.ui:176
+#: src/LeaptimeManager/ui/app_backup.ui:178
 msgid ""
 "Note: If you want to save the complete list of all installed packages on the "
 "system, please use the command 'dpkg --get-selections > mylist.list' in a "
 "terminal."
 msgstr ""
 
-#: src/LeaptimeManager/ui/app_backup.ui:207
-msgid "Please select a location to save the software selection (.list file):"
-msgstr ""
-
-#: src/LeaptimeManager/ui/app_backup.ui:245
-msgid "Please select a saved software selection (.list file):"
-msgstr ""
-
-#: src/LeaptimeManager/ui/app_backup.ui:283
-msgid "Select the packages you want to install."
-msgstr ""
-
-#: src/LeaptimeManager/ui/app_backup.ui:326
-msgid "Refresh"
-msgstr ""
-
-#: src/LeaptimeManager/ui/app_backup.ui:408
-msgid "All the packages in your software selection are installed."
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:133
-msgid "User Data"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:147
-#: src/LeaptimeManager/ui/MainWindow.ui:151
-msgid "Apt Packages"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:210
-msgid "Add"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:214
-msgid "Create backup of currently installed apps"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:226
-msgid "Restore"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:230
-msgid "Restore apps from selected backup"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:242
-msgid "Edit"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:246
-#: src/LeaptimeManager/ui/MainWindow.ui:274
-#: src/LeaptimeManager/ui/MainWindow.ui:278
-#: src/LeaptimeManager/ui/user_data.ui:367
-#: src/LeaptimeManager/ui/user_data.ui:518
-msgid "Remove"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:258
-msgid "Browse"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:262
-msgid "Launch"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:408
-msgid "Status Bar"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:430
-msgid "An all-in-one backup manager for *nix systems"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:447
-msgid "Open menu"
-msgstr ""
-
-#: src/LeaptimeManager/ui/MainWindow.ui:467
-msgid "Menu"
-msgstr ""
-
-#: src/LeaptimeManager/ui/user_data.ui:81
+#: src/LeaptimeManager/ui/app_backup.ui:210
+#: src/LeaptimeManager/ui/user_data.ui:83
 msgid "Name:"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:96
-msgid "GIve the the backup a name to identify individual backups."
+#: src/LeaptimeManager/ui/app_backup.ui:226
+msgid "Enter name of the backup."
+msgstr ""
+
+#: src/LeaptimeManager/ui/app_backup.ui:238
+msgid "Please select a location to save the software selection (.list file):"
+msgstr ""
+
+#: src/LeaptimeManager/ui/app_backup.ui:276
+msgid "Please select a saved software selection (.list file):"
+msgstr ""
+
+#: src/LeaptimeManager/ui/app_backup.ui:315
+msgid "Select the packages you want to install."
+msgstr ""
+
+#: src/LeaptimeManager/ui/app_backup.ui:358
+msgid "Refresh"
+msgstr ""
+
+#: src/LeaptimeManager/ui/app_backup.ui:440
+msgid "All the packages in your software selection are installed."
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:137
+msgid "User Data"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:141
+msgid "Backup files in user's home directory and mounted devices."
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:152
+msgid "APT Packages"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:156
+msgid ""
+"Backup Debian APT packages which were manually installed later and did not "
+"come with the system."
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:167
+msgid "System"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:171
+msgid ""
+"Backup the complete system. Some temporary, machine-specific files are "
+"automatically excluded. Backup of user's data is optional and is excluded by "
+"default."
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:233
+msgid "Add"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:237
+msgid "Create backup of currently installed apps"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:249
+msgid "Restore"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:253
+msgid "Restore apps from selected backup"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:265
+msgid "Edit"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:269
+#: src/LeaptimeManager/ui/MainWindow.ui:297
+#: src/LeaptimeManager/ui/MainWindow.ui:301
+#: src/LeaptimeManager/ui/user_data.ui:680
+#: src/LeaptimeManager/ui/user_data.ui:831
+msgid "Remove"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:281
+msgid "Browse"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:285
+msgid "Launch"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:431
+msgid "Status Bar"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:453
+msgid "An all-in-one backup manager for *nix systems"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:471
+msgid "Open menu"
+msgstr ""
+
+#: src/LeaptimeManager/ui/MainWindow.ui:491
+msgid "Menu"
 msgstr ""
 
 #: src/LeaptimeManager/ui/user_data.ui:98
+msgid "Give the the backup a name to identify individual backups."
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:100
 msgid "Enter the backup name."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:109
+#: src/LeaptimeManager/ui/user_data.ui:111
 msgid "Please select the source of the backup."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:111
+#: src/LeaptimeManager/ui/user_data.ui:113
 msgid "Source:"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:128
+#: src/LeaptimeManager/ui/user_data.ui:130
 msgid "Please choose source folder"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:139
+#: src/LeaptimeManager/ui/user_data.ui:141
 msgid "Please select the destination where you want to save the backup."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:141
+#: src/LeaptimeManager/ui/user_data.ui:143
 msgid "Destination:"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:157
+#: src/LeaptimeManager/ui/user_data.ui:159
 msgid "Please choose destination folder"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:169
+#: src/LeaptimeManager/ui/user_data.ui:171
+msgid "Mode:"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:190
+msgid "Backup"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:191
+msgid "Synchronize"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:203
+msgid ""
+"Select method of backup. Tarball creates compressed archive file, while "
+"rsync copies files to another directory keeping the properties and "
+"attribures intact."
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:205
 msgid "Method:"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:188
+#: src/LeaptimeManager/ui/user_data.ui:224
 msgid "rsync"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:189
+#: src/LeaptimeManager/ui/user_data.ui:225
 msgid "tarball"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:201
+#: src/LeaptimeManager/ui/user_data.ui:237
 msgid "Tar Format:"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:219
+#: src/LeaptimeManager/ui/user_data.ui:251
+msgid "Select format for tarball. Only available with tarball method."
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:256
 msgid "tar"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:220
+#: src/LeaptimeManager/ui/user_data.ui:257
 msgid "tar.bz2"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:221
+#: src/LeaptimeManager/ui/user_data.ui:258
 msgid "tar.gz"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:222
+#: src/LeaptimeManager/ui/user_data.ui:259
 msgid "tar.xz"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:235
+#: src/LeaptimeManager/ui/user_data.ui:272
 msgid "Description:"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:250
-#: src/LeaptimeManager/ui/user_data.ui:252
+#: src/LeaptimeManager/ui/user_data.ui:287
+#: src/LeaptimeManager/ui/user_data.ui:289
 msgid "Enter a description of the backup."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:289
+#: src/LeaptimeManager/ui/user_data.ui:300
+msgid "Enter options separated by space. Only available for Rsync."
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:302
+msgid "Extra Arguments:"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:317
+msgid "Enter arguments to pass to rsync, separated by a single space."
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:319
+msgid "Enter arguments to be passed to rsync."
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:331
+msgid "Schedule:"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:357
+msgid "Specific Time"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:372
+msgid "At Interval"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:405
+msgid "Select Time:"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:438
+msgid "Hourly"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:453
+msgid "Daily"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:468
+msgid "Weekly"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:483
+msgid "Monthly"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:501
+msgid "Keep:"
+msgstr ""
+
+#: src/LeaptimeManager/ui/user_data.ui:602
 msgid ""
 "Please add files or directories to the list below to exclude them from the "
 "backup."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:341
+#: src/LeaptimeManager/ui/user_data.ui:654
 msgid "Exclude files"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:354
+#: src/LeaptimeManager/ui/user_data.ui:667
 msgid "Exclude directories"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:411
+#: src/LeaptimeManager/ui/user_data.ui:724
 msgid ""
 "Hidden files and hidden folders located at the root of your home directory "
 "are not included by default."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:424
+#: src/LeaptimeManager/ui/user_data.ui:737
 msgid ""
 "These files and folders usually contain temporary data or preferences for "
 "your applications."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:439
+#: src/LeaptimeManager/ui/user_data.ui:752
 msgid ""
 "If you want to include some of them in the backup, please add them to the "
 "list below."
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:492
+#: src/LeaptimeManager/ui/user_data.ui:805
 msgid "Include files"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:505
+#: src/LeaptimeManager/ui/user_data.ui:818
 msgid "Include directories"
 msgstr ""
 
-#: src/LeaptimeManager/ui/user_data.ui:560
+#: src/LeaptimeManager/ui/user_data.ui:873
 msgid "Please wait while your files are being backed up."
 msgstr ""

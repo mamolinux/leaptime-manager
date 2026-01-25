@@ -39,7 +39,7 @@ from gi.repository import GLib, GdkPixbuf, Gtk, XApp
 from LeaptimeManager.cli_args import  APP, LOCALE_DIR
 from LeaptimeManager.common import _async, _print_timing
 from LeaptimeManager.database_rw import databackup_db
-from LeaptimeManager.dialogs import show_message
+from LeaptimeManager.dialogs import show_message, delete_confirm
 from LeaptimeManager.scheduler import TimeChooserButton
 from LeaptimeManager.dataBackup_backend import UserData_backend
 from LeaptimeManager.tarball_backend import tar_backend
@@ -357,7 +357,7 @@ class UserData():
 		self.backup_method = self.methods_combo.get_active_text()
 		try:
 			if self.source_dir and self.dest_dir and os.access(self.dest_dir, os.W_OK):
-				module_logger.debug(_("Name: %s, Description: %s, Source: %s, Destination: %s, Method: %s") %(self.backup_name, self.backup_desc, self.source_dir, self.dest_dir, self.backup_method))
+				module_logger.debug(_(f"Name: {self.backup_name}, Description: {self.backup_desc}, Source: {self.source_dir}, Destination: {self.dest_dir}, Method: {self.backup_method}"))
 				if self.backup_method == "tarball":
 					self.tar_backup_format = self.tarballs_combo.get_active_text()
 					module_logger.debug(_("Tar archive format: %s") % self.tar_backup_format)

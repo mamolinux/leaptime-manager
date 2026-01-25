@@ -1,0 +1,717 @@
+# Lao translation for mamolinux
+# Copyright (c) 2025 Rosetta Contributors and Canonical Ltd 2025
+# This file is distributed under the same license as the mamolinux package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mamolinux\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2024-03-08 14:36+0530\n"
+"PO-Revision-Date: 2025-11-02 13:33+0000\n"
+"Last-Translator: boneni <Unknown>\n"
+"Language-Team: Lao <lo@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2026-01-25 17:44+0000\n"
+"X-Generator: Launchpad (build 9fcfff1971229ac997140f06b41a902ac8ec69f4)\n"
+
+#: data/leaptime-manager.desktop.in:3 src/LeaptimeManager/about_window.py:62
+#: src/LeaptimeManager/dialogs.py:47 src/LeaptimeManager/ui/MainWindow.ui:429
+msgid "LeapTime Manager"
+msgstr "ໂຕຈັດການ LeapTime"
+
+#: data/leaptime-manager.desktop.in:4 src/LeaptimeManager/common.py:65
+msgid ""
+"Aiming to be an all-in-one, friendly to new-users, GUI based backup manager "
+"for Debian/Ubuntu based systems."
+msgstr ""
+"ສ້າງຂຶ້ນເພື່ອເປັນໂຕຈັດການສຳຮອງຂໍ້ມູນແບບຄົບວົງຈອນ, ເປັນມິດກັບຜູ້ໃຊ້ໃໝ່, "
+"ໃຊ້ງານຜ່ານໜ້າຕ່າງກຣາຟິກສຳລັບລະບົບທີ່ໃຊ້ Debian/Ubuntu."
+
+#: src/LeaptimeManager/about_window.py:59 src/LeaptimeManager/gui.py:143
+msgid "About"
+msgstr "ກ່ຽວກັບ"
+
+#: src/LeaptimeManager/about_window.py:72
+msgid "Maintainer"
+msgstr "ຜູ້ດູແລ"
+
+#: src/LeaptimeManager/appBackup.py:79 src/LeaptimeManager/dataBackup.py:238
+msgid "Name"
+msgstr "ຊື່"
+
+#: src/LeaptimeManager/appBackup.py:84
+msgid "File Name"
+msgstr "ຊື່ໄຟລ໌"
+
+#: src/LeaptimeManager/appBackup.py:89 src/LeaptimeManager/dataBackup.py:258
+msgid "Created"
+msgstr "ສ້າງເມື່ອ"
+
+#: src/LeaptimeManager/appBackup.py:94 src/LeaptimeManager/dataBackup.py:263
+msgid "Repeat"
+msgstr "ເຮັດຊ້ຳ"
+
+#: src/LeaptimeManager/appBackup.py:99
+msgid "Location"
+msgstr "ທີ່ຕັ້ງ"
+
+#: src/LeaptimeManager/appBackup.py:200
+msgid "No packages need to be installed."
+msgstr "ບໍ່ມີແພັກເກັດທີ່ຕ້ອງຕິດຕັ້ງ."
+
+#: src/LeaptimeManager/appBackup.py:207
+msgid "No packages selected to install."
+msgstr "ບໍ່ມີແພັກເກັດຖືກເລືອກເພື່ອຕິດຕັ້ງ."
+
+#: src/LeaptimeManager/appBackup.py:319
+msgid "No backup destination is selected."
+msgstr "ບໍ່ໄດ້ເລືອກປາຍທາງການສຳຮອງຂໍ້ມູນ."
+
+#: src/LeaptimeManager/appBackup.py:325
+msgid "Showing backup apps list..."
+msgstr "ກຳລັງສະແດງລາຍຊື່ແອັບທີ່ສຳຮອງຂໍ້ມູນ..."
+
+#: src/LeaptimeManager/appBackup.py:354
+msgid "The selected file is not a valid software selection."
+msgstr "ໄຟລ໌ທີ່ເລືອກບໍ່ແມ່ນລາຍການຊັອບແວທີ່ຖືກຕ້ອງ."
+
+#: src/LeaptimeManager/appBackup.py:357
+#, python-format
+msgid "Validation passed for restore file: %s"
+msgstr "ການກວດສອບຜ່ານສຳລັບໄຟລ໌ກູ້ຄືນ: %s"
+
+#: src/LeaptimeManager/appBackup.py:360 src/LeaptimeManager/appBackup.py:402
+msgid "An error occurred while reading the file."
+msgstr "ເກີດຂໍ້ຜິດພາດຂະນະອ່ານໄຟລ໌."
+
+#: src/LeaptimeManager/appBackup.py:384
+msgid "Could not locate the package."
+msgstr "ບໍ່ສາມາດຊອກຫາແພັກເກັດໄດ້."
+
+#: src/LeaptimeManager/appBackup.py:459
+msgid "Loading main page with available backups lists."
+msgstr "ກຳລັງໂຫລດໜ້າຫຼັກພ້ອມລາຍຊື່ສຳຮອງຂໍ້ມູນທີ່ມີຢູ່."
+
+#: src/LeaptimeManager/appBackup.py:462
+#, python-format
+msgid "Existing app backups: %s"
+msgstr "ຂໍ້ມູນສຳຮອງແອັບທີ່ມີຢູ່: %s"
+
+#: src/LeaptimeManager/appBackup.py:480
+#, python-format
+msgid "Selected app backup: %s"
+msgstr "ຂໍ້ມູນສຳຮອງແອັບທີ່ເລືອກ: %s"
+
+#: src/LeaptimeManager/appBackup.py:486
+msgid "Reloading navigation buttons for app backup."
+msgstr "ກຳລັງໂຫລດປຸ່ມນຳທາງໃໝ່ສຳລັບການສຳຮອງຂໍ້ມູນແອັບ."
+
+#: src/LeaptimeManager/appBackup.py:500
+msgid "Starting app backup list process"
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນລາຍຊື່ການສຳຮອງຂໍ້ມູນແອັບ"
+
+#: src/LeaptimeManager/appBackup.py:510
+msgid "Starting app restore list process"
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນລາຍຊື່ການກູ້ຄືນຂໍ້ມູນແອັບ"
+
+#: src/LeaptimeManager/appBackup.py:519
+#, python-format
+msgid "Restoring from file: %s"
+msgstr "ກຳລັງກູ້ຄືນຈາກໄຟລ໌: %s"
+
+#: src/LeaptimeManager/appBackup.py:528 src/LeaptimeManager/dataBackup.py:682
+msgid "Editing backup file from database list."
+msgstr "ກຳລັງແກ້ໄຂໄຟລ໌ສຳຮອງຂໍ້ມູນຈາກລາຍຊື່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/appBackup.py:529 src/LeaptimeManager/appBackup.py:534
+#: src/LeaptimeManager/dataBackup.py:678 src/LeaptimeManager/dataBackup.py:683
+#: src/LeaptimeManager/dataBackup.py:688
+msgid ""
+"This feature has not been implented yet. Please wait for future releases."
+msgstr "ຄຸນສົມບັດນີ້ຍັງບໍ່ທັນຖືກເພີ່ມເຂົ້າມາ. ກະລຸນາລໍຖ້າໃນເວີຊັນຕໍ່ໄປ."
+
+#: src/LeaptimeManager/appBackup.py:533
+msgid "Opening backup file from database list."
+msgstr "ກຳລັງເປີດໄຟລ໌ສຳຮອງຂໍ້ມູນຈາກລາຍຊື່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/appBackup.py:538
+msgid "Removing app backup from database list."
+msgstr "ກຳລັງລຶບຂໍ້ມູນສຳຮອງແອັບອອກຈາກລາຍຊື່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/common.py:101
+msgid "Initializing backend."
+msgstr "ກຳລັງເລີ່ມຕົ້ນລະບົບຫຼັງບ້ານ."
+
+#: src/LeaptimeManager/common.py:103
+msgid "Configuration directory exists. Nothing to do."
+msgstr "ມີໂຟລເດີການຕັ້ງຄ່າຢູ່ແລ້ວ. ບໍ່ຕ້ອງເຮັດຫຍັງ."
+
+#: src/LeaptimeManager/common.py:105
+msgid "Creating configuration directory."
+msgstr "ກຳລັງສ້າງໂຟລເດີການຕັ້ງຄ່າ."
+
+#: src/LeaptimeManager/common.py:108
+msgid "User data log directory exists. Nothing to do."
+msgstr "ມີໂຟລເດີບັນທຶກຂໍ້ມູນຜູ້ໃຊ້ຢູ່ແລ້ວ. ບໍ່ຕ້ອງເຮັດຫຍັງ."
+
+#: src/LeaptimeManager/common.py:110
+msgid "Creating user data log directory."
+msgstr "ກຳລັງສ້າງໂຟລເດີບັນທຶກຂໍ້ມູນຜູ້ໃຊ້."
+
+#: src/LeaptimeManager/common.py:125
+msgid "Loading existing configurations."
+msgstr "ກຳລັງໂຫລດການຕັ້ງຄ່າທີ່ມີຢູ່."
+
+#: src/LeaptimeManager/common.py:134
+msgid "Configuration file exists. Validating configurations."
+msgstr "ມີໄຟລ໌ການຕັ້ງຄ່າຢູ່ແລ້ວ. ກຳລັງກວດສອບການຕັ້ງຄ່າ."
+
+#: src/LeaptimeManager/common.py:137
+msgid "Creating configuration files."
+msgstr "ກຳລັງສ້າງໄຟລ໌ການຕັ້ງຄ່າ."
+
+#: src/LeaptimeManager/common.py:156
+msgid "Validating existing configurations."
+msgstr "ກຳລັງກວດສອບການຕັ້ງຄ່າທີ່ມີຢູ່."
+
+#: src/LeaptimeManager/dataBackup.py:61
+msgid "Initializing User Data backend class..."
+msgstr "ກຳລັງເລີ່ມຕົ້ນຄລາສຂໍ້ມູນຜູ້ໃຊ້ຫຼັງບ້ານ..."
+
+#: src/LeaptimeManager/dataBackup.py:90
+#, python-format
+msgid "Skipping %s because named pipes are not supported."
+msgstr "ກຳລັງຂ້າມ %s ເນື່ອງຈາກບໍ່ຮອງຮັບ named pipes."
+
+#: src/LeaptimeManager/dataBackup.py:161
+#, python-format
+msgid "Number of files: %s, Total size in byte: %s"
+msgstr "ຈຳນວນໄຟລ໌: %s, ຂະໜາດທັງໝົດເປັນໄບຕ໌: %s"
+
+#: src/LeaptimeManager/dataBackup.py:162
+#, python-format
+msgid "List of files to copy: %s"
+msgstr "ລາຍຊື່ໄຟລ໌ທີ່ຈະສຳເນົາ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:172
+msgid ""
+"Warning: The meta file could not be saved. This backup will not be accepted "
+"for restoration."
+msgstr ""
+"ຄຳເຕືອນ: ບໍ່ສາມາດບັນທຶກໄຟລ໌ meta ໄດ້. "
+"ການສຳຮອງຂໍ້ມູນນີ້ຈະບໍ່ຖືກຍອມຮັບສຳລັບການກູ້ຄືນ."
+
+#: src/LeaptimeManager/dataBackup.py:203
+#, python-format
+msgid ""
+"Warning: Some files were not saved. Only %(archived)d files were backed up "
+"out of %(total)d."
+msgstr ""
+"ຄຳເຕືອນ: ບາງໄຟລ໌ບໍ່ໄດ້ຖືກບັນທຶກ. ມີພຽງ %(archived)d "
+"ໄຟລ໌ທີ່ຖືກສຳຮອງຂໍ້ມູນຈາກທັງໝົດ %(total)d."
+
+#: src/LeaptimeManager/dataBackup.py:214
+msgid "Initializing user data backup class..."
+msgstr "ກຳລັງເລີ່ມຕົ້ນຄລາສສຳຮອງຂໍ້ມູນຜູ້ໃຊ້..."
+
+#: src/LeaptimeManager/dataBackup.py:243
+msgid "Method"
+msgstr "ວິທີການ"
+
+#: src/LeaptimeManager/dataBackup.py:248
+msgid "Source"
+msgstr "ຕົ້ນທາງ"
+
+#: src/LeaptimeManager/dataBackup.py:253
+msgid "Destination"
+msgstr "ປາຍທາງ"
+
+#: src/LeaptimeManager/dataBackup.py:268
+msgid "Comment"
+msgstr "ຄຳອະທິບາຍເພີ່ມຕື່ມ"
+
+#: src/LeaptimeManager/dataBackup.py:353 src/LeaptimeManager/dataBackup.py:377
+#, python-format
+msgid "Previous page: %s"
+msgstr "ໜ້າກ່ອນໜ້າ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:372
+#, python-format
+msgid "Showing databackup page: %s on back button"
+msgstr "ກຳລັງສະແດງໜ້າສຳຮອງຂໍ້ມູນ: %s ເທິງປຸ່ມກັບຄືນ"
+
+#: src/LeaptimeManager/dataBackup.py:391
+msgid "Start Backup"
+msgstr "ເລີ່ມສຳຮອງຂໍ້ມູນ"
+
+#: src/LeaptimeManager/dataBackup.py:406
+msgid "Finish"
+msgstr "ສຳເລັດ"
+
+#: src/LeaptimeManager/dataBackup.py:413
+#, python-format
+msgid "Showing databackup page: %s on forward button"
+msgstr "ກຳລັງສະແດງໜ້າສຳຮອງຂໍ້ມູນ: %s ເທິງປຸ່ມໄປໜ້າ"
+
+#: src/LeaptimeManager/dataBackup.py:423
+#, python-format
+msgid "Tarball format for backup: %s"
+msgstr "ຮູບແບບ Tarball ສຳລັບການສຳຮອງຂໍ້ມູນ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:427
+#, python-format
+msgid "Using backup method: %s"
+msgstr "ກຳລັງໃຊ້ວິທີສຳຮອງຂໍ້ມູນ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:442
+msgid "Data Backup - Select files"
+msgstr "ສຳຮອງຂໍ້ມູນ - ເລືອກໄຟລ໌"
+
+#: src/LeaptimeManager/dataBackup.py:444
+msgid "Data Backup - Select folders"
+msgstr "ສຳຮອງຂໍ້ມູນ - ເລືອກໂຟລເດີ"
+
+#: src/LeaptimeManager/dataBackup.py:462
+#, python-format
+msgid "%s is not located in your source directory."
+msgstr "%s ບໍ່ໄດ້ຕັ້ງຢູ່ໃນໂຟລເດີຕົ້ນທາງຂອງທ່ານ."
+
+#: src/LeaptimeManager/dataBackup.py:475
+msgid "Gathering info on backup."
+msgstr "ກຳລັງລວບລວມຂໍ້ມູນກ່ຽວກັບການສຳຮອງ."
+
+#: src/LeaptimeManager/dataBackup.py:479
+#, python-format
+msgid "Name: %s, Description: %s, Source: %s, Destination: %s, Method: %s"
+msgstr "ຊື່: %s, ລາຍລະອຽດ: %s, ຕົ້ນທາງ: %s, ປາຍທາງ: %s, ວິທີການ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:482
+#, python-format
+msgid "Tar archive format: %s"
+msgstr "ຮູບແບບໄຟລ໌ Tar: %s"
+
+#: src/LeaptimeManager/dataBackup.py:495
+#, python-format
+msgid "Excluded files list: %s"
+msgstr "ລາຍຊື່ໄຟລ໌ທີ່ບໍ່ລວມ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:496
+#, python-format
+msgid "Excluded folder list: %s"
+msgstr "ລາຍຊື່ໂຟລເດີທີ່ບໍ່ລວມ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:509
+#, python-format
+msgid "Included files list: %s"
+msgstr "ລາຍຊື່ໄຟລ໌ທີ່ລວມ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:510
+#, python-format
+msgid "Included folder list: %s"
+msgstr "ລາຍຊື່ໂຟລເດີທີ່ລວມ: %s"
+
+#: src/LeaptimeManager/dataBackup.py:527
+msgid "Calculating..."
+msgstr "ກຳລັງຄຳນວນ..."
+
+#: src/LeaptimeManager/dataBackup.py:531
+msgid "The following errors occurred:"
+msgstr "ເກີດຂໍ້ຜິດພາດຕໍ່ໄປນີ້:"
+
+#: src/LeaptimeManager/dataBackup.py:537
+msgid "The backup was aborted."
+msgstr "ການສຳຮອງຂໍ້ມູນຖືກຍົກເລີກ."
+
+#: src/LeaptimeManager/dataBackup.py:541
+#, python-format
+msgid "Your files were successfully saved in %s."
+msgstr "ໄຟລ໌ຂອງທ່ານຖືກບັນທຶກສຳເລັດໃນ %s."
+
+#: src/LeaptimeManager/dataBackup.py:580
+msgid "Starting backup using Rsync method..."
+msgstr "ກຳລັງເລີ່ມສຳຮອງຂໍ້ມູນໂດຍໃຊ້ວິທີ Rsync..."
+
+#: src/LeaptimeManager/dataBackup.py:581
+msgid "This feature has not been implented yet. Use tarball method."
+msgstr "ຄຸນສົມບັດນີ້ຍັງບໍ່ທັນຖືກເພີ່ມເຂົ້າມາ. ໃຫ້ໃຊ້ວິທີ tarball."
+
+#: src/LeaptimeManager/dataBackup.py:587
+#, python-format
+msgid "%s is backed up into %s"
+msgstr "%s ຖືກສຳຮອງຂໍ້ມູນໄປທີ່ %s"
+
+#: src/LeaptimeManager/dataBackup.py:599
+msgid "Starting backup using tarball method..."
+msgstr "ກຳລັງເລີ່ມສຳຮອງຂໍ້ມູນໂດຍໃຊ້ວິທີ tarball..."
+
+#: src/LeaptimeManager/dataBackup.py:601
+#, python-format
+msgid "%(source_dir)s is backed up into %(tarfile)s"
+msgstr "%(source_dir)s ຖືກສຳຮອງຂໍ້ມູນໄປທີ່ %(tarfile)s"
+
+#: src/LeaptimeManager/dataBackup.py:617
+msgid "No source directory selected."
+msgstr "ບໍ່ໄດ້ເລືອກໂຟລເດີຕົ້ນທາງ."
+
+#: src/LeaptimeManager/dataBackup.py:619
+msgid "No destination directory selected."
+msgstr "ບໍ່ໄດ້ເລືອກໂຟລເດີປາຍທາງ."
+
+#: src/LeaptimeManager/dataBackup.py:621
+msgid "You do not have the permission to write in the selected directory."
+msgstr "ທ່ານບໍ່ມີສິດໃນການຂຽນລົງໃນໂຟລເດີທີ່ເລືອກ."
+
+#: src/LeaptimeManager/dataBackup.py:625
+msgid "Loading main page with available data backups lists."
+msgstr "ກຳລັງໂຫລດໜ້າຫຼັກພ້ອມລາຍຊື່ສຳຮອງຂໍ້ມູນທີ່ມີຢູ່."
+
+#: src/LeaptimeManager/dataBackup.py:628
+#, python-format
+msgid "Existing data backups: %s"
+msgstr "ຂໍ້ມູນສຳຮອງທີ່ມີຢູ່: %s"
+
+#: src/LeaptimeManager/dataBackup.py:646
+msgid "Reloading navigation buttons for data backup."
+msgstr "ກຳລັງໂຫລດປຸ່ມນຳທາງໃໝ່ສຳລັບການສຳຮອງຂໍ້ມູນ."
+
+#: src/LeaptimeManager/dataBackup.py:667
+msgid "Starting Data backup..."
+msgstr "ກຳລັງເລີ່ມສຳຮອງຂໍ້ມູນ..."
+
+#: src/LeaptimeManager/dataBackup.py:674
+msgid "Starting Data restore..."
+msgstr "ກຳລັງເລີ່ມກູ້ຄືນຂໍ້ມູນ..."
+
+#: src/LeaptimeManager/dataBackup.py:687
+msgid "Opening backup file/directory from database list."
+msgstr "ກຳລັງເປີດໄຟລ໌/ໂຟລເດີສຳຮອງຂໍ້ມູນຈາກລາຍຊື່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/dataBackup.py:692
+msgid "Removing data backup from database list."
+msgstr "ກຳລັງລຶບຂໍ້ມູນສຳຮອງອອກຈາກລາຍຊື່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/dataBackup.py:704
+#, python-format
+msgid "Deleteing file: %s"
+msgstr "ກຳລັງລຶບໄຟລ໌: %s"
+
+#: src/LeaptimeManager/dataBackup.py:707
+#, python-format
+msgid "%s"
+msgstr "%s"
+
+#: src/LeaptimeManager/database_rw.py:47
+msgid "Writing backup to database."
+msgstr "ກຳລັງຂຽນຂໍ້ມູນສຳຮອງໃສ່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/database_rw.py:54
+msgid "Reading backups from database."
+msgstr "ກຳລັງອ່ານຂໍ້ມູນສຳຮອງຈາກຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/database_rw.py:68
+msgid "Writing data backup to database."
+msgstr "ກຳລັງຂຽນຂໍ້ມູນສຳຮອງໃສ່ຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/database_rw.py:75
+msgid "Reading data backups from database."
+msgstr "ກຳລັງອ່ານຂໍ້ມູນສຳຮອງຈາກຖານຂໍ້ມູນ."
+
+#: src/LeaptimeManager/gui.py:135
+msgid "Show Logs"
+msgstr "ສະແດງບັນທຶກ"
+
+#: src/LeaptimeManager/gui.py:149
+msgid "Quit"
+msgstr "ອອກ"
+
+#: src/LeaptimeManager/gui.py:178
+msgid "Showing app backup stack."
+msgstr "ກຳລັງສະແດງລາຍການສຳຮອງຂໍ້ມູນແອັບ."
+
+#: src/LeaptimeManager/gui.py:192
+msgid "Showing data backup stack."
+msgstr "ກຳລັງສະແດງລາຍການສຳຮອງຂໍ້ມູນ."
+
+#: src/LeaptimeManager/gui.py:206
+msgid "Add button clicked."
+msgstr "ກົດປຸ່ມເພີ່ມ."
+
+#: src/LeaptimeManager/gui.py:208
+msgid "Starting new data backup process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການສຳຮອງຂໍ້ມູນໃໝ່..."
+
+#: src/LeaptimeManager/gui.py:211
+msgid "Starting app backup process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການສຳຮອງຂໍ້ມູນແອັບ..."
+
+#: src/LeaptimeManager/gui.py:216
+msgid "Starting data restore process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການກູ້ຄືນຂໍ້ມູນ..."
+
+#: src/LeaptimeManager/gui.py:219
+msgid "Starting app restore process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການກູ້ຄືນຂໍ້ມູນແອັບ..."
+
+#: src/LeaptimeManager/gui.py:224
+msgid "Starting data backup editing process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການແກ້ໄຂຂໍ້ມູນສຳຮອງ..."
+
+#: src/LeaptimeManager/gui.py:227
+msgid "Starting app backup editing process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການແກ້ໄຂຂໍ້ມູນສຳຮອງແອັບ..."
+
+#: src/LeaptimeManager/gui.py:232
+msgid "Starting data backup browsing process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການເບິ່ງຂໍ້ມູນສຳຮອງ..."
+
+#: src/LeaptimeManager/gui.py:235
+msgid "Starting app backup browsing process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການເບິ່ງຂໍ້ມູນສຳຮອງແອັບ..."
+
+#: src/LeaptimeManager/gui.py:240
+msgid "Starting data backup remove process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການລຶບຂໍ້ມູນສຳຮອງ..."
+
+#: src/LeaptimeManager/gui.py:243
+msgid "Starting app backup remove process..."
+msgstr "ກຳລັງເລີ່ມຂັ້ນຕອນການລຶບຂໍ້ມູນສຳຮອງແອັບ..."
+
+#: src/LeaptimeManager/logger.py:63
+msgid "LeapTime Manager Logs"
+msgstr "ບັນທຶກໂຕຈັດການ LeapTime"
+
+#: src/LeaptimeManager/ui/app_backup.ui:82
+msgid "Please select the applications you want to save."
+msgstr "ກະລຸນາເລືອກແອັບພລິເຄຊັນທີ່ທ່ານຕ້ອງການບັນທຶກ."
+
+#: src/LeaptimeManager/ui/app_backup.ui:132
+#: src/LeaptimeManager/ui/app_backup.ui:352
+msgid "Select all"
+msgstr "ເລືອກທັງໝົດ"
+
+#: src/LeaptimeManager/ui/app_backup.ui:146
+#: src/LeaptimeManager/ui/app_backup.ui:339
+msgid "Deselect all"
+msgstr "ບໍ່ເລືອກທັງໝົດ"
+
+#: src/LeaptimeManager/ui/app_backup.ui:176
+msgid ""
+"Note: If you want to save the complete list of all installed packages on the "
+"system, please use the command 'dpkg --get-selections > mylist.list' in a "
+"terminal."
+msgstr ""
+"ໝາຍເຫດ: ຖ້າທ່ານຕ້ອງການບັນທຶກລາຍຊື່ທັງໝົດຂອງແພັກເກັດທີ່ຕິດຕັ້ງໃນລະບົບ, "
+"ກະລຸນາໃຊ້ຄຳສັ່ງ 'dpkg --get-selections > mylist.list' ໃນ terminal."
+
+#: src/LeaptimeManager/ui/app_backup.ui:207
+msgid "Please select a location to save the software selection (.list file):"
+msgstr "ກະລຸນາເລືອກທີ່ຕັ້ງເພື່ອບັນທຶກລາຍການຊັອບແວ (ໄຟລ໌ .list):"
+
+#: src/LeaptimeManager/ui/app_backup.ui:245
+msgid "Please select a saved software selection (.list file):"
+msgstr "ກະລຸນາເລືອກລາຍການຊັອບແວທີ່ບັນທຶກໄວ້ (ໄຟລ໌ .list):"
+
+#: src/LeaptimeManager/ui/app_backup.ui:283
+msgid "Select the packages you want to install."
+msgstr "ເລືອກແພັກເກັດທີ່ທ່ານຕ້ອງການຕິດຕັ້ງ."
+
+#: src/LeaptimeManager/ui/app_backup.ui:326
+msgid "Refresh"
+msgstr "ໂຫຼດໃໝ່"
+
+#: src/LeaptimeManager/ui/app_backup.ui:408
+msgid "All the packages in your software selection are installed."
+msgstr "ແພັກເກັດທັງໝົດໃນລາຍການຊັອບແວຂອງທ່ານໄດ້ຖືກຕິດຕັ້ງແລ້ວ."
+
+#: src/LeaptimeManager/ui/MainWindow.ui:133
+msgid "User Data"
+msgstr "ຂໍ້ມູນຜູ້ໃຊ້"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:147
+#: src/LeaptimeManager/ui/MainWindow.ui:151
+msgid "Apt Packages"
+msgstr "ແພັກເກັດ Apt"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:210
+msgid "Add"
+msgstr "ເພີ່ມ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:214
+msgid "Create backup of currently installed apps"
+msgstr "ສ້າງຂໍ້ມູນສຳຮອງຂອງແອັບທີ່ຕິດຕັ້ງໃນປັດຈຸບັນ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:226
+msgid "Restore"
+msgstr "ກູ້ຄືນ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:230
+msgid "Restore apps from selected backup"
+msgstr "ກູ້ຄືນແອັບຈາກຂໍ້ມູນສຳຮອງທີ່ເລືອກ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:242
+msgid "Edit"
+msgstr "ແກ້ໄຂ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:246
+#: src/LeaptimeManager/ui/MainWindow.ui:274
+#: src/LeaptimeManager/ui/MainWindow.ui:278
+#: src/LeaptimeManager/ui/user_data.ui:367
+#: src/LeaptimeManager/ui/user_data.ui:518
+msgid "Remove"
+msgstr "ລຶບ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:258
+msgid "Browse"
+msgstr "ເປີດເບິ່ງ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:262
+msgid "Launch"
+msgstr "ເປີດໃຊ້ງານ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:408
+msgid "Status Bar"
+msgstr "ແຖບສະຖານະ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:430
+msgid "An all-in-one backup manager for *nix systems"
+msgstr "ໂຕຈັດການສຳຮອງຂໍ້ມູນແບບຄົບວົງຈອນສຳລັບລະບົບ *nix"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:447
+msgid "Open menu"
+msgstr "ເປີດເມນູ"
+
+#: src/LeaptimeManager/ui/MainWindow.ui:467
+msgid "Menu"
+msgstr "ເມນູ"
+
+#: src/LeaptimeManager/ui/user_data.ui:81
+msgid "Name:"
+msgstr "ຊື່:"
+
+#: src/LeaptimeManager/ui/user_data.ui:96
+msgid "GIve the the backup a name to identify individual backups."
+msgstr "ຕັ້ງຊື່ໃຫ້ກັບການສຳຮອງຂໍ້ມູນເພື່ອຈຳແນກແຕ່ລະອັນ."
+
+#: src/LeaptimeManager/ui/user_data.ui:98
+msgid "Enter the backup name."
+msgstr "ປ້ອນຊື່ການສຳຮອງຂໍ້ມູນ."
+
+#: src/LeaptimeManager/ui/user_data.ui:109
+msgid "Please select the source of the backup."
+msgstr "ກະລຸນາເລືອກຕົ້ນທາງຂອງການສຳຮອງຂໍ້ມູນ."
+
+#: src/LeaptimeManager/ui/user_data.ui:111
+msgid "Source:"
+msgstr "ຕົ້ນທາງ:"
+
+#: src/LeaptimeManager/ui/user_data.ui:128
+msgid "Please choose source folder"
+msgstr "ກະລຸນາເລືອກໂຟລເດີຕົ້ນທາງ"
+
+#: src/LeaptimeManager/ui/user_data.ui:139
+msgid "Please select the destination where you want to save the backup."
+msgstr "ກະລຸນາເລືອກປາຍທາງທີ່ທ່ານຕ້ອງການບັນທຶກຂໍ້ມູນສຳຮອງ."
+
+#: src/LeaptimeManager/ui/user_data.ui:141
+msgid "Destination:"
+msgstr "ປາຍທາງ:"
+
+#: src/LeaptimeManager/ui/user_data.ui:157
+msgid "Please choose destination folder"
+msgstr "ກະລຸນາເລືອກໂຟລເດີປາຍທາງ"
+
+#: src/LeaptimeManager/ui/user_data.ui:169
+msgid "Method:"
+msgstr "ວິທີການ:"
+
+#: src/LeaptimeManager/ui/user_data.ui:188
+msgid "rsync"
+msgstr "rsync"
+
+#: src/LeaptimeManager/ui/user_data.ui:189
+msgid "tarball"
+msgstr "tarball"
+
+#: src/LeaptimeManager/ui/user_data.ui:201
+msgid "Tar Format:"
+msgstr "ຮູບແບບ Tar:"
+
+#: src/LeaptimeManager/ui/user_data.ui:219
+msgid "tar"
+msgstr "tar"
+
+#: src/LeaptimeManager/ui/user_data.ui:220
+msgid "tar.bz2"
+msgstr "tar.bz2"
+
+#: src/LeaptimeManager/ui/user_data.ui:221
+msgid "tar.gz"
+msgstr "tar.gz"
+
+#: src/LeaptimeManager/ui/user_data.ui:222
+msgid "tar.xz"
+msgstr "tar.xz"
+
+#: src/LeaptimeManager/ui/user_data.ui:235
+msgid "Description:"
+msgstr "ລາຍລະອຽດ:"
+
+#: src/LeaptimeManager/ui/user_data.ui:250
+#: src/LeaptimeManager/ui/user_data.ui:252
+msgid "Enter a description of the backup."
+msgstr "ປ້ອນລາຍລະອຽດຂອງການສຳຮອງຂໍ້ມູນ."
+
+#: src/LeaptimeManager/ui/user_data.ui:289
+msgid ""
+"Please add files or directories to the list below to exclude them from the "
+"backup."
+msgstr ""
+"ກະລຸນາເພີ່ມໄຟລ໌ ຫຼື "
+"ໂຟລເດີໃສ່ລາຍຊື່ດ້ານລຸ່ມເພື່ອບໍ່ໃຫ້ລວມຢູ່​ໃນ​ການ​ສຳຮອງ​ຂໍ້​ມູນ."
+
+#: src/LeaptimeManager/ui/user_data.ui:341
+msgid "Exclude files"
+msgstr "ບໍ່ລວມໄຟລ໌"
+
+#: src/LeaptimeManager/ui/user_data.ui:354
+msgid "Exclude directories"
+msgstr "ບໍ່ລວມໂຟລເດີ"
+
+#: src/LeaptimeManager/ui/user_data.ui:411
+msgid ""
+"Hidden files and hidden folders located at the root of your home directory "
+"are not included by default."
+msgstr ""
+"ໄຟລ໌ ແລະ ໂຟລເດີທີ່ເຊື່ອງໄວ້ທີ່ຢູ່ໃນໂຟລເດີຫຼັກ (home) "
+"ຂອງທ່ານຈະບໍ່ຖືກລວມໂດຍຄ່າເລີ່ມຕົ້ນ."
+
+#: src/LeaptimeManager/ui/user_data.ui:424
+msgid ""
+"These files and folders usually contain temporary data or preferences for "
+"your applications."
+msgstr ""
+"ໄຟລ໌ ແລະ ໂຟລເດີເຫຼົ່ານີ້ມັກຈະມີຂໍ້ມູນຊົ່ວຄາວ ຫຼື "
+"ການຕັ້ງຄ່າຕ່າງໆສຳລັບແອັບຂອງທ່ານ."
+
+#: src/LeaptimeManager/ui/user_data.ui:439
+msgid ""
+"If you want to include some of them in the backup, please add them to the "
+"list below."
+msgstr ""
+"ຖ້າທ່ານຕ້ອງການລວມບາງອັນເຂົ້າໃນການສຳຮອງຂໍ້ມູນ, "
+"ກະລຸນາເພີ່ມພວກມັນໃສ່ລາຍຊື່ດ້ານລຸ່ມ."
+
+#: src/LeaptimeManager/ui/user_data.ui:492
+msgid "Include files"
+msgstr "ລວມໄຟລ໌"
+
+#: src/LeaptimeManager/ui/user_data.ui:505
+msgid "Include directories"
+msgstr "ລວມໂຟລເດີ"
+
+#: src/LeaptimeManager/ui/user_data.ui:560
+msgid "Please wait while your files are being backed up."
+msgstr "ກະລຸນາລໍຖ້າຂະນະທີ່ໄຟລ໌ຂອງທ່ານກຳລັງຖືກສຳຮອງຂໍ້ມູນ."

@@ -99,9 +99,8 @@ class tar_backend():
 				sys.exit(1)
 			
 			# get a count of all the files
-			self.copy_files, self.num_files, self.total_size = self.manager.scan_dirs(self.operating, self.source_dir, excluded_files, excluded_dirs, included_files, included_dirs, self.manager.callback_count_total)
-			module_logger.debug(_("Number of files: %s, Total size in byte: %s" % (self.num_files, self.total_size)))
-			module_logger.debug(_("List of files to copy: %s" % "\n".join(self.copy_files)))
+			module_logger.debug(_(f"Number of files: {self.num_files}, Total size in byte: {self.total_size}"))
+			module_logger.debug(_(f"List of files to copy: {"\n".join(self.copy_files)}"))
 			
 			# Create META file
 			try:
