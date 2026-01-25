@@ -48,3 +48,17 @@ def show_message(window, message, message_type=Gtk.MessageType.WARNING):
 	dialog.set_position(Gtk.WindowPosition.CENTER)
 	dialog.run()
 	dialog.destroy()
+
+def delete_confirm(window, message_head, msg_detail, message_type=Gtk.MessageType.WARNING):
+	dialog = Gtk.MessageDialog(window, message_type)
+	dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_DELETE, Gtk.ResponseType.YES)
+	dialog.set_title(_("Remove %s" % message_head))
+	dialog.set_property("text", _("Are you sure you want to delete '%s'?") % msg_detail)
+	dialog.format_secondary_text(_("This backup will be permanently lost."))
+	dialog.set_position(Gtk.WindowPosition.CENTER)
+	if dialog.run() == Gtk.ResponseType.YES:
+		dialog.destroy()
+		return True
+	else:
+		dialog.destroy()
+		return False

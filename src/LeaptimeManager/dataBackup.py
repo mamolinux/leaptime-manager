@@ -23,9 +23,11 @@
 # import the necessary modules!
 import gettext
 import gi
+import glob
 import locale
 import logging
 import os
+import shutil
 import subprocess
 
 
@@ -550,7 +552,7 @@ class UserData():
 	def on_remove_databackup(self, widget):
 		# On remove button press
 		module_logger.debug(_("Removing data backup from database list."))
-		# remove backup file
+		# remove data backup
 		for i in range(len(self.data_db_list)):
 			if self.data_db_list[i]['uuid'] == self.selected_databackup:
 				backup_dict = self.data_db_list[i]
@@ -558,16 +560,25 @@ class UserData():
 				if method == "rsync":
 					pass
 				else:
-					backup_filepath = os.path.join(backup_dict["destination"], backup_dict["filename"])
-				# Remove backup file(s)
-				try:
-					module_logger.info(_("Deleteing file: %s" % backup_filepath))
-					os.remove(backup_filepath)
-				except Exception as e:
-					module_logger.error(_("%s" % e))
-				# remove backup entry from database
-				del self.data_db_list[i]
-				break
+					backup_filepaths = glob.glob(os.path.join(backup_dict["destination"], backup_dict["filename"]+"*"))
+				
+				msg = "%s data backup" % method
+				msg_detail = backup_dict["name"]
+				if delete_confirm(self.window, msg, msg_detail):
+					# Remove backup file(s)
+					for filepath in backup_filepaths:
+						try:
+							module_logger.info(_("Deleteing file: %s" % filepath))
+							os.remove(filepath)
+						except OSError as e:
+							# Log the error but continue to remove the entry from the DB list
+							module_logger.error(_(f"Error removing file {filepath}: {e.strerror}"))
+					if os.path.isdir(os.path.dirname(backup_dict["logfile"])):
+						shutil.rmtree(os.path.dirname(backup_dict["logfile"]))
+					# remove backup entry from database
+					del self.data_db_list[i]
+					module_logger.info(_(f"{msg} '{msg_detail}' removed from database list."))
+					break
 		
 		self.db_manager.write_db(self.data_db_list)
 		self.load_mainpage()
