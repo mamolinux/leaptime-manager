@@ -145,6 +145,9 @@ class UserData():
 		self.tarballs_combo.set_active(0)
 		self.tarballs_combo.connect("changed", self.tar_format_combo_changed)
 		
+		# rsync user args
+		self.rsync_user_args_entry = self.builder.get_object("rsync_user_args")
+		
 		# Schedule radio button
 		self.specific_time_btn = self.builder.get_object("specific_time_btn")
 		self.specific_time_btn.connect("toggled", self.toggled_schedule_btn)
@@ -299,9 +302,13 @@ class UserData():
 		if self.backup_method == "rsync":
 			self.builder.get_object("tar_format_label").set_visible(False)
 			self.builder.get_object("tar_format_combo").set_visible(False)
+			self.builder.get_object("rsync_user_args_label").set_visible(True)
+			self.builder.get_object("rsync_user_args").set_visible(True)
 		else:
 			self.builder.get_object("tar_format_label").set_visible(True)
 			self.builder.get_object("tar_format_combo").set_visible(True)
+			self.builder.get_object("rsync_user_args_label").set_visible(False)
+			self.builder.get_object("rsync_user_args").set_visible(False)
 	
 	def toggled_schedule_btn(self, button):
 		if self.specific_time_btn.get_active():
@@ -459,13 +466,41 @@ class UserData():
 		GLib.idle_add(self.set_widgets_before_backup)
 		if self.backup_method == "rsync":
 			module_logger.info(_("Starting backup using Rsync method..."))
-			show_message(self.window, _("This feature has not been implented yet. Use tarball method."))
-			# cmd = "rsync -aAXUH --checksum --compress --partial --progress %s %s" % (self.source_dir, self.dest_dir)
-			# cmd = list(cmd.split(" "))
-			# module_logger.debug(_("Running command: %s") % cmd)
-			# with open(self.backuplog, "a") as logfile:
-			# 	subprocess.Popen(cmd, shell=False, stdout=logfile)
-			module_logger.info(_("%s is backed up into %s") % (self.source_dir, self.dest_dir))
+			from LeaptimeManager.rsync_backend import rsync_backend
+			rsync = rsync_backend(self.errors)
+			backup_data = rsync.prep_rsync_backup(
+				self.backup_name, self.source_dir, self.dest_dir,
+				self.excluded_files, self.excluded_dirs,
+				self.included_files, self.included_dirs,
+				dry_run=False, show_progress=True, delete_extra=False
+			)
+			self.backuplog = backup_data["logfile"]
+			self.uuid = backup_data["uuid"]
+			self.timestamp = backup_data["timestamp"]
+			
+			def run_rsync_thread():
+				try:
+					module_logger.debug(f"[RUNNING] {" ".join(backup_data["cmd"])}")
+					process = subprocess.Popen(
+						backup_data["cmd"],
+						stdout=subprocess.PIPE,
+						stderr=subprocess.STDOUT,
+						text=True
+					)
+					with open(self.backuplog, "a") as logf:
+						for line in iter(process.stdout.readline, ''):
+							logf.write(line)
+							logf.flush()
+							GLib.idle_add(self.append_to_log_view, line)
+							GLib.idle_add(self.set_progress, 0, 1, line)  # dummy size args, log line appended
+					process.wait()
+				except Exception as e:
+					# module_logger.error(str(e))
+					self.errors.append(str(e))
+					# GLib.idle_add(self.append_to_log_view, f"[ERROR] {e}\n")
+				rsync.finish_rsync_backup(self.backup_desc, self.backup_method)
+				GLib.idle_add(self.set_widgets_after_backup)
+			threading.Thread(target=run_rsync_thread, daemon=True).start()
 		else:
 			module_logger.info(_("Starting backup using tarball method..."))
 			self.tar_backup()
