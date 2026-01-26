@@ -1,5 +1,5 @@
-Description
-===========
+Usage
+=====
 
 .. argparse::
    :module: LeaptimeManager.cli_args

@@ -10,7 +10,4 @@ Welcome to LeapTime Manager documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules
-
-Indices and tables
-==================
+   LeaptimeManager
