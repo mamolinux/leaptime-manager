@@ -43,6 +43,136 @@ _ = gettext.gettext
 # logger
 module_logger = logging.getLogger('LeaptimeManager.scheduler')
 
+class ScheduleManager:
+	"""Manages scheduling for backups with support for various intervals."""
+
+	INTERVALS = {
+		'hourly': 'Hourly',
+		'daily': 'Daily',
+		'weekly': 'Weekly',
+		'monthly': 'Monthly',
+		'custom': 'Custom Interval'
+	}
+
+	def __init__(self):
+		self.schedules = {}
+
+	@staticmethod
+	def parse_interval(interval_str):
+		"""Parse interval string like 'daily', 'hourly', 'weekly', 'monthly', or 'custom:N:hours/days'."""
+		if not interval_str:
+			return None
+
+		parts = interval_str.split(':')
+		interval_type = parts[0]
+
+		if interval_type in ['hourly', 'daily', 'weekly', 'monthly']:
+			return {'type': interval_type}
+		elif interval_type == 'custom' and len(parts) == 3:
+			return {
+				'type': 'custom',
+				'value': int(parts[1]),
+				'unit': parts[2]  # 'hours', 'days', 'weeks'
+			}
+		return None
+
+	@staticmethod
+	def format_interval(interval_dict):
+		"""Format interval dict to string for database storage."""
+		if not interval_dict:
+			return ""
+
+		interval_type = interval_dict.get('type', '')
+		if interval_type in ['hourly', 'daily', 'weekly', 'monthly']:
+			return interval_type
+		elif interval_type == 'custom':
+			value = interval_dict.get('value', 1)
+			unit = interval_dict.get('unit', 'days')
+			return f"custom:{value}:{unit}"
+		return ""
+
+	@staticmethod
+	def get_next_run_time(interval_dict, last_run=None):
+		"""Calculate next run time based on interval and last run time."""
+		import datetime
+
+		if not interval_dict:
+			return None
+
+		if last_run is None:
+			last_run = datetime.datetime.now()
+		elif isinstance(last_run, str):
+			try:
+				last_run = datetime.datetime.strptime(last_run, "%Y-%m-%d %H:%M")
+			except ValueError:
+				last_run = datetime.datetime.now()
+
+		interval_type = interval_dict.get('type', '')
+
+		if interval_type == 'hourly':
+			return last_run + datetime.timedelta(hours=1)
+		elif interval_type == 'daily':
+			return last_run + datetime.timedelta(days=1)
+		elif interval_type == 'weekly':
+			return last_run + datetime.timedelta(weeks=1)
+		elif interval_type == 'monthly':
+			# Approximate month as 30 days
+			return last_run + datetime.timedelta(days=30)
+		elif interval_type == 'custom':
+			value = interval_dict.get('value', 1)
+			unit = interval_dict.get('unit', 'days')
+
+			if unit == 'hours':
+				return last_run + datetime.timedelta(hours=value)
+			elif unit == 'days':
+				return last_run + datetime.timedelta(days=value)
+			elif unit == 'weeks':
+				return last_run + datetime.timedelta(weeks=value)
+
+		return None
+
+	@staticmethod
+	def is_due(interval_str, last_run):
+		"""Check if a backup is due based on interval and last run time."""
+		interval_dict = ScheduleManager.parse_interval(interval_str)
+		if not interval_dict:
+			return False
+
+		next_run = ScheduleManager.get_next_run_time(interval_dict, last_run)
+		if next_run is None:
+			return False
+
+		return datetime.datetime.now() >= next_run
+
+	@staticmethod
+	def get_interval_description(interval_str):
+		"""Get human-readable description of interval."""
+		interval_dict = ScheduleManager.parse_interval(interval_str)
+		if not interval_dict:
+			return _("No schedule")
+
+		interval_type = interval_dict.get('type', '')
+
+		if interval_type == 'hourly':
+			return _("Every hour")
+		elif interval_type == 'daily':
+			return _("Every day")
+		elif interval_type == 'weekly':
+			return _("Every week")
+		elif interval_type == 'monthly':
+			return _("Every month")
+		elif interval_type == 'custom':
+			value = interval_dict.get('value', 1)
+			unit = interval_dict.get('unit', 'days')
+			unit_trans = {
+				'hours': _('hour(s)'),
+				'days': _('day(s)'),
+				'weeks': _('week(s)')
+			}
+			return _("Every %(value)d %(unit)s") % {'value': value, 'unit': unit_trans.get(unit, unit)}
+
+		return _("Unknown schedule")
+
 class TimeChooserButton(Gtk.Button):
 	
 	def __init__(self, follow_current=False, time=None):

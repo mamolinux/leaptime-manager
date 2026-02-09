@@ -121,7 +121,7 @@ class AppBackup_backend():
 		module_logger.debug("Found manually installed Packages: %s" % installed_pkg_list)
 		return installed_pkg_list
 	
-	def pkg_backup_save_to_file(self, backup_name, backup_dest, cache):
+	def pkg_backup_save_to_file(self, backup_name, backup_dest, cache, repeat=""):
 		# Save the package selection
 		uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
 		time_now = time.localtime()
@@ -133,18 +133,40 @@ class AppBackup_backend():
 			for row in installed_pkg_list:
 				if row[0]:
 					f.write("%s\t%s\n" % (row[1], "install"))
-		self.repeat = ""
+		self.repeat = repeat
 		app_backup_dict = {
 			"uuid" : uuid,
 			"name" : backup_name,
 			"filename" : self.filename,
 			"created" : self.timestamp,
 			"repeat" : self.repeat,
-			"location" : backup_dest
+			"location" : backup_dest,
+			"last_run" : self.timestamp
 		}
-		
+
 		self.app_db_list.append(app_backup_dict)
 		self.db_manager.write_db(self.app_db_list)
+
+	def execute_scheduled_backup(self, backup_name, backup_dest, cache):
+		"""Execute a scheduled backup and update the last_run timestamp."""
+		uuid = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
+		time_now = time.localtime()
+		timestamp = time.strftime("%Y-%m-%d %H:%M", time_now)
+		filename = backup_name+"_"+time.strftime("%Y-%m-%d-%H%M", time_now)+"-packages.list"
+		file_path = os.path.join(backup_dest, filename)
+		installed_pkg_list = self.create_installed_pkg_list(cache)
+
+		try:
+			with open(file_path, "w") as f:
+				for row in installed_pkg_list:
+					if row[0]:
+						f.write("%s\t%s\n" % (row[1], "install"))
+
+			module_logger.info(_("Scheduled backup executed: %s") % backup_name)
+			return True
+		except Exception as e:
+			module_logger.error(_("Failed to execute scheduled backup %s: %s") % (backup_name, str(e)))
+			return False
 	
 	def back_compat(self):
 		# Do a backward compatibility check
@@ -155,15 +177,20 @@ class AppBackup_backend():
 			if (not "uuid" in backup) or (len(backup["uuid"]) != 8) :
 				module_logger.warning(_("Selected app backup was created using an older version. This backup will now be updated to work with the current version. But, there is a possibility that it might not work. Check the logs and report any issue."))
 				backup["uuid"] = ''.join(random.choice(string.digits+string.ascii_letters) for _ in range(8))
-			
+
+			# Add last_run field if missing for backward compatibility
+			if "last_run" not in backup:
+				backup["last_run"] = backup.get("created", "")
+
 			app_backup_dict = {
 				"uuid" : backup["uuid"],
 				"name" : backup["name"],
 				"filename" : backup["filename"],
 				"created" : backup["created"],
 				"repeat" : backup["repeat"],
-				"location" : backup["location"]
+				"location" : backup["location"],
+				"last_run" : backup["last_run"]
 			}
-			
+
 			self.temp_app_db_list.append(app_backup_dict)
 			self.db_manager.write_db(self.temp_app_db_list)

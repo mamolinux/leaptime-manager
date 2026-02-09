@@ -65,7 +65,7 @@ Aiming to be an all-in-one, friendly to new-users, GUI based backup manager for 
 ## ToDo List
 **Software:**
 1. [x] Apt backup
-	1. [ ] Scheduled app backup
+	1. [x] Scheduled app backup
 2. [x] Apt restore
 
 **Data:**
